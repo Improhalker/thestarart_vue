@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import YoutubeMusic from './components/global/YoutubeMusic.vue';
+import NavBar from './components/global/NavBar.vue';
 
 </script>
 
@@ -8,14 +10,10 @@ import { RouterLink, RouterView } from 'vue-router'
     
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+     <NavBar/>
     </div>
+    
   </header>
-  
+  <YoutubeMusic />
   <RouterView />
 </template>

@@ -116,7 +116,7 @@ onMounted(() => {
           <HoverCardTrigger>
             <div
               class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer transition-all
-                     bg-gradient-to-br from-[#000c6a] via-[#d00308] to-[#69029c] hover:scale-110"
+                     bg-gradient-to-br from-[#000c6a] via-[#d00308] to-[#69029c] hover:scale-110 transition-all animate-pulse-icon"
             >
               <Info class="w-5 h-5 text-white" />
             </div>
@@ -152,3 +152,13 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+  @keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .animate-pulse-icon {
+    animation: pulse-icon 1.5s ease-in-out infinite;
+  }
+</style>

@@ -7,7 +7,8 @@ import YoutubeMusic from '../components/global/YoutubeMusic.vue';
 
 <template>
   <main>
-
-    <YoutubeMusic />
+    <div class="">
+     
+    </div>
   </main>
 </template>
