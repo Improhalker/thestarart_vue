@@ -10,8 +10,8 @@ import {
 
 const musics = [
   {
-    id: "ko70cExuzZM",
-    title: "Taylor Swift - The Fate of Ophelia",
+    id: "lNMTtvVes8Y",
+    title: "The Neighbourhood - Holy Ghost",
     reason: "Combina com a vibe dos desenhos do momento",
   },
   {
