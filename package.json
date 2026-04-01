@@ -18,14 +18,15 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
-    "@vueuse/core": "^14.0.0",
+    "@vueuse/core": "^14.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.554.0",
     "pinia": "^3.0.3",
-    "reka-ui": "^2.6.0",
+    "reka-ui": "^2.9.3",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
+    "vaul-vue": "^0.4.1",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
   },

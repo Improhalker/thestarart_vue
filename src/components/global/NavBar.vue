@@ -71,7 +71,7 @@ const socialLinks = [
     <div class="grid grid-cols-1 gap-4">
       <div v-for="link in socialLinks" :key="link.id" :class="[
         'p-4 rounded-xl transition-all duration-500 ease-out',
-        'backdrop-blur-md bg-black/[0.5] border shadow-2xl',
+        'backdrop-blur-md bg-black/50 border shadow-2xl',
         'hover:scale-110 active:scale-95 cursor-pointer group',
         link.color
       ]">
@@ -96,7 +96,7 @@ const socialLinks = [
       </DialogTrigger>
 
       <DialogContent
-        class="bottom-18! left-0! translate-x-0! translate-y-0! w-screen h-screen p-0 bg-black text-white flex border-black flex-col justify-center items-center relative max-w-full!">
+        class=" left-0! translate-x-0! translate-y-0! w-screen h-screen p-0 bg-black text-white flex border-black flex-col justify-center items-center absolute max-w-full!">
         <div class="flex flex-col items-center gap-6 text-2xl lg:text-[50px] ts-font-main font-light text-white/80">
           <template v-for="item in menuItems" :key="item.label">
             <DialogClose as-child>

@@ -24,7 +24,7 @@ import NavBar from './components/global/NavBar.vue';
 body {
   background-image: url('images/mainwallpaper2.jpg');
   background-size: cover;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   height: 100vh;
 }
 </style>
