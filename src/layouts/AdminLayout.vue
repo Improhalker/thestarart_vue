@@ -49,7 +49,11 @@ const router = useRouter()
 
     <main class="flex-1 relative z-10 p-6 overflow-y-auto custom-scrollbar">
       <div class="bg-white/95 border-4 border-black p-6 shadow-[8px_8px_0px_0px_var(--ts-retro-shadow)] min-h-full">
-        <RouterView />
+        <RouterView v-slot="{ Component }">
+          <transition name="pixel-fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </RouterView>
       </div>
     </main>
 
@@ -60,6 +64,16 @@ const router = useRouter()
 </template>
 
 <style scoped>
+.pixel-fade-enter-active,
+.pixel-fade-leave-active {
+  transition: opacity 0.15s steps(4);
+}
+
+.pixel-fade-enter-from,
+.pixel-fade-leave-to {
+  opacity: 0;
+}
+
 .pixelated {
   image-rendering: pixelated;
 }
@@ -67,10 +81,12 @@ const router = useRouter()
 .custom-scrollbar::-webkit-scrollbar {
   width: 14px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #dfdfdf;
   border-left: 2px solid black;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #c0c0c0;
   border: 2px solid black;
