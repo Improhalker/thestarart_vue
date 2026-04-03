@@ -4,7 +4,7 @@ import CsSection from './CsSection.vue';
 </script>
 
 <template>
-  <section class="relative flex items-center justify-center text-white">
+  <section class="bg-red-500 relative flex items-center justify-center text-white">
 
     <div class="absolute inset-0 bg-black/40"></div>
 

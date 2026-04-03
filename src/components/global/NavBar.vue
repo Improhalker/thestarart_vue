@@ -67,23 +67,7 @@ const socialLinks = [
 </script>
 
 <template>
-  <aside class="fixed top-1/2 -translate-y-1/2 left-6 z-50">
-    <div class="grid grid-cols-1 gap-4">
-      <div v-for="link in socialLinks" :key="link.id" :class="[
-        'p-4 rounded-xl transition-all duration-500 ease-out',
-        'backdrop-blur-md bg-black/50 border shadow-2xl',
-        'hover:scale-110 active:scale-95 cursor-pointer group',
-        link.color
-      ]">
-        <component 
-          :is="link.icon" 
-          :size="22" 
-          stroke-width="1.5" 
-          class="transition-colors duration-500"
-        />
-      </div>
-    </div>
-  </aside>
+
   <header class="w-full flex justify-between items-center p-4 text-white relative">
     <div class="text-xl font-bold">TheStarArt_</div>
 
@@ -130,6 +114,23 @@ const socialLinks = [
       </DialogContent>
     </Dialog>
   </header>
+    <aside class="fixed lg:top-[500px] left-2 md:left-6 lg:relative w-fit z-50">
+    <div class="grid grid-cols-1 gap-4">
+      <div v-for="link in socialLinks" :key="link.id" :class="[
+        'p-4 rounded-xl transition-all duration-500 ease-out',
+        'backdrop-blur-md bg-black/50 border shadow-2xl',
+        'hover:scale-110 active:scale-95 cursor-pointer group',
+        link.color
+      ]">
+        <component 
+          :is="link.icon" 
+          :size="22" 
+          stroke-width="1.5" 
+          class="transition-colors duration-500"
+        />
+      </div>
+    </div>
+  </aside>
 
   
 </template>

@@ -13,8 +13,8 @@ const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
   {
-    id: "lNMTtvVes8Y",
-    title: "The Neighbourhood - Holy Ghost",
+    id: "7ixW54J6bEo",
+    title: "Sabrina Carpenter",
     reason: "Combina com a vibe dos desenhos do momento",
   },
   {
@@ -138,7 +138,7 @@ watch(isReady, (ready) => {
     </button>
   </div>
 
-  <div class="hidden md:block fixed z-50 transition-all duration-500 ease-in-out bottom-8 right-8 w-[230px] h-[380px]">
+  <div class="hidden md:block fixed z-50 transition-all duration-500 ease-in-out bottom-8 right-8 w-[520px] h-[480px]">
 
     <div
       class="w-full h-full bg-[#1a191d]/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/5 text-white flex flex-col relative overflow-hidden p-3">
@@ -155,7 +155,7 @@ watch(isReady, (ready) => {
       <div
         class="relative w-full aspect-square md:h-[220px] flex justify-center items-center rounded-xl overflow-hidden bg-black border border-white/5">
 
-        <div id="yt-player" class="w-full h-full opacity-60"></div>
+        <div id="yt-player" class="w-full h-full"></div>
 
         <div v-if="!isStarted" class="absolute inset-0 z-10 cursor-pointer group" @click="start">
           <img :src="`https://img.youtube.com/vi/${music.id}/hqdefault.jpg`"
@@ -163,7 +163,7 @@ watch(isReady, (ready) => {
 
           <div class="absolute inset-0 flex items-center justify-center">
             <div
-              class="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20 group-hover:scale-110 transition">
+              class="backdrop-blur-md p-4 rounded-full border border-white/20 group-hover:scale-110 transition">
               <Play class="w-6 h-6 fill-white" />
             </div>
           </div>
@@ -231,4 +231,5 @@ watch(isReady, (ready) => {
 .animate-pulse-icon {
   animation: pulse-icon 2s ease-in-out infinite;
 }
+
 </style>
