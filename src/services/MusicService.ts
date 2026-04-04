@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://thestarartlaravelback.test/api',
+  baseURL: 'http://srv906410.hstgr.cloud/api',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
