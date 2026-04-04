@@ -109,7 +109,7 @@ const socialLinks = [
           <a>IG</a>
         </div>
         <div class="absolute left-4 bottom-4 text-white">
-          <Headphones size="32" />
+          <Headphones :size="32" />
         </div>
       </DialogContent>
     </Dialog>
