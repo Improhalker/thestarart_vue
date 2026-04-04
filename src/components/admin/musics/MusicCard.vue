@@ -24,8 +24,8 @@ const thumbUrl = `https://img.youtube.com/vi/${props.music.youtube_id}/mqdefault
 
         <div class="bg-black text-white p-1 px-2 flex justify-between items-center text-[9px] font-black uppercase">
             <span>ID: #00{{ music.id }}</span>
-            <span :class="music.is_active ? 'text-red-500' : 'text-green-400'">
-                ● {{ music.is_active ? 'OFFLINE' : 'ONLINE' }}
+            <span :class="music.is_active ? 'text-green-400' : ' text-red-500'">
+                ● {{ music.is_active ? 'ONLINE' : ' OFFLINE ' }}
             </span>
         </div>
 

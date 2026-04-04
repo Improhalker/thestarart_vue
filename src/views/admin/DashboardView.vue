@@ -16,7 +16,7 @@
         </div>
         <div class="p-4 bg-white m-1 border border-gray-400">
           <p class="text-xs font-bold uppercase text-ts-blue">Database Sync:</p>
-          <p class="text-lg font-black mt-1">12 Músicas</p>
+          <p class="text-lg font-black mt-1">2 Músicas</p>
           <div class="w-full bg-gray-200 h-6 mt-2 border-2 border-black p-[2px]">
              <div class="bg-ts-pink h-full w-[40%]"></div>
           </div>

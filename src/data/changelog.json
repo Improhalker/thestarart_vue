@@ -1,0 +1,35 @@
+[
+  {
+    "version": "1.2.0",
+    "date": "03/04/2026",
+    "status": "STABLE",
+    "changes": [
+      "Corrigido MusicResource com campo is_active ausente",
+      "Adicionada lógica de alternância Boolean em MusicForm",
+      "Implementada navegação dinâmica da Sidebar com mapeamento const",
+      "Atualizada interface com ativos GIF animados retrô",
+      "Aplicado scroll com altura máxima e barra de rolagem personalizada Win98"
+    ]
+  },
+  { 
+    "version": "1.1.0",
+    "date": "2026-04-03",
+    "status": "STABLE",
+    "changes": [
+      "Implementado sistema de CRUD completo para Music_Database.",
+      "Adicionado extrator automático de ID de vídeos do YouTube.",
+      "Otimização do Modal Wizard para evitar estouro de tela em resoluções baixas.",
+      "Correção de persistência no estado de edição do formulário."
+    ]
+  },
+  {
+    "version": "1.0.0",
+    "date": "2026-03-15",
+    "status": "LEGACY",
+    "changes": [
+      "Lançamento inicial do painel administrativo TheStarArt.",
+      "Configuração de rotas dinâmicas e layouts persistentes.",
+      "Integração com backend Laravel via Axios."
+    ]
+  }
+]

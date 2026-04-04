@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ChangelogView from '@/views/admin/ChangelogView.vue';
 // TODO, add changelogs
 </script>
 
@@ -16,24 +17,7 @@
 
     <div class="p-4 space-y-6">
       <section class="space-y-2">
-        <h3 class="text-xs font-black border-b-2 border-black pb-1 uppercase italic flex items-center gap-2">
-          <span class="w-2 h-2 bg-ts-pink"></span>
-          Changelog v0.2.1
-        </h3>
-        <ul class="text-[11px] space-y-2 font-bold leading-tight">
-          <li class="flex gap-2">
-            <span class="text-ts-pink">[+]</span>
-            <span>Madoka Mascot & Pet Logic</span>
-          </li>
-          <li class="flex gap-2">
-            <span class="text-ts-blue">[*]</span>
-            <span>Layout Tri-Column System</span>
-          </li>
-          <li class="flex gap-2">
-            <span class="text-ts-red">[!]</span>
-            <span>Fixing 200 OK empty response</span>
-          </li>
-        </ul>
+        <ChangelogView />
       </section>
 
       <section class="border-2 border-black p-2 bg-[#dfdfdf] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">

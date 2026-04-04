@@ -18,7 +18,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div class="admin-pet-container fixed bottom-4 right-71 z-[100] flex flex-col items-end">
+  <div class="admin-pet-container fixed bottom-20 -left-12 z-[100] flex flex-col items-end">
     
     <Transition name="fade">
       <div v-if="showBubble" class="mb-2 bg-white border-2 border-black p-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative">
