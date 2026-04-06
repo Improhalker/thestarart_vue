@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.4.0",
+    "date": "06/04/2026",
+    "status": "STABLE",
+    "changes": [
+      "Lançamento da HomePage com arquitetura de colunas dinâmicas",
+      "Integração de Video Preview (Iframe API) na seção de Esports/Galeria",
+      "Refatoração de componentes globais com suporte a variantes (Default/Retro-Pink)",
+      "Implementação de lógica Draggable e detecção de colisões para o Mascote Admin",
+      "Correção de bugs de renderização e warnings de SSR no componente de música",
+      "Padronização de 'CardWindowHeader' em todo o ecossistema do painel"
+    ]
+  },
+  {
     "version": "1.3.0",
     "date": "06/04/2026",
     "status": "STABLE",

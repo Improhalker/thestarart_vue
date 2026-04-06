@@ -5,7 +5,7 @@ import NavBar from '@/components/global/NavBar.vue'
 
 <template>
 
-  <main class="main-layout">
+  <main class="main-layout font-pixel">
       <header>
         <div class="wrapper">
           <NavBar />

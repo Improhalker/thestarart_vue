@@ -6,8 +6,15 @@
 
 p,
 h1,
-h2,h3,
-h4, h5,h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Pixelify Sans", sans-serif;
+}
+
+.font-pixel {
   font-family: "Pixelify Sans", sans-serif;
 }
 
@@ -41,6 +48,33 @@ h4, h5,h6 {
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+}
+
+:deep([role="slider"]) {
+  background-color: #ffffff !important;
+  border: 1px solid #000 !important;
+  border-radius: 0px !important;
+  width: 14px !important;
+  height: 14px !important;
+  box-shadow: 1px 1px 0px 0px #000 !important;
+}
+
+.retro-btn {
+  background: var(--ts-primary-pink);
+  border: 1px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.retro-btn:active {
+  transform: translate(1px, 1px);
+  border: 1px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
 }
 
 @media screen and (max-width: 640px) {
