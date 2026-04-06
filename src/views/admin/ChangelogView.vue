@@ -47,7 +47,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
 
             <CardWindowHeader :title="`BUILD_${log.version.replace('.', '_')}`" :icon="Terminal">
               <template #right>
-                <span class="text-[12px] text-white font-bold opacity-80 mr-2">
+                <span class="text-[8px] md:text-[12px] text-white font-bold opacity-80 mr-2">
                   {{ log.date }}
                 </span>
               </template>

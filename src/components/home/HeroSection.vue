@@ -2,6 +2,7 @@
 import YoutubeMusic from '@/components/global/YoutubeMusic.vue'
 import ChangelogView from '@/views/admin/ChangelogView.vue';
 import AdminPet from '../admin/madoka/AdminPet.vue';
+import LeftSide from './LeftSide.vue';
 import Main from './Main.vue';
 
 </script>
@@ -9,9 +10,7 @@ import Main from './Main.vue';
 <template>
   <section class="w-full min-h-screen bg-[#13011a] text-pink-100">
     <div class="h-full grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-6 p-6">
-      <div class="rounded-xl bg-purple-900 p-6">
-        <!-- left column -->
-      </div>
+      <LeftSide />
       <div class="rounded-xl 00 p-6">
         <Main />
       </div>
