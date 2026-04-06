@@ -10,11 +10,9 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div
-    class="font-pixel flex items-center justify-between px-2 py-1 border-b border-black
-           bg-gradient-to-r from-[var(--ts-primary-pink)] to-[#2d0240]"
-  >
-    
+  <div class="font-pixel flex items-center justify-between px-2 py-1 border-b border-black
+           bg-gradient-to-r from-[var(--ts-primary-pink)] to-[#2d0240]">
+
     <!-- LEFT -->
     <div class="flex items-center gap-1.5">
       <div v-if="icon" class="bg-black p-[3px] border border-white/20">
@@ -25,6 +23,7 @@ defineProps<Props>()
         {{ title }}
       </span>
     </div>
+    <slot name="right" />
 
     <!-- RIGHT -->
     <div class="flex gap-1">

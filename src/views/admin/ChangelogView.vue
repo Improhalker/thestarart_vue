@@ -45,10 +45,9 @@ const isPink = computed(() => props.variant === 'retro-pink')
                    border-r-[#2a0221] border-b-[#2a0221]
                    bg-[#13011a]">
 
-            <!-- HEADER PADRÃO (IGUAL YOUTUBE) -->
             <CardWindowHeader :title="`BUILD_${log.version.replace('.', '_')}`" :icon="Terminal">
               <template #right>
-                <span class="text-[9px] text-white font-bold opacity-80 mr-2">
+                <span class="text-[12px] text-white font-bold opacity-80 mr-2">
                   {{ log.date }}
                 </span>
               </template>
