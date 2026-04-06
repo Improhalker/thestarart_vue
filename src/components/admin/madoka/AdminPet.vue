@@ -28,29 +28,19 @@ const handleClick = () => {
     </Transition>
 
     <div 
-      class="cursor-pointer transition-transform active:scale-95"
+      class="cursor-pointer"
       @click="handleClick"
       title="FEED ME"
     >
       <img 
         :src="isAngry ? '/images/admin/madoka-no.gif' : '/images/admin/madoka.gif'" 
         alt="Mascot"
-        class="w-32 md:w-80 h-auto pixelated drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)]"
+        :class="isAngry ? 'w-32 md:w-72 relative left-8 h-auto pixelated drop-shadow-[2px_2px_0px_rgba(255,0,0,0.7)]' : 'w-32 md:w-48 relative left-24 h-auto pixelated drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)]'"
       />
     </div>
   </div>
 </template>
 
 <style scoped>
-.pixelated {
-  image-rendering: pixelated;
-}
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.2s, transform 0.2s;
-}
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
-}
 </style>

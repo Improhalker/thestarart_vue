@@ -10,7 +10,6 @@ const isCollapsed = ref(false)
 const router = useRouter()
 const route = useRoute()
 
-// Configuração dos Menus
 const menuItems = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
   { name: 'Músicas', path: '/admin/musics', icon: Music },
