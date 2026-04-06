@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.3.0",
+    "date": "06/04/2026",
+    "status": "STABLE",
+    "changes": [
+      "Iniciada refatoração global de componentes para melhor reuso",
+      "Implementação de variantes e props dinâmicas em componentes core",
+      "Início da montagem e estruturação da HomePage",
+      "Refatoração da estrutura visual com nova paleta de cores retro-pink",
+      "Correção de bugs críticos no painel administrativo",
+      "Ajustes de 'small details' em UI/UX e polimento de interfaces"
+    ]
+  },
+  {
     "version": "1.2.0",
     "date": "03/04/2026",
     "status": "STABLE",
@@ -11,7 +24,7 @@
       "Aplicado scroll com altura máxima e barra de rolagem personalizada Win98"
     ]
   },
-  { 
+  {
     "version": "1.1.0",
     "date": "2026-04-03",
     "status": "STABLE",
