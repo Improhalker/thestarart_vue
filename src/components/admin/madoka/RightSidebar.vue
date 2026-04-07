@@ -5,7 +5,7 @@ import ChangelogView from '@/views/admin/ChangelogView.vue';
 
 <template>
   <aside
-    class="w-72 bg-ts-retro-gray border-l-4 border-black flex flex-col overflow-y-auto hidden lg:flex relative z-20">
+    class="bg-ts-retro-gray border-l-4 border-black flex-col overflow-y-auto hidden lg:flex relative z-20">
     <div
       class="p-2 bg-ts-red text-white text-[10px] font-bold uppercase tracking-widest flex justify-between items-center border-b-2 border-black">
       <span>System_Logs.txt</span>

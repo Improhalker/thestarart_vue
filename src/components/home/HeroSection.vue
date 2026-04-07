@@ -14,7 +14,7 @@ import Main from './Main.vue';
       <div class="rounded-xl 00 p-2 ">
         <Main />
       </div>
-      <div class="rounded-xl md:space-y-6 p-2 ">
+      <div class="rounded-xl md:space-y-6 p-2 lg:max-w-[450px]">
         <YoutubeMusic />
         <ChangelogView variant="retro-pink" />
       </div>
