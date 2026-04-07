@@ -22,8 +22,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
             </p>
 
             <p>
-                Este projeto nasce exatamente dessa combinação: performance, liberdade criativa
-                e controle total do sistema.
+                Este projeto nasce exatamente das minhas raizes, usando o que aprendi e me divertindo com o processo de criar algo único e pessoal. Stacks: Laravel e Vue.
             </p>
         </div>
     </div>
