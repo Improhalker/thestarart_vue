@@ -8,7 +8,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
              border-r-[#2a0221] border-b-[#2a0221]">
             <CardWindowHeader title="Thought_Terminal.exe" />
 
-            <div class="p-4 font-mono space-y-4 text-sm">
+            <div class="p-4 space-y-4 text-sm">
                 <div>
                     <p class="text-pink-600">>> WHOAMI</p>
                     <p class="text-pink-100 pl-3 border-l border-pink-900">
