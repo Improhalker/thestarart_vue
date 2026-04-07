@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import type { Component } from "vue";
-
+import { useAchievements } from '@/composables/useAchievements'
 interface Props {
   title: string
   icon?: Component
+}
+
+const { unlock } = useAchievements()
+
+const handleInutilClick = () => {
+  unlock({
+    id: 'useless_buttons',
+    title: 'FALTA DE CRIATIVIDADE',
+    description: 'Esses botões são meramente visuais. Parabéns, achou mais uma inutilidade no projeto!',
+    icon: '⚙️'
+  })
 }
 
 defineProps<Props>()
@@ -27,8 +38,8 @@ defineProps<Props>()
 
     <!-- RIGHT -->
     <div class="flex gap-1">
-      <button class="retro-btn w-6 h-5 text-[10px]">_</button>
-      <button class="retro-btn w-6 h-5 text-[10px]">X</button>
+      <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">_</button>
+      <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">X</button>
     </div>
 
   </div>

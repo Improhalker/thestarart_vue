@@ -50,7 +50,7 @@ const handleMouseLeave = () => {
 
 <template>
 
-  <header class="w-full flex justify-between items-center p-4 text-white relative">
+  <header class="bg-purple-950 w-full flex justify-between items-center p-4 text-white relative">
     <div class="text-xl font-bold">TheStarArt_</div>
 
     <Dialog>

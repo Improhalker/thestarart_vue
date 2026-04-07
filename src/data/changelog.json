@@ -1,5 +1,18 @@
 [
   {
+  "version": "1.5.0",
+  "date": "07/04/2026",
+  "status": "STABLE",
+  "changes": [
+    "Implementação do Sistema Global de Conquistas (Achievements) com suporte a persistência e filas",
+    "Adição de efeitos sonoros 8-bit e Chiptune para interações de UI e gatilhos do Mascote",
+    "Refatoração estética do sistema de Badges com contraste adaptativo (Off-White Pink / Retro-Black)",
+    "Otimização de carregamento de assets dinâmicos (GIF Preload) para evitar Layout Shift no Mascote",
+    "Integração de lógica de gatilhos ocultos em botões decorativos do 'CardWindowHeader'",
+    "Ajustes finos na paleta de cores CSS Variables para suporte a contrastes de alta fidelidade e ajustes mobile-first"
+  ]
+},
+  {
     "version": "1.4.0",
     "date": "06/04/2026",
     "status": "STABLE",
