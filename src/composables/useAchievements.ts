@@ -8,14 +8,13 @@ export interface Achievement {
 }
 
 const unlockedIds = ref<Set<string>>(new Set())
-const currentAchievement = ref<Achievement | null>(null)
-const isShowing = ref(false)
+const activeAchievements = ref<Achievement[]>([])
 
 export const useAchievements = () => {
   
   const playSound = () => {
     const audio = new Audio('/sounds/coin.mp3')
-    audio.volume = 0.3
+    audio.volume = 0.2
     audio.play().catch(e => console.log('Audio play blocked:', e))
   }
 
@@ -23,25 +22,17 @@ export const useAchievements = () => {
     if (unlockedIds.value.has(achievement.id)) return
 
     unlockedIds.value.add(achievement.id)
-
     playSound()
 
-    if (isShowing.value) {
-      return 
-    }
-
-    currentAchievement.value = achievement
-    isShowing.value = true
+    activeAchievements.value.push(achievement)
 
     setTimeout(() => {
-      isShowing.value = false
-      setTimeout(() => currentAchievement.value = null, 500) 
-    }, 4500)
+      activeAchievements.value = activeAchievements.value.filter(a => a.id !== achievement.id)
+    }, 5000)
   }
 
   return {
     unlock,
-    currentAchievement,
-    isShowing
+    activeAchievements
   }
 }
