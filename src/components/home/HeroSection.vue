@@ -6,20 +6,26 @@ import LeftSide from './LeftSide.vue';
 import Main from './Main.vue';
 
 </script>
-
 <template>
-  <section class=" min-h-screen bg-[#13011a] text-pink-100">
-    <div class="place-self-center h-full grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-0  p-6">
+  <section 
+    class="relative min-h-screen bg-repeat bg-fixed text-pink-100"
+    style="background-image: url('/public/images/bluebox.gif');"
+  >
+<div class="fixed inset-0 bg-[#13011a]/20 pointer-events-none z-0"></div>
+    <div class="relative z-10 place-self-center h-full grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-0 p-6">
       <LeftSide />
-      <div class="rounded-xl 00 p-2 ">
+      
+      <div class="rounded-xl p-2">
         <Main />
       </div>
-      <div class="rounded-xl md:space-y-6 p-2 lg:max-w-[450px]">
+
+      <div class="rounded-xl md:space-y-6 p-2 md:max-w-[300px] lg:max-w-[450px]">
         <YoutubeMusic />
         <ChangelogView variant="retro-pink" />
       </div>
     </div>
-    <div>
+
+    <div class="relative z-20">
       <AdminPet />
     </div>
   </section>
