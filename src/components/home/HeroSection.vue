@@ -9,7 +9,7 @@ import Main from './Main.vue';
 <template>
   <section 
     class="relative min-h-screen bg-repeat bg-fixed text-pink-100"
-    style="background-image: url('/public/images/bluebox.gif');"
+    style="background-image: url('/images/bluebox.gif');"
   >
 <div class="fixed inset-0 bg-[#13011a]/20 pointer-events-none z-0"></div>
     <div class="relative z-10 place-self-center h-full grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-0 p-6">
