@@ -52,7 +52,9 @@ const handleMouseLeave = () => {
 
   <header class="bg-purple-950 w-full flex justify-between items-center p-4 text-white relative">
     <div class="text-xl font-bold">TheStarArt_</div>
-
+<div>
+  <img src="https://blob.gifcities.org/gifcities/7EOEBJ7JTFK7WPDMXYXP34OTB7ATNLRQ.gif" alt="">
+</div>
     <Dialog>
       <DialogTrigger as-child>
         <button class="flex items-center gap-2 p-2 rounded hover:bg-white/10 transition">
