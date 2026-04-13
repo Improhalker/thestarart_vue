@@ -89,10 +89,10 @@ const posts = [
   },
   {
     id: 2,
-    title: "Criando um player retrô com Vue + YouTube API",
-    description: "Como manter estado entre mobile e desktop sem reiniciar música.",
+    title: "Minha AWP Deus Minhoca, minha arma mais amada",
+    description: "Simplesmente a awp que me acompanha em todas as partidas.",
     date: "2026-04-03",
-    tag: "DEV"
+    tag: "CS2"
   },
   {
     id: 3,

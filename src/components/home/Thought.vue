@@ -12,8 +12,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
                 <div>
                     <p class="text-pink-600">>> WHOAMI</p>
                     <p class="text-pink-100 pl-3 border-l border-pink-900">
-                        Gabriel Estrela — dev, artista e player de CS.
-                        Curto misturar código com estética retrô e caótica.
+                        Gabriel Estrela (21y) — dev, artista e player de CS.
                     </p>
                 </div>
 
@@ -23,6 +22,8 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
                         <li>- Análise de demos de CS2</li>
                         <li>- UI retro / pixel / industrial</li>
                         <li>- Sistemas SaaS próprios</li>
+                        <li>- Lapis de cor</li>
+                        <li>- Anime - Geek World</li>
                     </ul>
                 </div>
 

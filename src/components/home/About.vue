@@ -10,12 +10,12 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
 
         <div class="mt-4 space-y-3 text-sm text-pink-100 leading-relaxed">
             <p>
-                Realizei o objetivo de trabalhar em home office para uma empresa gringa,
+                Realizei o objetivo de trabalhar em home office para uma empresa da gringa,
                 desenvolvendo automações e soluções com <span class="text-pink-400">Python, n8n e Zapier</span>.
             </p>
 
             <p>
-                Hoje atuo principalmente como <span class="text-pink-400">WordPress Developer</span>,
+                Hoje tambem alem de automacoes, atuo como <span class="text-pink-400">WordPress Developer</span>,
                 mas minha base vem de experiências anteriores que me ensinaram a trabalhar com
                 stacks mais robustas como <span class="text-pink-400">Laravel</span> e
                 <span class="text-pink-400">Vue</span>.

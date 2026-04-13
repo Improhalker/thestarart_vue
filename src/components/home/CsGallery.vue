@@ -44,12 +44,12 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
                 </span>
 
                 <p class="text-pink-100 text-[12px] leading-tight uppercase tracking-tight">
-                    Explorando novas estéticas para conteúdo de esports e arte digital.
+                    Meu desempenho para ser aprovado no time Academy da AT0N Gaming. A peneira aconteceu em Abril de 2026 e contou com jogadores de todo o Brasil competindo por 5 vagas no time.
                 </p>
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+    <!-- <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
         <div v-for="stat in ['Rank: 12', 'KDR: 1.2', 'Main: AWP', 'Map: Mirage']" :key="stat" class="p-2 text-center bg-[#13011a]
                border-2 border-[var(--ts-primary-pink)]
                border-r-[#2a0221] border-b-[#2a0221]">
@@ -57,5 +57,5 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
                 {{ stat }}
             </span>
         </div>
-    </div>
+    </div> -->
 </template>
