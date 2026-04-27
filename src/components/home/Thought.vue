@@ -21,9 +21,10 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
                     <ul class="text-pink-100 pl-3 space-y-1">
                         <li>- Análise de demos de CS2</li>
                         <li>- UI retro / pixel / industrial</li>
-                        <li>- Sistemas SaaS próprios</li>
+                        <li>- Wordpress + Webflow (mesmo este ser Vue + Laravel)</li>
                         <li>- Lapis de cor</li>
                         <li>- Anime - Geek World</li>
+                        <li>- Muita musica</li>
                     </ul>
                 </div>
 
