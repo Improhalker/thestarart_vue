@@ -1,5 +1,14 @@
 [
   {
+  "version": "1.6.1",
+  "date": "27/04/2026",
+  "status": "STABLE",
+  "changes": [
+    "Adicionando Popup de aviso de construção do site para usuários novos ou visitantes ocasionais"
+    
+  ]
+},
+  {
   "version": "1.6.0",
   "date": "27/04/2026",
   "status": "STABLE",

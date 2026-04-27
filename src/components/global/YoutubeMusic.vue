@@ -7,7 +7,7 @@ import CardWindowHeader from "./CardWindowHeader.vue";
 const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
-  { id: "IyZzGgBBzo8", title: "cigarettes out the window x dangerously yours - tv girl", reason: "Simplesmente Tv. Girl" },
+  { id: "0iVlSNpq8i8", title: "BIRDBRAIN", reason: "Estou viciado por algum motivo nessa musica sensacional" },
   { id: "IKgp6n21XpM", title: "Lofi relax", reason: "Boa pra desenhar à noite" },
   { id: "im7Kw9Ak6kQ", title: "Pop hits", reason: "Energia pra desenhar personagens dinâmicos" },
 ];

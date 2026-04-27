@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import NavBar from '@/components/global/NavBar.vue'
+import StartupPopup from '@/components/global/StartupPopup.vue';
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import NavBar from '@/components/global/NavBar.vue'
         </div>
       </header>
       <RouterView />
-    
+        <StartupPopup />
+
   </main>
 </template>
