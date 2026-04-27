@@ -74,9 +74,9 @@ import { ref } from "vue"
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue"
 
 const images = [
-  "/images/desenhos/azurlane.png",
+  "/images/desenhos/madoka.webp",
+  "/images/desenhos/makima.webp",
   "/images/desenhos/katarinaaaa.png",
-  "/images/art3.png",
 ]
 
 const current = ref(0)
