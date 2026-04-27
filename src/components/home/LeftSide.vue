@@ -26,7 +26,9 @@
         </a>
       </div>
     </div>
-
+ <div>
+      <Slider />
+    </div>
     <div
       class="bg-[#13011a]
              border-2 border-[var(--ts-primary-pink)]
@@ -84,21 +86,20 @@
       </div>
     </div>
 
-    <!-- 🌐 FOOTER BADGE -->
     <div class="flex justify-center opacity-50 grayscale hover:grayscale-0 transition">
       <img
         src="https://cyber.dabamos.de/88x31/netscape4.gif"
         class="pixelated"
       />
     </div>
-
+   
   </div>
 </template>
 
 <script setup lang="ts">
 import { FolderOpen, ChevronRight } from "lucide-vue-next";
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue"
-
+import Slider from "../drawing/Slider.vue";
 const links = ["Home", "Projetos", "E-Sports", "Setup"];
 
 const gifs = [

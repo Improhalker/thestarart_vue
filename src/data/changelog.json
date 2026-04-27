@@ -1,5 +1,14 @@
 [
   {
+  "version": "1.6.0",
+  "date": "27/04/2026",
+  "status": "STABLE",
+  "changes": [
+    "Implementacao de Google tradutor para suport em multiplos idiomas (Português, Inglês, Espanhol)",
+    "Correcoes pequenas em bugs de layout e responsividade em telas menores na Homepage"
+  ]
+},
+  {
   "version": "1.5.0",
   "date": "07/04/2026",
   "status": "STABLE",
