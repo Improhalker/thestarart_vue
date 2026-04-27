@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
 // Layouts
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import LanguageSelector from '@/components/global/translate/LanguageSelector.vue'
 
 import HomeView from '@/views/HomeView.vue'
 
@@ -23,9 +23,18 @@ const router = createRouter({
           name: 'about',
           component: () => import('@/views/AboutView.vue'),
         },
+        {
+          path: 'justcryatthispoint',
+          name: 'justcryatthispoint',
+          component: () => import('@/views/FourthView.vue'),
+        },
       ],
     },
-
+    {
+      path: '/choose-your-lang',
+      name: 'choose-lang',
+      component: LanguageSelector
+    },
     {
       path: '/admin',
       component: AdminLayout,
@@ -43,6 +52,22 @@ const router = createRouter({
       ],
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const lang = localStorage.getItem('lang')
+
+  if (!lang && to.path !== '/choose-your-lang') {
+    next({
+      path: '/choose-your-lang',
+      query: {
+        redirect: to.fullPath
+      }
+    })
+    return
+  }
+
+  next()
 })
 
 export default router

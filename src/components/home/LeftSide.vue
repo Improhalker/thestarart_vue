@@ -97,6 +97,7 @@
 
 <script setup lang="ts">
 import { FolderOpen, ChevronRight } from "lucide-vue-next";
+import CardWindowHeader from "@/components/global/CardWindowHeader.vue"
 
 const links = ["Home", "Projetos", "E-Sports", "Setup"];
 

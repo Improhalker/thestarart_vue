@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import YoutubeMusic from '@/components/global/YoutubeMusic.vue'
 import NavBar from '@/components/global/NavBar.vue'
 </script>
 
