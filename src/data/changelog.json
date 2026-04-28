@@ -1,5 +1,14 @@
 [
   {
+  "version": "1.6.2",
+  "date": "28/04/2026",
+  "status": "STABLE",
+  "changes": [
+    "Adicionando chat live integrado via Chatango para interação em tempo real com a comunidade"
+    
+  ]
+},
+  {
   "version": "1.6.1",
   "date": "27/04/2026",
   "status": "STABLE",
