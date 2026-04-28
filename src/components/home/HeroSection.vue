@@ -3,6 +3,7 @@ import YoutubeMusic from '@/components/global/YoutubeMusic.vue'
 import ChangelogView from '@/views/admin/ChangelogView.vue';
 import AdminPet from '../admin/madoka/AdminPet.vue';
 import LeftSide from './LeftSide.vue';
+import Chat from '../globalchat/Chat.vue';
 import Main from './Main.vue';
 
 </script>
@@ -21,6 +22,7 @@ import Main from './Main.vue';
 
       <div class="rounded-xl md:space-y-6 p-2 md:max-w-[300px] lg:max-w-[450px]">
         <YoutubeMusic />
+                <Chat />
         <ChangelogView variant="retro-pink" />
       </div>
     </div>

@@ -3,22 +3,19 @@ import { onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   handle: { type: String, default: 'thestarartt' },
-  width: { type: String, default: '199px' },
+  width: { type: String, default: '100%' },
   height: { type: String, default: '300px' }
 })
 
 onMounted(() => {
-  // 1. Cria o elemento de script
   const script = document.createElement('script')
   
-  // 2. Define o ID e os atributos que o Chatango exige
   script.id = 'cid0020000438374339182'
   script.async = true
   script.src = '//st.chatango.com/js/gz/emb.js'
   script.style.width = props.width
   script.style.height = props.height
 
-  // 3. Define as configurações do widget (o JSON que estava dentro da tag)
   script.textContent = JSON.stringify({
     handle: props.handle,
     arch: "js",
@@ -30,7 +27,6 @@ onMounted(() => {
     }
   })
 
-  // 4. Injeta no componente
   const container = document.getElementById('chatango-container')
   if (container) {
     container.appendChild(script)
@@ -38,8 +34,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  // Limpeza: remove o script e o widget quando sair da página 
-  // para não acumular lixo no DOM ou dar erro de ID duplicado
   const script = document.getElementById('cid0020000438374339182')
   if (script) script.remove()
   
@@ -57,6 +51,7 @@ onBeforeUnmount(() => {
 .chatango-wrapper {
   display: flex;
   justify-content: center;
-  min-height: 300px; /* Evita layout shift */
+  min-height: 300px; 
 }
 </style>
+
