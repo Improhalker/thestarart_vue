@@ -32,7 +32,7 @@
         </p>
 
         <p>
-          Agradeço pela compreensão enquanto continuo desenvolvendo a experiência.
+          Agradeço pela compreensão enquanto continuo postergando o lançamento oficial do site. Sinta-se à vontade para explorar o que já está disponível e voltar em breve para novidades!
         </p>
       </div>
 
