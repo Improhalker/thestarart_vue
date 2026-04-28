@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import ChangelogView from '@/views/admin/ChangelogView.vue';
-// TODO, add changelogs
 </script>
 
 <template>
   <aside
-    class="bg-ts-retro-gray border-l-4 border-black flex-col overflow-y-auto hidden lg:flex relative z-20">
+    class="max-w-[400px] bg-ts-retro-gray border-l-4 border-black flex-col overflow-y-auto hidden lg:flex relative z-20">
     <div
       class="p-2 bg-ts-red text-white text-[10px] font-bold uppercase tracking-widest flex justify-between items-center border-b-2 border-black">
       <span>System_Logs.txt</span>
@@ -19,6 +18,8 @@ import ChangelogView from '@/views/admin/ChangelogView.vue';
       <section class="space-y-2">
         <ChangelogView />
       </section>
+      <div>
+    </div>
 
       <section class="border-2 border-black p-2 bg-[#dfdfdf] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
         <p class="text-[10px] uppercase font-black mb-2 border-b border-black/20">Server Monitor</p>
@@ -45,6 +46,7 @@ import ChangelogView from '@/views/admin/ChangelogView.vue';
       Build: April_2026_v1
     </div>
 
+    
   </aside>
 </template>
 
