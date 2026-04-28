@@ -27,7 +27,7 @@
     <div class="bg-ts-blue/10 border-l-4 border-ts-blue p-4 mt-8">
       <p class="text-sm leading-tight font-bold italic">
         > Bem-vindo, Gabriel. <br>
-        > Aguardando entrada de dados no TheStarArt_...
+        > Aguardando entrada de dados no <span class="notranslate">TheStarArt_</span>...
       </p>
     </div>
   </div>
