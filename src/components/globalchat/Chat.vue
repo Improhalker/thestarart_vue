@@ -26,6 +26,7 @@ onMounted(() => {
     }
   })
 
+  
   const container = document.getElementById('chatango-container')
   if (container) {
     container.appendChild(script)
