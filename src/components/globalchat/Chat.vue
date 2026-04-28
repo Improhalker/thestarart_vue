@@ -2,15 +2,14 @@
 import { onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
-  handle: { type: String, default: 'thestarartt' },
+  handle: { type: String, default: 'thestarartcommunityt' },
   width: { type: String, default: '100%' },
   height: { type: String, default: '300px' }
 })
 
 onMounted(() => {
   const script = document.createElement('script')
-  
-  script.id = 'cid0020000438374339182'
+  script.id = 'cid0020000438378006912'
   script.async = true
   script.src = '//st.chatango.com/js/gz/emb.js'
   script.style.width = props.width

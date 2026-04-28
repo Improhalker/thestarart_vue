@@ -26,7 +26,6 @@ import Main from './Main.vue';
         <ChangelogView variant="retro-pink" />
       </div>
     </div>
-
     <div class="relative z-20">
       <AdminPet />
     </div>

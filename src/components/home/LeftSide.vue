@@ -27,7 +27,7 @@
       </div>
     </div>
  <div>
-      <Slider />
+    <Slider />
     </div>
     <div
       class="bg-[#13011a]
