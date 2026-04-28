@@ -32,14 +32,14 @@
           @click="prev"
           class="absolute left-1 top-1/2 -translate-y-1/2 text-pink-500 text-xs bg-black/60 px-2 py-1"
         >
-          ◀
+          <
         </button>
 
         <button
           @click="next"
           class="absolute right-1 top-1/2 -translate-y-1/2 text-pink-500 text-xs bg-black/60 px-2 py-1"
         >
-          ▶
+          >
         </button>
       </div>
 
