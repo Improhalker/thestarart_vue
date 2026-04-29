@@ -204,7 +204,7 @@ onUnmounted(() => stopProgressTimer());
         </button>
       </div>
 
-      <div class="mt-4 p-2 bg-red-950/10 border-l-2 border-[var(--crimson-accent)] text-[10px] text-white/60 italic">
+      <div class="mt-4 p-2 bg-red-950/10 border-l-2 border-[var(--crimson-accent)] text-[13px] text-white/60 italic">
         <span class="text-[var(--crimson-accent)] not-italic font-bold">DATA_LOG:</span> {{ music.reason }}
       </div>
     </div>
