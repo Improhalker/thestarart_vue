@@ -209,6 +209,45 @@ onUnmounted(() => stopProgressTimer());
       </div>
     </div>
   </div>
+  <div v-show="!isMd" class="fixed z-50 bottom-0 left-0 w-full p-1 text-white
+    bg-black border-t-[3px] border-[var(--crimson-accent)] overflow-hidden">
+
+    <img src="https://blob.gifcities.org/gifcities/4TJDYREDRT376NS4QNFVRZEWJVCLC7IX.gif"
+      class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none" />
+
+    <div class="relative z-10">
+      <div class="mb-1 px-3 py-1 flex items-center justify-between
+        bg-gradient-to-r from-[var(--crimson-border)] to-black border-b border-red-900/50">
+        <div class="flex items-center gap-2">
+          <Music :size="10" :class="{ 'animate-pulse text-[var(--crimson-accent)]': isPlaying }" />
+          <span class="text-[10px] font-bold uppercase tracking-widest text-red-500">
+            Link_Established.raw
+          </span>
+        </div>
+        <span class="text-[9px] text-red-800">{{ Math.floor(progressPercent) }}%</span>
+      </div>
+
+      <div class="flex items-center gap-3 px-3 py-2">
+        <div class="w-12 h-12 overflow-hidden border border-[var(--crimson-border)] bg-red-950/20" @click="start">
+          <img :src="`https://img.youtube.com/vi/${music.id}/default.jpg`"
+            class="w-full h-full object-cover grayscale contrast-125" />
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <p class="text-[11px] font-black truncate text-[var(--crimson-accent)] uppercase">
+            {{ music.title }}
+          </p>
+          <div class="h-1 w-full bg-red-950 mt-1 overflow-hidden">
+            <div class="h-full bg-[var(--crimson-accent)]" :style="{ width: progressPercent + '%' }"></div>
+          </div>
+        </div>
+
+        <button @click="start" class="p-3 bg-red-600 border border-white active:bg-red-800">
+          <component :is="isPlaying ? Pause : Play" :size="18" fill="white" />
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 <style scoped>
 @reference "../../assets/main.css";
