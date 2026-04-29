@@ -57,7 +57,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div id="chatango-container" class="chatango-wrapper mb-6 ">
+  <div id="chatango-container" class="chatango-wrapper mb-6 shadow-[10px_10px_0px_rgba(0,0,0,0.5)] ">
     </div>
 </template>
 

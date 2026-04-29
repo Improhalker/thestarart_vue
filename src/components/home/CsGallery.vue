@@ -2,7 +2,7 @@
 import CardWindowHeader from '../global/CardWindowHeader.vue';
 </script>
 <template>
-    <div class="bg-black
+    <div class="bg-black shadow-[10px_10px_0px_rgba(0,0,0,0.5)]
              border-2 border-[var(--ts-primary-pink)]
              border-r-[#2a0221] border-b-[#2a0221]">
         <CardWindowHeader title="Gallery_Viewer.exe" />
@@ -17,7 +17,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
             group bg-black">
 
                 <iframe 
-      src="https://www.youtube.com/embed/EcQeubZPH8U?autoplay=0&controls=0&modestbranding=1&rel=0"
+      src="https://www.youtube.com/embed/R8IOZNWQqDg?si=FdCJ17geaRKsHiSS&autoplay=0&controls=0&modestbranding=1&rel=0"
       class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -30,7 +30,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
 
                 <div
                     class="absolute bottom-0 left-0 bg-pink-600 text-white text-[14px] px-2 py-1 uppercase font-bold z-10 shadow-[2px_-2px_0px_black]">
-                    LIVE_PREVIEW: PENEIRA AT0N GAMING
+                    LIVE_PREVIEW: HIGHLIGHTS AT0N Gaming
                 </div>
             </div>
             <!-- TEXTO -->
@@ -44,7 +44,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
                 </span>
 
                 <p class="text-pink-100 text-[12px] leading-tight uppercase tracking-tight">
-                    Meu desempenho para ser aprovado no time Academy da AT0N Gaming. A peneira aconteceu em Abril de 2026 e contou com jogadores de todo o Brasil competindo por 5 vagas no time.
+                    Alguns melhores momentos dos ultimos campeonatos representanod a AT0N Gaming, foram alguns campeonatos com menos de 1 mes de time, entao ja estou bem orgulhoso.
                 </p>
             </div>
         </div>

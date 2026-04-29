@@ -3,7 +3,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
 </script>
 <template>
 
-     <div class="bg-[#03010e]
+     <div class="bg-[#03010e] shadow-[10px_10px_0px_rgba(0,0,0,0.5)]
              border-2 border-[var(--ts-primary-pink)]
              border-r-[#2a0221] border-b-[#2a0221]">
             <CardWindowHeader title="Thought_Terminal.exe" />

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, onUnmounted } from "vue";
+import { onMounted, ref, computed, onUnmounted } from "vue";
 import { useMediaQuery } from "@vueuse/core";
 import { Slider } from "@/components/ui/slider";
 import { Headphones, Music, Play, Pause, Volume2, VolumeX } from "lucide-vue-next";
 import CardWindowHeader from "./CardWindowHeader.vue";
+
 const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
-  { id: "0iVlSNpq8i8", title: "BIRDBRAIN", reason: "Estou viciado por algum motivo nessa musica sensacional" },
+  { id: "b8m9zhNAgKs", title: "Rae Sremmurd - Black Beatles ft. Gucci Mane", reason: "Nostalgia demais, anos 2017-19." },
   { id: "IKgp6n21XpM", title: "Lofi relax", reason: "Boa pra desenhar à noite" },
   { id: "im7Kw9Ak6kQ", title: "Pop hits", reason: "Energia pra desenhar personagens dinâmicos" },
 ];
@@ -23,7 +24,10 @@ const isReady = ref(false);
 
 const currentTime = ref(0);
 const duration = ref(0);
-const progressPercent = computed(() => (duration.value > 0 ? (currentTime.value / duration.value) * 100 : 0));
+const progressPercent = computed(() =>
+  duration.value > 0 ? (currentTime.value / duration.value) * 100 : 0
+);
+
 let progressInterval: any = null;
 
 const updateProgress = () => {
@@ -42,13 +46,25 @@ const stopProgressTimer = () => {
   clearInterval(progressInterval);
 };
 
+const onVolumeChange = (val: number[] | undefined) => {
+  if (!val || !val.length) return
+  setVolume(val[0]!)
+}
 const setVolume = (val: number) => {
+  volume.value = val
+
   if (!player.value || !isReady.value) return;
-  player.value.setVolume(val);
-  val === 0 ? player.value.mute() : player.value.unMute();
-  isMuted.value = val === 0;
-  volume.value = val;
-};
+
+  player.value.setVolume(val)
+
+  if (val === 0) {
+    player.value.mute()
+    isMuted.value = true
+  } else {
+    player.value.unMute()
+    isMuted.value = false
+  }
+}
 
 const toggleMute = () => {
   if (!player.value) return;
@@ -103,148 +119,107 @@ onMounted(() => {
 onUnmounted(() => stopProgressTimer());
 </script>
 <template>
-  <!-- DESKTOP -->
-  <div v-show="isMd" class="font-pixel p-4  shadow-[10px_10px_0px_rgba(0,0,0,0.5)]
-           border-2 border-[var(--ts-primary-pink)]
-           border-r-[#2a0221] border-b-[#2a0221]
-           bg-[var(--ts-primary-black)]">
-    <CardWindowHeader title="Recomendações" :icon="Headphones" />
+  <div v-show="isMd" class="max-w-[420px] font-pixel p-1 relative overflow-hidden
+    bg-black border-4 border-double border-[var(--crimson-border)]
+    shadow-[0_0_20px_rgba(255,0,0,0.2)]">
 
-    <div class=" space-y-3">
-      <!-- VIDEO -->
-      <div class="relative aspect-video overflow-hidden
-               border-2 border-[#1a0215]
-               border-r-[var(--ts-primary-pink)]
-               border-b-[var(--ts-primary-pink)]
-               border-pink-900/50">
+    <img src="https://blob.gifcities.org/gifcities/4TJDYREDRT376NS4QNFVRZEWJVCLC7IX.gif"
+      class="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none z-0" />
+
+    <div class="p-3 relative z-10 bg-black/40 backdrop-blur-[1px]">
+      <div class="flex justify-between items-center border-b border-[var(--crimson-border)] mb-4 pb-1">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 bg-[var(--crimson-accent)] animate-pulse"></div>
+          <span
+            class="text-[var(--crimson-accent)] text-[10px] font-bold tracking-widest uppercase">Combat_Radio_v2.1</span>
+        </div>
+        <img src="https://blob.gifcities.org/gifcities/AVTTI34ND3VRS4ODVSAA6DZVFZTHA7AL.gif"
+          class="h-4 grayscale invert" />
+      </div>
+
+      <div class="flex gap-2 mb-4">
+        <div class="w-24 h-24 border border-[var(--crimson-border)] relative overflow-hidden bg-black">
+          <img src="https://blob.gifcities.org/gifcities/ZPA6L2QYGWUVN4K3L2RS4KRLTWEL3B6P.gif"
+            class="w-full h-full object-cover grayscale contrast-150 opacity-80" />
+          <div class="absolute inset-0 bg-red-900/20"></div>
+        </div>
+        <div class="flex-1 bg-black/80 p-2 border border-[var(--crimson-border)] relative flex flex-col justify-center">
+          <img src="https://blob.gifcities.org/gifcities/EJWZ4HDE4OEVQPLZSJC62A5CV5TQX5U7.gif"
+            class="absolute top-0 right-0 h-8 opacity-40" />
+          <p class="text-[9px] text-[var(--crimson-text-soft)] mb-1 font-bold">>> NOW_PLAYING</p>
+          <p class="text-[11px] text-white leading-tight uppercase font-black">{{ music.title }}</p>
+          <div class="mt-2 flex gap-1">
+            <div v-for="i in 4" :key="i" class="w-1 h-1 bg-[var(--crimson-accent)]"
+              :class="isPlaying ? 'animate-bounce' : ''" :style="{ animationDelay: `${i * 0.1}s` }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative aspect-video border-2 border-[var(--crimson-border)] mb-4 bg-black group overflow-hidden">
+
         <div id="yt-player" class="w-full h-full"></div>
 
-        <div v-if="!isStarted" class="absolute inset-0 z-10 cursor-pointer bg-black/40 flex items-center justify-center"
+        <div v-if="!isStarted" class="absolute inset-0 z-20 cursor-pointer flex items-center justify-center bg-black"
           @click="start">
           <img :src="`https://img.youtube.com/vi/${music.id}/hqdefault.jpg`"
-            class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-luminosity" />
-
-          <div class="p-4 bg-[#6b0455] z-20
-                   border-2 border-[var(--ts-primary-pink)]
-                   border-r-[#2a0221] border-b-[#2a0221]">
-            <Play class="w-8 h-8 fill-white" />
+            class="absolute inset-0 w-full h-full object-cover grayscale opacity-50" />
+          <div
+            class="relative z-30 p-4 border-2 border-[var(--crimson-accent)] bg-black/80 group-hover:bg-[var(--crimson-accent)] group-hover:scale-110 transition-all">
+            <Play class="w-6 h-6 fill-white" />
           </div>
         </div>
       </div>
 
-      <!-- PLAYER CARD -->
-      <div class="p-4 bg-[#13011a] border-pink-900/30
-               border-2 border-[var(--ts-primary-pink)]
-               border-r-[#2a0221] border-b-[#2a0221]">
-        <div class="flex justify-between items-center mb-3 border-b border-pink-500/30 pb-2">
-          <p class="text-[14px] font-black text-pink-400 uppercase tracking-widest truncate">
-            TRACK: {{ music.title }}
-          </p>
+      <div class="mb-4">
+        <div class="flex justify-between text-[9px] uppercase text-[var(--crimson-text-soft)] mb-1 font-bold">
+          <span>Buffer_Stream</span>
+          <span>{{ Math.floor(progressPercent) }}%</span>
         </div>
+        <div class="h-2 bg-red-950/30 border border-[var(--crimson-border)] overflow-hidden">
+          <div class="h-full bg-[var(--crimson-accent)] shadow-[0_0_10px_rgba(255,0,0,0.8)] transition-all duration-500"
+            :style="{ width: progressPercent + '%' }"></div>
+        </div>
+      </div>
 
-        <!-- PROGRESS -->
-        <div class="mb-4 space-y-1">
-          <div class="flex justify-between text-[9px] text-pink-500/80 uppercase">
-            <span>Progresso</span>
-            <span>{{ Math.floor(progressPercent) }}%</span>
+      <div class="flex items-center gap-3">
+        <button @click="start"
+          class="p-3 bg-black border border-[var(--crimson-border)] hover:border-[var(--crimson-accent)] transition-colors">
+          <component :is="isPlaying ? Pause : Play" :size="16" class="text-[var(--crimson-accent)]" />
+        </button>
+
+        <div class="flex-1 space-y-1">
+          <div class="flex justify-between text-[12px] font-bold text-[var(--crimson-text-soft)] uppercase">
+            <span class="flex items-center gap-1">
+              <Volume2 :size="10" /> Output_Gain
+            </span>
+            <span>{{ volume }}%</span>
           </div>
-
-          <div class="h-2 bg-black border border-pink-900/50 relative overflow-hidden">
-            <div class="h-full bg-pink-500 transition-all duration-500" :style="{ width: progressPercent + '%' }"></div>
-          </div>
+          <Slider :max="100" :step="5" class="w-full cursor-pointer" :model-value="[volume]"
+            @update:model-value="onVolumeChange" />
         </div>
 
-        <!-- CONTROLS -->
-        <div class="flex items-center gap-4">
-          <button @click="start" class="retro-btn p-3">
-            <component :is="isPlaying ? Pause : Play" :size="16" fill="white" />
-          </button>
-
-          <button @click="toggleMute" class="retro-btn p-3">
-            <component :is="isMuted ? VolumeX : Volume2" :size="16" />
-          </button>
-
-          <div class="flex-1 space-y-2">
-            <div class="flex justify-between text-[10px] uppercase font-bold text-pink-300/60">
-              <span class="flex items-center gap-1">
-                <Volume2 :size="10" /> Vol
-              </span>
-              <span>{{ volume }}%</span>
-            </div>
-
-            <Slider :max="100" :step="5" class="cursor-pointer bg-pink-900/40 border border-pink-500/20 h-2"
-              :model-value="[volume]" @update:model-value="(val) => setVolume(val?.[0] ?? 20)" />
-          </div>
-        </div>
+        <button @click="toggleMute"
+          class="p-3 bg-black border border-[var(--crimson-border)] hover:border-[var(--crimson-accent)]">
+          <component :is="isMuted ? VolumeX : Volume2" :size="14" class="text-white" />
+        </button>
       </div>
 
-      <!-- REASON -->
-      <div class="p-3 bg-[#03010e] text-pink-400 font-pixel text-[12px] min-h-[60px] leading-relaxed
-               border-2 border-[#1a0215]
-               border-r-[var(--ts-primary-pink)]
-               border-b-[var(--ts-primary-pink)]">
-        <span class="text-pink-600 font-bold opacity-80 block mb-1 underline text-[10px]">
-          /REASON_DATA:
-        </span>
-        {{ music.reason }}
+      <div class="mt-4 p-2 bg-red-950/10 border-l-2 border-[var(--crimson-accent)] text-[10px] text-white/60 italic">
+        <span class="text-[var(--crimson-accent)] not-italic font-bold">DATA_LOG:</span> {{ music.reason }}
       </div>
-    </div>
-  </div>
-
-  <!-- MOBILE -->
-  <div v-show="!isMd" class="fixed z-50 bottom-0 left-0 w-full p-1 text-white bg-[#13011a]
-           border-t-[3px] border-[var(--ts-primary-pink)]">
-    <div class="mb-1 px-3 py-1 flex items-center gap-2
-             bg-gradient-to-r from-[var(--ts-primary-pink)] to-[#2d0240]
-             border-b border-black">
-      <Music :size="10" :class="{ 'animate-pulse': isPlaying }" />
-      <span class="text-[11px] font-bold uppercase tracking-widest">
-        Live_Stream.mp3
-      </span>
-    </div>
-
-    <div class="flex items-center gap-4 px-3 py-2">
-      <div class="w-12 h-12 overflow-hidden flex-shrink-0
-               border-2 border-[#1a0215]
-               border-r-[var(--ts-primary-pink)]
-               border-b-[var(--ts-primary-pink)]" @click="start">
-        <img :src="`https://img.youtube.com/vi/${music.id}/default.jpg`"
-          class="w-full h-full object-cover grayscale-[0.3]" />
-      </div>
-
-      <div class="flex-1 min-w-0">
-        <div class="overflow-hidden whitespace-nowrap py-1">
-          <p class="animate-marquee inline-block text-[12px] font-bold text-pink-400 uppercase tracking-tighter">
-            {{ music.title }} — {{ music.reason }}
-          </p>
-        </div>
-
-        <div class="w-full h-1.5 bg-pink-900/30 mt-2 border border-black overflow-hidden">
-          <div class="h-full bg-pink-500 transition-all duration-500" :style="{ width: progressPercent + '%' }"></div>
-        </div>
-      </div>
-
-      <button @click="start" class="retro-btn p-3">
-        <component :is="isPlaying ? Pause : Play" :size="18" fill="white" />
-      </button>
     </div>
   </div>
 </template>
-
 <style scoped>
-.animate-marquee {
-  display: inline-block;
-  padding-left: 100%;
-  animation: marquee 10s linear infinite;
+@reference "../../assets/main.css";
+
+:deep(.relative.flex.w-full.touch-none.select-none.items-center) {
+  height: 1rem;
 }
 
-@keyframes marquee {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(-100%, 0);
-  }
+:deep(.relative.grow.overflow-hidden.rounded-full) {
+  background-image: url('https://blob.gifcities.org/gifcities/WGO4PI5FFCKRLHCTRSITWIGFX745INUD.gif');
+  height: 1rem;
+  background-size: cover;
 }
 </style>

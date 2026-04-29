@@ -16,7 +16,7 @@ import ChangelogView from '@/views/admin/ChangelogView.vue';
 
     <div class="p-4 space-y-6">
       <section class="space-y-2">
-        <ChangelogView />
+        <ChangelogView variant="default" />
       </section>
       <div>
     </div>

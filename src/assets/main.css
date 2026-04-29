@@ -29,6 +29,46 @@ h6 {
   --ts-retro-gray: #c0c0c0;
   --ts-retro-blue: #000080;
   --ts-retro-shadow: rgba(0, 0, 0, 1);
+
+  --ui-bg: #ffe4f3;
+  --ui-bg-secondary: #ffc1e6;
+  --ui-bg-tertiary: #ff9bd8;
+
+  --ui-border: #f472b6;
+  --ui-border-dark: #a14a7a;
+
+  --ui-text: #5a0f3c;
+  --ui-text-soft: #7a1c52;
+
+  --ui-accent: #ff4fc4;
+  --ui-accent-soft: #f9a8d4;
+
+--crimson-bg: #0a0a0a;
+  --crimson-secondary: #1a0505;
+  --crimson-tertiary: #300a0a;
+  --crimson-accent: #ff0000;
+  --crimson-border: #4a1010;
+  --crimson-border-dark: #000000;
+  --crimson-text: #e0e0e0;
+
+  /* TEMPLATE 2: DEEP PURPLE/ONYX (Vibe Night Ops) */
+  --onyx-bg: #0d0d0d;
+  --onyx-secondary: #14141c;
+  --onyx-tertiary: #1b1b29;
+  --onyx-accent: #00ffcc; /* Cyan para contraste, ou mude para Red */
+  --onyx-border: #2d2d3a;
+  --onyx-border-dark: #050505;
+  --onyx-text: #ffffff;
+
+  --ui-dark-bg: #0a0a0f;
+  --ui-dark-bg-secondary: #160016;
+  --ui-dark-accent: #ff2e63;
+  --ui-dark-accent-soft: #ff6b9a;
+
+  --ui-glow-red: rgba(255, 46, 99, 0.6);
+  --ui-glow-pink: rgba(255, 79, 196, 0.5);
+
+
 }
 
 @theme {
@@ -38,6 +78,16 @@ h6 {
   --color-ts-blue: var(--ts-light-blue);
   --color-ts-retro-gray: var(--ts-retro-gray);
   --color-ts-retro-blue: var(--ts-retro-blue);
+  --color-ts-ui-bg: var(--ui-bg);
+  --color-ts-ui-bg-secondary: var(--ui-bg-secondary);
+  --color-ts-ui-bg-tertiary: var(--ui-bg-tertiary);
+  --color-ts-ui-border: var(--ui-border);
+  --color-ts-ui-border-dark: var(--ui-border-dark);
+  --color-ts-ui-text: var(--ui-text);
+  --color-ts-ui-text-soft: var(--ui-text-soft);
+  --color-ts-ui-accent: var(--ui-accent);
+  --color-ts-ui-accent-soft: var(--ui-accent-soft);
+
 }
 
 .ts-font-main {
