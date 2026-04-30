@@ -150,7 +150,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
               <span>Kernel_v4.2</span>
 
               <span class="font-bold text-[var(--ui-accent)]">
-                ● checksum_ok
+                ● {{ log.status }}
               </span>
             </div>
 

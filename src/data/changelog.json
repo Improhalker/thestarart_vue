@@ -4,6 +4,7 @@
     "date": "30/04/2026",
     "status": "DEV",
     "changes": [
+      "Correcoes na Madoka (Mascote) para melhor responsividade e interatividade",
       "Refatoração estrutural do layout: agora apenas o conteúdo principal é alterado, mantendo os componentes laterais (left e right) fixos",
       "Nova abordagem de altura dinâmica para melhor adaptação entre diferentes telas (ChangeLog componente)",
       "Atualização da paleta de cores e identidade visual",
