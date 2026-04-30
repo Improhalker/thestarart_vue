@@ -5,7 +5,8 @@
   "status": "DEV",
   "changes": [
     "Melhorias na UI e ajustes de layout em vários componentes",
-    "Componente do Youtube ainda em manutencaoo, aguardando correção de bugs e implementação de novas features"
+    "Componente do Youtube ainda em manutencaoo, aguardando correção de bugs e implementação de novas features",
+    "Corrrigindo ordem de componentes na HomePage para melhor fluxo visual e experiência do usuário"
   ]
 },
   {
