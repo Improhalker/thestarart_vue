@@ -14,7 +14,7 @@
 
     <!-- HEADER -->
     <h3
-      class="text-[10px] font-black uppercase underline tracking-widest
+      class="text-[12px] font-black uppercase underline tracking-widest
       text-[var(--ui-text-soft)]">
       /System_Resources:
     </h3>
@@ -27,7 +27,7 @@
 
       <!-- LABEL -->
       <div
-        class="flex justify-between text-[8px] font-bold uppercase
+        class="flex justify-between text-[12px] font-bold uppercase
         text-[var(--ui-text)]">
 
         <span>{{ stat.label }}</span>

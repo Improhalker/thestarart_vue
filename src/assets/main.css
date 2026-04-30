@@ -109,6 +109,15 @@ h6 {
   box-shadow: 1px 1px 0px 0px #000 !important;
 }
 
+
+.test::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 0, 80, 0.3);
+  pointer-events: none;
+}
+
 .retro-btn {
   background: var(--ts-primary-pink);
   border: 1px solid #fff;

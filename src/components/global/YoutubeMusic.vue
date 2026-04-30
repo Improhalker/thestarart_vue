@@ -21,6 +21,7 @@ const isMuted = ref(false);
 const volume = ref(20);
 const isStarted = ref(false);
 const isReady = ref(false);
+const isToggling = ref(false);
 
 const currentTime = ref(0);
 const duration = ref(0);
@@ -73,19 +74,21 @@ const toggleMute = () => {
 };
 
 const start = () => {
-  if (!player.value || !isReady.value) return;
+  if (!player.value || !isReady.value || isToggling.value) return;
+
+  isToggling.value = true;
+  isStarted.value = true;
+
   if (isPlaying.value) {
     player.value.pauseVideo();
-    isPlaying.value = false;
-    stopProgressTimer();
   } else {
-    isStarted.value = true;
     player.value.playVideo();
-    isPlaying.value = true;
-    startProgressTimer();
   }
-};
 
+  setTimeout(() => {
+    isToggling.value = false;
+  }, 300);
+};
 onMounted(() => {
   if (!(window as any).YT) {
     const tag = document.createElement("script");
@@ -103,14 +106,18 @@ onMounted(() => {
           setVolume(volume.value);
         },
         onStateChange: (event: any) => {
-          if (event.data === (window as any).YT.PlayerState.PLAYING) {
+          const state = event.data;
+
+          if (state === (window as any).YT.PlayerState.PLAYING) {
             isPlaying.value = true;
             startProgressTimer();
-          } else {
+          }
+
+          if (state === (window as any).YT.PlayerState.PAUSED) {
             isPlaying.value = false;
             stopProgressTimer();
           }
-        },
+        }
       },
     });
   };
@@ -237,6 +244,7 @@ onUnmounted(() => stopProgressTimer());
           <p class="text-[11px] font-black truncate text-[var(--crimson-accent)] uppercase">
             {{ music.title }}
           </p>
+
           <div class="h-1 w-full bg-red-950 mt-1 overflow-hidden">
             <div class="h-full bg-[var(--crimson-accent)]" :style="{ width: progressPercent + '%' }"></div>
           </div>

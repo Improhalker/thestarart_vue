@@ -35,7 +35,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="admin-pet-container fixed bottom-20 lg:bottom-0 left-0 md:left-12 z-[100] flex flex-col items-end">
+  <div class="admin-pet-container fixed bottom-20 lg:bottom-4 left-0 md:left-12 z-[100] flex flex-col items-end">
 
     <div class="cursor-pointer w-32 md:w-42 h-32 md:h-42 relative overflow-visible flex items-end justify-center"
       @click="handleClick">

@@ -4,7 +4,7 @@
       :key="selectedLanguage"
       v-model="selectedLanguage"
       @change="handleChange"
-      class="bg-purple-700 border border-gray-300 rounded px-2 py-1 text-sm"
+      class="bg-red-700 border border-gray-300 rounded px-2 py-1 text-sm"
     >
       <option value="pt">🇧🇷 PT</option>
       <option value="en">🇺🇸 EN</option>

@@ -18,9 +18,6 @@ function selectLang(lang: string) {
 <template>
   <div class="screen">
     
-    <!-- GIF / personagem -->
- 
-
     <h1 class="title">
       Choose your main language
     </h1>
