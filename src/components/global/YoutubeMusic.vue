@@ -8,7 +8,7 @@ import CardWindowHeader from "./CardWindowHeader.vue";
 const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
-  { id: "b8m9zhNAgKs", title: "Rae Sremmurd - Black Beatles ft. Gucci Mane", reason: "Nostalgia demais, anos 2017-19." },
+  { id: "T1xLQG0OakM", title: "Post Malone - Circles (Acoustic – One Night in Rome, Italy 2022)", reason: "Estou nostalgico essa semana." },
   { id: "IKgp6n21XpM", title: "Lofi relax", reason: "Boa pra desenhar à noite" },
   { id: "im7Kw9Ak6kQ", title: "Pop hits", reason: "Energia pra desenhar personagens dinâmicos" },
 ];
