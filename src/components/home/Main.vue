@@ -6,13 +6,10 @@ import CsGallery from './CsGallery.vue';
 </script>
 <template>
     <div class="flex flex-col gap-6">
-        
-        <Thought />
 
         <CsGallery />
-
         <Blog />
-
+        <Thought />
         <About />
         
     </div>
