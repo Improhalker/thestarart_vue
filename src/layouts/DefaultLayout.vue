@@ -26,7 +26,7 @@ import AdminPet from '@/components/admin/madoka/AdminPet.vue'
          grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-0 p-6
          items-start">
 
-        <div class="sticky top-24 self-start">
+        <div class="lg:sticky top-24 self-start">
           <LeftSide />
         </div>
 
@@ -34,7 +34,7 @@ import AdminPet from '@/components/admin/madoka/AdminPet.vue'
           <RouterView />
         </div>
 
-        <div class="sticky top-24 self-start rounded-xl md:space-y-6 p-2 mdx:max-w-[300px] lgx:max-w-[450px]">
+        <div class="lg:sticky top-24 self-start rounded-xl md:space-y-6 p-2 mdx:max-w-[300px] lgx:max-w-[450px]">
           <YoutubeMusic />
           <Chat />
           <ChangelogView variant="retro-pink" :limit="5" :fullHeight="false" />
