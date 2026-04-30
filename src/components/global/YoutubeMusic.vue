@@ -74,9 +74,8 @@ const toggleMute = () => {
 };
 
 const start = () => {
-  if (!player.value || !isReady.value || isToggling.value) return;
+  if (!player.value || !isReady.value) return;
 
-  isToggling.value = true;
   isStarted.value = true;
 
   if (isPlaying.value) {
@@ -84,11 +83,8 @@ const start = () => {
   } else {
     player.value.playVideo();
   }
-
-  setTimeout(() => {
-    isToggling.value = false;
-  }, 300);
 };
+
 onMounted(() => {
   if (!(window as any).YT) {
     const tag = document.createElement("script");
@@ -102,22 +98,23 @@ onMounted(() => {
       playerVars: { controls: 0, modestbranding: 1, rel: 0, playsinline: 1 },
       events: {
         onReady: () => {
-          isReady.value = true;
-          setVolume(volume.value);
-        },
+  isReady.value = true;
+  player.value.setVolume(volume.value);
+},
         onStateChange: (event: any) => {
-          const state = event.data;
+  const state = event.data;
+  const YTState = (window as any).YT.PlayerState;
 
-          if (state === (window as any).YT.PlayerState.PLAYING) {
-            isPlaying.value = true;
-            startProgressTimer();
-          }
+  if (state === YTState.PLAYING) {
+    isPlaying.value = true;
+    startProgressTimer();
+  }
 
-          if (state === (window as any).YT.PlayerState.PAUSED) {
-            isPlaying.value = false;
-            stopProgressTimer();
-          }
-        }
+  if (state === YTState.PAUSED) {
+    isPlaying.value = false;
+    stopProgressTimer();
+  }
+}
       },
     });
   };
