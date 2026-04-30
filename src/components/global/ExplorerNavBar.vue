@@ -18,10 +18,10 @@
     <!-- CONTENT -->
     <div class="p-2 flex flex-col gap-1 relative z-10">
 
-      <a
+      <RouterLink
         v-for="link in links"
-        :key="link"
-        href="#"
+        :key="link.path"
+        :to="link.path"
         class="flex items-center gap-2 p-2 text-[11px]
         text-[var(--ui-text)]
         hover:bg-white/40
@@ -35,9 +35,9 @@
           text-[var(--ui-accent)]" />
 
         <span class="font-bold uppercase tracking-tighter">
-          {{ link }}.sys
+          {{ link.name }}.sys
         </span>
-      </a>
+      </RouterLink>
 
     </div>
   </div>
@@ -47,5 +47,11 @@
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue"
 import { FolderOpen, ChevronRight } from "lucide-vue-next";
 
-const links = ["Home", "Projetos", "E-Sports", "Setup"];
+const links = [
+  { name: "Home", path: "/" },
+  { name: "Projetos", path: "/projects" },
+  { name: "E-Sports", path: "/esports" },
+  { name: "Setup", path: "/setup" },
+  { name: "Changelog", path: "/changelog" },
+];
 </script>

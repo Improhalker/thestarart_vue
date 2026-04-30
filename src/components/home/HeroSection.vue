@@ -29,3 +29,5 @@ import Main from './Main.vue';
     </div>
   </section>
 </template>
+
+COMPONENTE LEGADO DO HOME. MANTIDO POR QUESTÕES DE ORGANIZAÇÃO.

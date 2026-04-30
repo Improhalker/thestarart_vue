@@ -1,76 +1,78 @@
 [
   {
-  "version": "0.6.4",
-  "date": "30/04/2026",
-  "status": "DEV",
-  "changes": [
-    "Melhorias na UI e ajustes de layout em vários componentes",
-    "Componente do Youtube ainda em manutencaoo, aguardando correção de bugs e implementação de novas features",
-    "Corrrigindo ordem de componentes na HomePage para melhor fluxo visual e experiência do usuário"
-  ]
-},
+    "version": "0.6.4",
+    "date": "30/04/2026",
+    "status": "DEV",
+    "changes": [
+      "Refatoração estrutural do layout: agora apenas o conteúdo principal é alterado, mantendo os componentes laterais (left e right) fixos",
+      "Nova abordagem de altura dinâmica para melhor adaptação entre diferentes telas (ChangeLog componente)",
+      "Atualização da paleta de cores e identidade visual",
+      "Criação da nova página de Changelog",
+      "Reorganização da HomePage para melhorar o fluxo visual e a experiência do usuário",
+      "Ajustes gerais de UI e consistência entre componentes",
+      "Componente do YouTube ainda em manutenção, aguardando correções de bugs e novas features"
+    ]
+  },
   {
-  "version": "0.6.3",
-  "date": "29/04/2026",
-  "status": "DEV",
-  "changes": [
-    "Refatorando identidade visual com nova paleta clara baseada em tons de rosa (ui-bg, ui-accent, ui-border)",
-    "Padronizando uso de variáveis CSS globais para facilitar manutenção e troca de tema",
-    "Aplicando gradient system consistente utilizando valores arbitrários do Tailwind com variáveis",
-    "Redesign completo dos componentes principais (Explorer, Stats, Logs, Player) para estética retrô pixel moderna",
-    "Implementando variação visual 1-2-1 entre colunas para melhor equilíbrio de UX e contraste visual",
-    "Adicionando elementos visuais retrô (GIFs animados) para reforçar identidade nostálgica do projeto",
-    "Criando versão alternativa do player com estética 'crimson cyber' mais agressiva e menos soft",
-    "Integrando YouTube Player customizado com controle manual de play, mute e volume",
-    "Implementando sistema de progresso sincronizado com tempo real do player",
-    "Corrigindo bugs de renderização do iframe do YouTube (player invisível com áudio ativo)",
-    "Ajustando slider de volume (altura, estilo e binding correto com estado)",
-    "Customizando profundamente o componente Slider (track, range e thumb) com :deep",
-    "Explorando substituição da barra de progresso por GIFs animados (equalizer / energy bar)",
-    "Melhorando consistência visual entre desktop e mobile mantendo contraste intencional"
-  ]
-},
+    "version": "0.6.3",
+    "date": "29/04/2026",
+    "status": "DEV",
+    "changes": [
+      "Refatorando identidade visual com nova paleta clara baseada em tons de rosa (ui-bg, ui-accent, ui-border)",
+      "Padronizando uso de variáveis CSS globais para facilitar manutenção e troca de tema",
+      "Aplicando gradient system consistente utilizando valores arbitrários do Tailwind com variáveis",
+      "Redesign completo dos componentes principais (Explorer, Stats, Logs, Player) para estética retrô pixel moderna",
+      "Implementando variação visual 1-2-1 entre colunas para melhor equilíbrio de UX e contraste visual",
+      "Adicionando elementos visuais retrô (GIFs animados) para reforçar identidade nostálgica do projeto",
+      "Criando versão alternativa do player com estética 'crimson cyber' mais agressiva e menos soft",
+      "Integrando YouTube Player customizado com controle manual de play, mute e volume",
+      "Implementando sistema de progresso sincronizado com tempo real do player",
+      "Corrigindo bugs de renderização do iframe do YouTube (player invisível com áudio ativo)",
+      "Ajustando slider de volume (altura, estilo e binding correto com estado)",
+      "Customizando profundamente o componente Slider (track, range e thumb) com :deep",
+      "Explorando substituição da barra de progresso por GIFs animados (equalizer / energy bar)",
+      "Melhorando consistência visual entre desktop e mobile mantendo contraste intencional"
+    ]
+  },
   {
-  "version": "0.6.2",
-  "date": "28/04/2026",
-  "status": "STABLE",
-  "changes": [
-    "Adicionando chat live integrado via Chatango para interação em tempo real com a comunidade",
-    "Ajustando width de containers para melhor responsividade e alinhamento visual em diferentes seções do site"
-    
-  ]
-},
+    "version": "0.6.2",
+    "date": "28/04/2026",
+    "status": "STABLE",
+    "changes": [
+      "Adicionando chat live integrado via Chatango para interação em tempo real com a comunidade",
+      "Ajustando width de containers para melhor responsividade e alinhamento visual em diferentes seções do site"
+    ]
+  },
   {
-  "version": "0.6.1",
-  "date": "27/04/2026",
-  "status": "STABLE",
-  "changes": [
-    "Adicionando Popup de aviso de construção do site para usuários novos ou visitantes ocasionais"
-    
-  ]
-},
+    "version": "0.6.1",
+    "date": "27/04/2026",
+    "status": "STABLE",
+    "changes": [
+      "Adicionando Popup de aviso de construção do site para usuários novos ou visitantes ocasionais"
+    ]
+  },
   {
-  "version": "0.6.0",
-  "date": "27/04/2026",
-  "status": "STABLE",
-  "changes": [
-    "Implementacao de Google tradutor para suport em multiplos idiomas (Português, Inglês, Espanhol)",
-    "Correcoes pequenas em bugs de layout e responsividade em telas menores na Homepage"
-  ]
-},
+    "version": "0.6.0",
+    "date": "27/04/2026",
+    "status": "STABLE",
+    "changes": [
+      "Implementacao de Google tradutor para suport em multiplos idiomas (Português, Inglês, Espanhol)",
+      "Correcoes pequenas em bugs de layout e responsividade em telas menores na Homepage"
+    ]
+  },
   {
-  "version": "0.5.0",
-  "date": "07/04/2026",
-  "status": "STABLE",
-  "changes": [
-    "Implementação do Sistema Global de Conquistas (Achievements) com suporte a persistência e filas",
-    "Adição de efeitos sonoros 8-bit e Chiptune para interações de UI e gatilhos do Mascote",
-    "Refatoração estética do sistema de Badges com contraste adaptativo (Off-White Pink / Retro-Black)",
-    "Otimização de carregamento de assets dinâmicos (GIF Preload) para evitar Layout Shift no Mascote",
-    "Integração de lógica de gatilhos ocultos em botões decorativos do 'CardWindowHeader'",
-    "Ajustes finos na paleta de cores CSS Variables para suporte a contrastes de alta fidelidade e ajustes mobile-first"
-  ]
-},
+    "version": "0.5.0",
+    "date": "07/04/2026",
+    "status": "STABLE",
+    "changes": [
+      "Implementação do Sistema Global de Conquistas (Achievements) com suporte a persistência e filas",
+      "Adição de efeitos sonoros 8-bit e Chiptune para interações de UI e gatilhos do Mascote",
+      "Refatoração estética do sistema de Badges com contraste adaptativo (Off-White Pink / Retro-Black)",
+      "Otimização de carregamento de assets dinâmicos (GIF Preload) para evitar Layout Shift no Mascote",
+      "Integração de lógica de gatilhos ocultos em botões decorativos do 'CardWindowHeader'",
+      "Ajustes finos na paleta de cores CSS Variables para suporte a contrastes de alta fidelidade e ajustes mobile-first"
+    ]
+  },
   {
     "version": "0.4.0",
     "date": "06/04/2026",

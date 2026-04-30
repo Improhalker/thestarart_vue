@@ -51,11 +51,10 @@ h6 {
   --crimson-border-dark: #000000;
   --crimson-text: #e0e0e0;
 
-  /* TEMPLATE 2: DEEP PURPLE/ONYX (Vibe Night Ops) */
   --onyx-bg: #0d0d0d;
   --onyx-secondary: #14141c;
   --onyx-tertiary: #1b1b29;
-  --onyx-accent: #00ffcc; /* Cyan para contraste, ou mude para Red */
+  --onyx-accent: #00ffcc; 
   --onyx-border: #2d2d3a;
   --onyx-border-dark: #050505;
   --onyx-text: #ffffff;
@@ -114,7 +113,7 @@ h6 {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 0, 80, 0.3);
+  background: linear-gradient(to right, rgba(66, 0, 63, 0.5), rgba(255, 0, 80, 0.45));
   pointer-events: none;
 }
 
