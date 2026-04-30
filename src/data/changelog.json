@@ -4,7 +4,8 @@
   "date": "30/04/2026",
   "status": "DEV",
   "changes": [
-    "Melhorias na UI e ajustes de layout em vários componentes"
+    "Melhorias na UI e ajustes de layout em vários componentes",
+    "Componente do Youtube ainda em manutencaoo, aguardando correção de bugs e implementação de novas features"
   ]
 },
   {
