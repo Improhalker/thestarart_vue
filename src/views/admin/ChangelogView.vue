@@ -102,7 +102,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
               :icon="Terminal"
             >
               <template #right>
-                <span class="text-[8px] md:text-[12px] font-bold mr-2 text-[var(--ui-text)]">
+                <span class="text-[8px] md:text-[10px] font-bold mr-2 text-white">
                   {{ log.date }}
                 </span>
               </template>

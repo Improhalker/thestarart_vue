@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // Layouts
+import TryAccess from '@/components/global/access/TryAccess.vue'
+import AllTheThingsSheSaid from '@/components/global/access/AllTheThingsSheSaid.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import LanguageSelector from '@/components/global/translate/LanguageSelector.vue'
@@ -34,6 +36,18 @@ const router = createRouter({
           component: () => import('@/views/FourthView.vue'),
         },
       ],
+    },
+    {
+      path: '/noaccess',
+      name: 'noaccess',
+      component: TryAccess,
+     
+    },
+    {
+      path: '/AllTheThingsSheSaid',
+      name: 'AllTheThingsSheSaid',
+      component: AllTheThingsSheSaid,
+     
     },
     {
       path: '/choose-your-lang',
