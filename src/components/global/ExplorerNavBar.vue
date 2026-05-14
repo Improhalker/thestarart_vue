@@ -49,9 +49,9 @@ import { FolderOpen, ChevronRight } from "lucide-vue-next";
 
 const links = [
   { name: "Home", path: "/" },
-  { name: "Projetos", path: "/projects" },
-  { name: "E-Sports", path: "/esports" },
-  { name: "Setup", path: "/setup" },
+  { name: "Projetos", path: "/changelog" },
+  { name: "E-Sports", path: "/changelog" },
+  { name: "Setup", path: "/changelog" },
   { name: "Changelog", path: "/changelog" },
 ];
 </script>
