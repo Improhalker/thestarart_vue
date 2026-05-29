@@ -3,8 +3,8 @@ import { onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   handle: { type: String, default: 'thestarartcommunityt' },
-  width: { type: String, default: '100%' }, 
-  height: { type: String, default: '347px' } 
+  width: { type: String, default: '100%' },
+  height: { type: String, default: '347px' }
 })
 
 const SCRIPT_ID = 'cid0020000438378533753'
@@ -23,21 +23,21 @@ onMounted(() => {
     handle: props.handle,
     arch: "js",
     styles: {
-      a: "6600cc", 
+      a: "6600cc",
       b: 78,
-      c: "FFFFFF", 
+      c: "FFFFFF",
       d: "FFFFFF",
-      f: 78, 
-      i: 78, 
-      k: "6600cc", 
+      f: 78,
+      i: 78,
+      k: "6600cc",
       l: "6600cc",
-      m: "6600cc", 
-      n: "FFFFFF", 
-      o: 78, 
+      m: "6600cc",
+      n: "FFFFFF",
+      o: 78,
       p: "10",
-      q: "6600cc", 
-      r: 78, 
-      cnrs: "0.35" 
+      q: "6600cc",
+      r: 78,
+      cnrs: "0.35"
     }
   })
 
@@ -50,21 +50,28 @@ onMounted(() => {
 onBeforeUnmount(() => {
   const script = document.getElementById(SCRIPT_ID)
   if (script) script.remove()
-  
+
   const widget = document.querySelector('.chatango_embed')
   if (widget) widget.remove()
 })
 </script>
 
 <template>
-  <div id="chatango-container" class="chatango-wrapper mb-6 shadow-[10px_10px_0px_rgba(0,0,0,0.5)] ">
-    </div>
+  <div id="chatango-container" class="chatango-wrapper my-4 md:my-0 mb-6 shadow-[10px_10px_0px_rgba(0,0,0,0.5)] ">
+  </div>
 </template>
 
 <style scoped>
 .chatango-wrapper {
   display: flex;
   justify-content: center;
-  min-height: 347px; 
+  min-height: 347px;
+}
+
+@media screen and (max-width: 550px) {
+  .chatango-wrapper {
+    width: 326px;
+    place-self: center;
+  }
 }
 </style>

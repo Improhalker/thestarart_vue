@@ -28,7 +28,7 @@ h6 {
 
   --ts-retro-gray: #c0c0c0;
   --ts-retro-blue: #000080;
-  --ts-retro-shadow: rgba(0, 0, 0, 1);
+  --ts-retro-shadow: rgb(0 0 0 / 50%);
 
   --ui-bg: #ffe4f3;
   --ui-bg-secondary: #ffc1e6;
@@ -43,7 +43,7 @@ h6 {
   --ui-accent: #ff4fc4;
   --ui-accent-soft: #f9a8d4;
 
---crimson-bg: #0a0a0a;
+  --crimson-bg: #0a0a0a;
   --crimson-secondary: #1a0505;
   --crimson-tertiary: #300a0a;
   --crimson-accent: #ff0000;
@@ -54,7 +54,7 @@ h6 {
   --onyx-bg: #0d0d0d;
   --onyx-secondary: #14141c;
   --onyx-tertiary: #1b1b29;
-  --onyx-accent: #00ffcc; 
+  --onyx-accent: #00ffcc;
   --onyx-border: #2d2d3a;
   --onyx-border-dark: #050505;
   --onyx-text: #ffffff;
@@ -71,32 +71,77 @@ h6 {
 }
 
 @theme {
+  /* Core */
   --color-ts-black: var(--ts-primary-black);
+  --color-ts-black-secondary: var(--ts-secondary-black);
+
   --color-ts-red: var(--ts-primary-red);
   --color-ts-pink: var(--ts-primary-pink);
   --color-ts-blue: var(--ts-light-blue);
+
+  /* Retro */
   --color-ts-retro-gray: var(--ts-retro-gray);
   --color-ts-retro-blue: var(--ts-retro-blue);
+
+  /* UI Light */
   --color-ts-ui-bg: var(--ui-bg);
   --color-ts-ui-bg-secondary: var(--ui-bg-secondary);
   --color-ts-ui-bg-tertiary: var(--ui-bg-tertiary);
+
   --color-ts-ui-border: var(--ui-border);
   --color-ts-ui-border-dark: var(--ui-border-dark);
+
   --color-ts-ui-text: var(--ui-text);
   --color-ts-ui-text-soft: var(--ui-text-soft);
+
   --color-ts-ui-accent: var(--ui-accent);
   --color-ts-ui-accent-soft: var(--ui-accent-soft);
 
+  /* Crimson */
+  --color-ts-crimson-bg: var(--crimson-bg);
+  --color-ts-crimson-secondary: var(--crimson-secondary);
+  --color-ts-crimson-tertiary: var(--crimson-tertiary);
+
+  --color-ts-crimson-accent: var(--crimson-accent);
+
+  --color-ts-crimson-border: var(--crimson-border);
+  --color-ts-crimson-border-dark: var(--crimson-border-dark);
+
+  --color-ts-crimson-text: var(--crimson-text);
+
+  /* Onyx */
+  --color-ts-onyx-bg: var(--onyx-bg);
+  --color-ts-onyx-secondary: var(--onyx-secondary);
+  --color-ts-onyx-tertiary: var(--onyx-tertiary);
+
+  --color-ts-onyx-accent: var(--onyx-accent);
+
+  --color-ts-onyx-border: var(--onyx-border);
+  --color-ts-onyx-border-dark: var(--onyx-border-dark);
+
+  --color-ts-onyx-text: var(--onyx-text);
+
+  /* Dark UI */
+  --color-ts-ui-dark-bg: var(--ui-dark-bg);
+  --color-ts-ui-dark-bg-secondary: var(--ui-dark-bg-secondary);
+
+  --color-ts-ui-dark-accent: var(--ui-dark-accent);
+  --color-ts-ui-dark-accent-soft: var(--ui-dark-accent-soft);
+}
+.retro-shadow {
+  box-shadow: 10px 10px 0px var(--ts-retro-shadow);
 }
 
 .ts-font-main {
   font-family: 'Playfair Display', serif;
 }
+
 .VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
   display: none !important;
 }
+
 .container {
-  max-width: 900px;
+  max-width: 1350px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -164,13 +209,18 @@ h6 {
     pointer-events: none;
   }
 }
-html, body, #app {
+
+html,
+body,
+#app {
   height: 100%;
   margin: 0;
 }
+
 body {
   top: 0px !important;
 }
+
 .skiptranslate {
   display: none !important;
 }

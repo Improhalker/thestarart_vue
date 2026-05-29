@@ -8,7 +8,7 @@ import CardWindowHeader from "./CardWindowHeader.vue";
 const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
-  { id: "T1xLQG0OakM", title: "Post Malone - Circles (Acoustic – One Night in Rome, Italy 2022)", reason: "Estou nostalgico essa semana." },
+  { id: "mzJqxT1UGho", title: "Darling in the FranXX OP/Opening Full「KISS OF DEATH - Mika Nakashima x Hyde」[Kami Cover]", reason: "Eu realmente amo 'Darling in The Franxx'" },
   { id: "IKgp6n21XpM", title: "Lofi relax", reason: "Boa pra desenhar à noite" },
   { id: "im7Kw9Ak6kQ", title: "Pop hits", reason: "Energia pra desenhar personagens dinâmicos" },
 ];
