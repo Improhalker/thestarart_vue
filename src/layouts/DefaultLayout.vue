@@ -22,19 +22,19 @@ import AdminPet from '@/components/admin/madoka/AdminPet.vue'
       style="background-image: url('/images/bluebox.gif');">
       <div class="fixed inset-0 bg-[#13011a]/20 pointer-events-none z-0"></div>
 
-      <div class="max-w-[1600px] relative z-10 place-self-center h-full 
-         grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-0 p-6
+      <div class="container relative z-10 place-self-center h-full 
+         grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-5 p-6
          items-start">
 
-        <div class="lg:sticky top-24 self-start">
+        <div class="lg:sticky top-22">
           <LeftSide />
         </div>
 
-        <div class="rounded-xl p-2">
+        <div class="rounded-xl">
           <RouterView />
         </div>
 
-        <div class="lg:sticky top-24 self-start rounded-xl md:space-y-6 p-2 mdx:max-w-[300px] lgx:max-w-[450px]">
+        <div class="lg:sticky top-24 self-start overflow-x-hidden">
           <YoutubeMusic />
           <Chat />
           <ChangelogView variant="retro-pink" :limit="5" :fullHeight="false" />
