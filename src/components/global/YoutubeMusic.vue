@@ -8,7 +8,7 @@ import CardWindowHeader from "./CardWindowHeader.vue";
 const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
-  { id: "mzJqxT1UGho", title: "Darling in the FranXX OP/Opening Full「KISS OF DEATH - Mika Nakashima x Hyde」[Kami Cover]", reason: "Eu realmente amo 'Darling in The Franxx'" },
+  { id: "m-44PIocS_4", title: "Lil Peep - right here (feat. Horse Head) (Official Audio)", reason: "'RIP Lil Peep'" },
   { id: "IKgp6n21XpM", title: "Lofi relax", reason: "Boa pra desenhar à noite" },
   { id: "im7Kw9Ak6kQ", title: "Pop hits", reason: "Energia pra desenhar personagens dinâmicos" },
 ];
