@@ -7,7 +7,7 @@
     border-r-ts-ui-border-dark
     border-b-ts-ui-border-dark
   ">
-    <CardWindowHeader title="Devlog_Entries.log" />
+    <CardWindowHeader title="Blog.exe" />
 
     <div class="p-4 space-y-4">
 
@@ -91,6 +91,8 @@
 </template>
 
 <script setup lang="ts">
+import './Blog.css';
+ 
 import CardWindowHeader from '../CardWindowHeader.vue';
 const posts = [
   {
