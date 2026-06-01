@@ -141,10 +141,11 @@ onUnmounted(() => stopProgressTimer());
           class="h-4 grayscale invert" />
       </div>
 
-      <div class="flex gap-2 mb-4">
-        <div class="w-24 h-24 border border-[var(--crimson-border)] relative overflow-hidden bg-black">
+      <div class="flex flex-col gap-2 mb-4">
+        <div class="flex border border-[var(--crimson-border)] relative overflow-hidden bg-black">
           <img src="https://blob.gifcities.org/gifcities/ZPA6L2QYGWUVN4K3L2RS4KRLTWEL3B6P.gif"
             class="w-full h-full object-cover grayscale contrast-150 opacity-80" />
+         
           <div class="absolute inset-0 bg-red-900/20"></div>
         </div>
         <div class="flex-1 bg-black/80 p-2 border border-[var(--crimson-border)] relative flex flex-col justify-center">

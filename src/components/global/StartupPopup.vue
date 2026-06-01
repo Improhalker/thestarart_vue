@@ -39,7 +39,7 @@
       <!-- GIF -->
       <div class="flex justify-center">
         <img
-          src="/public/smallgifs/sorry.gif"
+          src="/src/assets/smallgifs/sorry.gif"
           class="pixelated max-w-full opacity-80"
         />
       </div>
