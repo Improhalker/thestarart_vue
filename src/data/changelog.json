@@ -1,5 +1,27 @@
 [
   {
+    "version": "0.7.0",
+    "date": "01/06/2026",
+    "status": "DEV",
+    "changes": [
+      "[REFACTOR] Reestruturação completa da Navbar.",
+      "[REFACTOR] Componentização da navegação desktop e mobile.",
+      "[UI] Novo menu mobile baseado em Shadcn Sheet.",
+      "[UI] Nova ambientação visual com fundo estrelado.",
+      "[UI] Melhorias de consistência visual em toda a homepage.",
+      "[UI] Correcao da tipografia Pixelify Sans.",
+      "[UI] Correcao da tipografia Playfair Display.",
+      "[UI] Ajustes na identidade visual retrô do projeto.",
+      "[FEATURE] Estrutura preparada para Carousel Shadcn.",
+      "[STYLE] Reorganização dos estilos globais.",
+      "[STYLE] Redução de CSS customizado em favor do Tailwind.",
+      "[STYLE] Criação de utilitários reutilizáveis.",
+      "[FIX] Correção de carregamento das fontes Google Fonts.",
+      "[FIX] Correções de importação e ordem dos estilos.",
+      "[PERF] Simplificação da homepage e redução de complexidade visual."
+    ]
+  },
+  {
     "version": "0.6.6",
     "date": "29/05/2026",
     "status": "DEV - REFACTOR",
