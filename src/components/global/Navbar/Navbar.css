@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-banner-scroll: banner-scroll 60s linear infinite;
+
+  @keyframes banner-scroll {
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: -2000px 0;
+    }
+  }
+}
