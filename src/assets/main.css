@@ -1,23 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
-
+@import "./font.css";
 @import "tailwindcss";
 @import "tw-animate-css";
-
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Pixelify Sans", sans-serif;
-}
-
-.font-pixel {
-  font-family: "Pixelify Sans", sans-serif;
-}
-
+@import "./utilities.css";
+@import "./components/button.css";
 
 :root {
   --ts-primary-black: #03010e;
@@ -128,23 +113,6 @@ h6 {
   --color-ts-ui-dark-accent: var(--ui-dark-accent);
   --color-ts-ui-dark-accent-soft: var(--ui-dark-accent-soft);
 }
-.retro-shadow {
-  box-shadow: 10px 10px 0px var(--ts-retro-shadow);
-}
-
-.ts-font-main {
-  font-family: 'Playfair Display', serif;
-}
-
-.VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
-  display: none !important;
-}
-
-.container {
-  max-width: 1350px;
-  margin-left: auto;
-  margin-right: auto;
-}
 
 :deep([role="slider"]) {
   background-color: #ffffff !important;
@@ -153,40 +121,6 @@ h6 {
   width: 14px !important;
   height: 14px !important;
   box-shadow: 1px 1px 0px 0px #000 !important;
-}
-
-
-.test::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(66, 0, 63, 0.5), rgba(255, 0, 80, 0.45));
-  pointer-events: none;
-}
-
-.retro-btn {
-  background: var(--ts-primary-pink);
-  border: 1px solid #fff;
-  border-right-color: #000;
-  border-bottom-color: #000;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.retro-btn:active {
-  transform: translate(1px, 1px);
-  border: 1px solid #000;
-  border-right-color: #fff;
-  border-bottom-color: #fff;
-}
-
-@media screen and (max-width: 640px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
 }
 
 @layer base {
@@ -210,17 +144,4 @@ h6 {
   }
 }
 
-html,
-body,
-#app {
-  height: 100%;
-  margin: 0;
-}
 
-body {
-  top: 0px !important;
-}
-
-.skiptranslate {
-  display: none !important;
-}
