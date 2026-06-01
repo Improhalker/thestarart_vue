@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useTranslate } from '@/composables/useTranslate'
 import LanguageButton from './LanguageButton.vue'
 
 const router = useRouter()
 const route = useRoute()
+
 function selectLang(lang: string) {
   localStorage.setItem('lang', lang)
 
@@ -16,47 +14,155 @@ function selectLang(lang: string) {
 </script>
 
 <template>
-  <div class="screen">
-    
-    <h1 class="title">
-      Choose your main language
-    </h1>
+  <div
+    class="
+      min-h-screen
 
-    <div class="buttons">
-      <LanguageButton lang="pt" label="Português 🇧🇷" @select="selectLang" />
-      <LanguageButton lang="en" label="English 🇺🇸" @select="selectLang" />
-      <LanguageButton lang="es" label="Español 🇪🇸" @select="selectLang" />
+      flex flex-col
+      items-center
+      justify-center
+
+      bg-gradient-to-b
+      from-ts-black
+      to-ts-black-secondary
+
+      text-white
+
+      px-6
+    "
+  >
+    <div
+      class="
+        w-full
+        max-w-lg
+
+        border-2
+        border-ts-pink
+
+        bg-black/60
+        backdrop-blur-sm
+
+        shadow-[8px_8px_0px_rgba(0,0,0,0.5)]
+      "
+    >
+      <!-- Header -->
+      <div
+        class="
+          flex items-center justify-between
+
+          px-4 py-2
+
+          bg-ts-pink
+
+          text-white
+          text-xs
+          font-bold
+          tracking-widest
+        "
+      >
+        <span>LANGUAGE_SELECT.EXE</span>
+
+        <span>BOOT MODE</span>
+      </div>
+
+      <!-- Content -->
+      <div
+        class="
+          flex flex-col
+          items-center
+
+          gap-6
+
+          p-8
+        "
+      >
+        <div class="text-center">
+
+          <p
+            class="
+              text-ts-pink
+              text-xs
+              tracking-[0.3em]
+              uppercase
+            "
+          >
+            TheStarArt System
+          </p>
+
+          <h1
+            class="
+              mt-2
+
+              text-3xl
+              font-black
+
+              tracking-tight
+            "
+          >
+            Select Language
+          </h1>
+
+          <p
+            class="
+              mt-2
+
+              text-sm
+              text-white/60
+            "
+          >
+            Choose your preferred system language
+          </p>
+
+        </div>
+
+        <div
+          class="
+            w-full
+
+            flex flex-col
+
+            gap-3
+          "
+        >
+          <LanguageButton
+            lang="pt"
+            label="Português 🇧🇷"
+            @select="selectLang"
+          />
+
+          <LanguageButton
+            lang="en"
+            label="English 🇺🇸"
+            @select="selectLang"
+          />
+
+          <LanguageButton
+            lang="es"
+            label="Español 🇪🇸"
+            @select="selectLang"
+          />
+        </div>
+
+        <div
+          class="
+            w-full
+
+            border-t
+            border-white/10
+
+            pt-4
+
+            text-[10px]
+            uppercase
+
+            text-white/50
+          "
+        >
+          <div>USER: GUEST</div>
+          <div>STATUS: WAITING FOR LANGUAGE SELECTION</div>
+        </div>
+
+      </div>
     </div>
-
   </div>
 </template>
-
-<style scoped>
-.screen {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #232226;
-  color: white;
-  text-align: center;
-  gap: 20px;
-}
-
-.anime {
-  width: 180px;
-  image-rendering: pixelated;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-.buttons {
-  display: flex;
-  gap: 12px;
-}
-</style>
