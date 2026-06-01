@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import NavBar from '@/components/global/NavBar.vue'
+import NavBar from '@/components/global/Navbar/NavBar.vue'
+import OldNavBar from '@/components/global/OldNavBar.vue'
 import StartupPopup from '@/components/global/StartupPopup.vue'
 import ChangelogView from '@/views/ChangelogView.vue'
-// Layout fixo
 import LeftSide from '@/components/home/LeftSide.vue'
 import YoutubeMusic from '@/components/global/YoutubeMusic.vue'
 import Chat from '@/components/globalchat/Chat.vue'
@@ -11,36 +11,32 @@ import AdminPet from '@/components/admin/madoka/AdminPet.vue'
 
 <template>
   <main class="main-layout font-pixel">
-
-    <header>
-      <div class="wrapper">
-        <NavBar />
-      </div>
-    </header>
-
-    <section class="relative test min-h-screen bg-repeat bg-fixed text-pink-100 mt-12 md:mt-16 lg:mt-20"
+    <section class="relative home-gradiant min-h-screen bg-repeat bg-fixed text-pink-100"
       style="background-image: url('/images/bluebox.gif');">
       <div class="fixed inset-0 bg-[#13011a]/20 pointer-events-none z-0"></div>
+      <section class="container pt-24">
+        <NavBar />
 
-      <div class="container relative z-10 place-self-center h-full 
-         grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-5 p-6
+        <div class="relative z-10 place-self-center h-full py-4
+         grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-5
          items-start">
 
-        <div class="lg:sticky top-22">
-          <LeftSide />
-        </div>
+          <div class="lg:sticky top-2 ">
+            <LeftSide />
+          </div>
 
-        <div class="rounded-xl">
-          <RouterView />
-        </div>
+          <div class="rounded-xl">
+            <RouterView />
+          </div>
 
-        <div class="lg:sticky top-24 self-start overflow-x-hidden">
-          <YoutubeMusic />
-          <Chat />
-          <ChangelogView variant="retro-pink" :limit="5" :fullHeight="false" />
-        </div>
+          <div class="lg:sticky top-24 self-start overflow-x-hidden">
+            <YoutubeMusic />
+            <Chat />
+            <ChangelogView variant="retro-pink" :limit="5" :fullHeight="false" />
+          </div>
 
-      </div>
+        </div>
+      </section>
 
       <div class="relative z-20">
         <AdminPet />

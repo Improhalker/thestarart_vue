@@ -26,7 +26,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
 </script>
 
 <template>
-  <div class="font-pixel space-y-4 p-4 relative overflow-hidden"
+  <div class="font-pixel space-y-4 relative overflow-hidden"
     :class="[
       isPink && 'bg-gradient-to-br from-[var(--ui-bg)] via-[var(--ui-bg-secondary)] to-[var(--ui-bg-tertiary)] border-2 border-[var(--ui-border)] border-r-[var(--ui-border-dark)] border-b-[var(--ui-border-dark)] shadow-[10px_10px_0px_rgba(0,0,0,0.4)]',
 
@@ -36,24 +36,15 @@ const isPink = computed(() => props.variant === 'retro-pink')
     ]"
   >
 
-    <!-- sparkles -->
-    <img
-      v-if="isPink"
-      src="https://blob.gifcities.org/gifcities/RAB63QVEAB73QGUZU6DNIMIIIRIYTYLQ.gif"
-      class="absolute top-2 right-2 w-10 opacity-30 pointer-events-none"
-    />
-
     <CardWindowHeader title="System_Logs.txt" :icon="Headphones" />
 
     <div
       :class="[
-        'overflow-auto pr-4 custom-scrollbar',
+        'overflow-auto pr-1 custom-scrollbar',
         props.fullHeight ? 'h-full' : 'h-[400px] resize-y'
       ]"
     >
       <div class="space-y-4 relative pb-4">
-
-        <!-- timeline line -->
         <div
           class="absolute left-[9px] top-0 bottom-0 w-[2px] hidden md:block"
           :class="
@@ -64,15 +55,11 @@ const isPink = computed(() => props.variant === 'retro-pink')
                 : 'bg-black/10'
           "
         ></div>
-
-        <!-- items -->
         <div
           v-for="(log, index) in logs"
           :key="log.version"
-          class="relative md:pl-8 mb-6"
+          class="relative md:pl-5 mb-6"
         >
-
-          <!-- dot -->
           <div
             class="absolute left-[4px] top-1 w-3 h-3 border-2 hidden md:block z-10 transition-colors"
             :class="[
@@ -86,8 +73,6 @@ const isPink = computed(() => props.variant === 'retro-pink')
                 : 'bg-white/60'
             ]"
           ></div>
-
-          <!-- card -->
           <div
             class="overflow-hidden border-2 backdrop-blur-sm"
             :class="[
@@ -96,7 +81,6 @@ const isPink = computed(() => props.variant === 'retro-pink')
               isCrimson && 'border-[var(--crimson-border)] border-r-[var(--crimson-border-dark)] border-b-[var(--crimson-border-dark)] bg-[var(--crimson-bg)]/70'
             ]"
           >
-
             <CardWindowHeader
               :title="`BUILD_${log.version.replace('.', '_')}`"
               :icon="Terminal"
@@ -107,8 +91,6 @@ const isPink = computed(() => props.variant === 'retro-pink')
                 </span>
               </template>
             </CardWindowHeader>
-
-            <!-- content -->
             <div
               class="p-3 text-[13px]"
               :class="
@@ -135,8 +117,6 @@ const isPink = computed(() => props.variant === 'retro-pink')
                 </li>
               </ul>
             </div>
-
-            <!-- footer -->
             <div
               class="p-1 px-3 text-[8px] flex justify-between uppercase"
               :class="
@@ -158,8 +138,6 @@ const isPink = computed(() => props.variant === 'retro-pink')
         </div>
       </div>
     </div>
-
-    <!-- footer -->
     <div
       class="pt-2 flex items-center gap-4 opacity-60 scale-75 origin-left"
       :class="isPink ? 'saturate-150' : ''"
