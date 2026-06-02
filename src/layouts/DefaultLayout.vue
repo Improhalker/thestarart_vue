@@ -13,11 +13,10 @@ import AdminPet from '@/components/admin/madoka/AdminPet.vue'
   <main class="main-layout font-pixel">
     <section class="relative home-gradiant min-h-screen bg-repeat bg-fixed text-pink-100"
       style="background-image: url('/images/bluebox.gif');">
-      <div class="fixed inset-0 bg-[#13011a]/20 pointer-events-none z-0"></div>
-      <section class="container pt-24">
+      <section class="px-0 pb-16 pt-0 lg:pt-24">
         <NavBar />
 
-        <div class="relative z-10 place-self-center h-full py-4
+        <div class="container relative z-10 place-self-center h-full py-4
          grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-5
          items-start">
 
@@ -41,16 +40,41 @@ import AdminPet from '@/components/admin/madoka/AdminPet.vue'
       <div class="relative z-20">
         <AdminPet />
       </div>
+      <footer class="
+        container 
+        relative
+        overflow-hidden
+        border-t-[3px]
+        border-[var(--ts-primary-pink)]
+        bg-black
+        px-0
+      ">
+        <div class="
+          absolute inset-0 opacity-40
+          bg-[url('/images/banner.webp')]
+          bg-repeat-x bg-cover
+          bg-[position:center_-100px]
+        "></div>
+
+        <div class="
+          absolute inset-0
+          bg-gradient-to-r
+          from-black/80
+          via-[#48054a]/40
+          to-black/80
+        "></div>
+
+        <div class="relative z-10 py-3">
+          <p class="text-center text-sm text-gray-300">
+            © 2026 TheStarArt_. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </section>
 
     <StartupPopup />
 
-    <!-- FOOTER -->
-    <footer class="bg-gradient-to-r border-t-[3px] border-[var(--crimson-accent)] from-black to-red-950">
-      <div class="text-center text-sm text-white py-2">
-        &copy; 2026 TheStarArt_. All rights reserved.
-      </div>
-    </footer>
+
 
   </main>
 </template>

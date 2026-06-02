@@ -1,7 +1,5 @@
 <template>
-    <div class="bg-[#13011a] shadow-[10px_10px_0px_rgba(0,0,0,0.5)]
-             border-2 border-[var(--ts-primary-pink)]
-             border-r-[#2a0221] border-b-[#2a0221]">
+    <div class="container-style-dark">
         <CardWindowHeader title="Visual_Buffer.sys" />
 
         <div class="p-3 space-y-3">

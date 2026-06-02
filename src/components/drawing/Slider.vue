@@ -30,14 +30,7 @@ const openFullscreen = (img: string) => {
 </script>
 
 <template>
-  <div class="
-      bg-[#0a0110]
-      shadow-[10px_10px_0px_rgba(0,0,0,0.5)]
-      border-2
-      border-[var(--ts-primary-pink)]
-      border-r-[#2a0221]
-      border-b-[#2a0221]
-    ">
+  <div class="container-style-dark">
     <CardWindowHeader title="Art_Viewer.dll" />
     <div class="p-2">
 

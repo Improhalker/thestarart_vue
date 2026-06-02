@@ -7,9 +7,9 @@ import CsGallery from './CsGallery.vue';
 <template>
     <div class="flex flex-col gap-6">
         <Thought />
+        <Blog />
         <About />
         <CsGallery />
-        <Blog />
-        
+
     </div>
 </template>

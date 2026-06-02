@@ -1,10 +1,7 @@
 <template>
   <div
     class="relative
-    bg-gradient-to-br from-[var(--ui-bg)] via-[var(--ui-bg-secondary)] to-[var(--ui-bg-tertiary)]
-    shadow-[10px_10px_0px_rgba(0,0,0,0.4)]
-    border-2 border-[var(--ui-border)]
-    border-r-[var(--ui-border-dark)] border-b-[var(--ui-border-dark)]
+    container-blog
     p-4 space-y-4 overflow-hidden">
 
     <!-- sparkles -->

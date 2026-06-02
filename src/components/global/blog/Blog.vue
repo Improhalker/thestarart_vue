@@ -1,31 +1,14 @@
 <template>
   <div class="
-    bg-ts-onyx-secondary
-    retro-shadow
-    border-2
-    border-ts-ui-border
-    border-r-ts-ui-border-dark
-    border-b-ts-ui-border-dark
+container-style-dark
   ">
     <CardWindowHeader title="Blog.exe" />
 
     <div class="p-4 space-y-4">
 
       <!-- POST -->
-      <div v-for="post in posts" :key="post.id" class="group cursor-pointer
-           border-2
-           border-[var(--color-ts-ui-border)]
-           border-r-[var(--color-ts-ui-border-dark)]
-           border-b-[var(--color-ts-ui-border-dark)]
-           bg-gradient-to-br
-           from-[var(--color-ts-ui-bg)]
-           via-[var(--color-ts-ui-bg-secondary)]
-           to-[var(--color-ts-ui-bg-tertiary)]
-           p-3
-           transition-all
-           duration-300
-           hover:translate-y-[-2px]
-           hover:shadow-lg">
+      <div v-for="post in posts" :key="post.id"   class="container-blog group cursor-pointer p-3"
+>
         <!-- TOP -->
         <div class="flex justify-between items-center mb-2">
           <span class="text-[10px] uppercase font-bold

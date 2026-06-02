@@ -2,11 +2,7 @@
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
 
     <div
-      class="relative w-full max-w-md mx-2
-             bg-[#0a0110]
-             border-2 border-[var(--ts-primary-pink)]
-             border-r-[#2a0221] border-b-[#2a0221]
-             p-4 space-y-4"
+      class="relative w-full max-w-md mx-2 container-style-dark p-4 space-y-4"
     >
 
       <!-- Header -->

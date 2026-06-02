@@ -28,7 +28,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
 <template>
   <div class="font-pixel space-y-4 relative overflow-hidden"
     :class="[
-      isPink && 'bg-gradient-to-br from-[var(--ui-bg)] via-[var(--ui-bg-secondary)] to-[var(--ui-bg-tertiary)] border-2 border-[var(--ui-border)] border-r-[var(--ui-border-dark)] border-b-[var(--ui-border-dark)] shadow-[10px_10px_0px_rgba(0,0,0,0.4)]',
+      isPink && 'container-style-dark',
 
       isCrimson && 'bg-gradient-to-r from-[var(--crimson-bg)] via-[var(--crimson-secondary)] to-[var(--crimson-tertiary)] border-2 border-[var(--crimson-border)] border-r-[var(--crimson-border-dark)] border-b-[var(--crimson-border-dark)] shadow-[0_0_20px_rgba(255,0,0,0.15)]',
 
@@ -95,7 +95,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
               class="p-3 text-[13px]"
               :class="
                 isPink
-                  ? 'bg-[var(--ui-bg)]/70 text-[var(--ui-text)]'
+                  ? 'container-blog text-[var(--ui-text)]'
                   : isCrimson
                     ? 'bg-black/40 text-[var(--crimson-text)]'
                     : 'bg-white text-black'
@@ -121,15 +121,15 @@ const isPink = computed(() => props.variant === 'retro-pink')
               class="p-1 px-3 text-[8px] flex justify-between uppercase"
               :class="
                 isPink
-                  ? 'bg-[var(--ui-bg)]/50 border-t border-[var(--ui-border)] text-[var(--ui-text-soft)]'
+                  ? 'container-blog '
                   : isCrimson
                     ? 'bg-black/50 border-t border-[var(--crimson-border)] text-red-300'
                     : 'bg-gray-50 border-t border-gray-200 text-gray-400'
               "
             >
-              <span>Kernel_v4.2</span>
+              <span class="text-black">Kernel_v4.2</span>
 
-              <span class="font-bold text-[var(--ui-accent)]">
+              <span class="font-bold text-green-500">
                 ● {{ log.status }}
               </span>
             </div>
@@ -162,16 +162,19 @@ const isPink = computed(() => props.variant === 'retro-pink')
 
 <style scoped>
 .custom-scrollbar::-webkit-scrollbar {
-  width: 12px;
+  width: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--ui-bg-secondary);
-  border-left: 1px solid var(--ui-border);
+  background: #0f0120;
+  border-left: 1px solid #48054a;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--ui-accent);
-  border: 1px solid black;
+  background: #690454;
+  border: 1px solid #000;
 }
-</style>
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #c1277c;
+}</style>
