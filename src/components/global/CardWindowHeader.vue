@@ -4,7 +4,10 @@ import { useAchievements } from '@/composables/useAchievements'
 interface Props {
   title: string
   icon?: Component
+  hideWindowButtons?: boolean
 }
+
+defineProps<Props>()
 
 const { unlock } = useAchievements()
 
@@ -17,7 +20,6 @@ const handleInutilClick = () => {
   })
 }
 
-defineProps<Props>()
 </script>
 
 <template>
@@ -35,7 +37,7 @@ defineProps<Props>()
     </div>
     <slot name="right" />
 
-    <div class="flex gap-1">
+    <div v-if="!hideWindowButtons" class="flex gap-1">
       <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">_</button>
       <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">X</button>
     </div>

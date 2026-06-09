@@ -27,8 +27,7 @@ container-style-dark
         <!-- TITLE -->
         <h3 class="text-[13px] font-black uppercase tracking-wide
              text-[var(--color-ts-ui-text)]
-             transition-colors
-             group-hover:text-[var(--color-ts-ui-accent)]">
+             transition-colors">
           {{ post.title }}
         </h3>
 

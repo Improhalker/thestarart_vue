@@ -123,6 +123,7 @@ onMounted(() => {
 onUnmounted(() => stopProgressTimer());
 </script>
 <template>
+  
   <div v-show="isMd" class="max-w-[420px] font-pixel p-1 relative overflow-hidden
     bg-black border-4 border-double border-[var(--crimson-border)]
     shadow-[0_0_20px_rgba(255,0,0,0.2)]">
@@ -135,22 +136,20 @@ onUnmounted(() => stopProgressTimer());
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 bg-[var(--crimson-accent)] animate-pulse"></div>
           <span
-            class="text-[var(--crimson-accent)] text-[10px] font-bold tracking-widest uppercase">Combat_Radio_v2.1</span>
+            class="text-[var(--crimson-accent)] text-[10px] font-bold tracking-widest uppercase">Radio v2.2</span>
         </div>
         <img src="https://blob.gifcities.org/gifcities/AVTTI34ND3VRS4ODVSAA6DZVFZTHA7AL.gif"
           class="h-4 grayscale invert" />
       </div>
 
       <div class="flex flex-col gap-2 mb-4">
-        <div class="flex border border-[var(--crimson-border)] relative overflow-hidden bg-black">
+        <div class="flex border border-[var(--crimson-border)] relative overflow-hidden justify-center py-4">
           <img src="https://blob.gifcities.org/gifcities/ZPA6L2QYGWUVN4K3L2RS4KRLTWEL3B6P.gif"
-            class="w-full h-full object-cover grayscale contrast-150 opacity-80" />
+            class="h-24 object-cover grayscale contrast-150 opacity-80" />
          
           <div class="absolute inset-0 bg-red-900/20"></div>
         </div>
         <div class="flex-1 bg-black/80 p-2 border border-[var(--crimson-border)] relative flex flex-col justify-center">
-          <img src="https://blob.gifcities.org/gifcities/EJWZ4HDE4OEVQPLZSJC62A5CV5TQX5U7.gif"
-            class="absolute top-0 right-0 h-8 opacity-40" />
           <p class="text-[9px] text-[var(--crimson-text-soft)] mb-1 font-bold">>> NOW_PLAYING</p>
           <p class="text-[11px] text-white leading-tight uppercase font-black">{{ music.title }}</p>
           <div class="mt-2 flex gap-1">
