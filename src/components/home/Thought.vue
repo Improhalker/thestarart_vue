@@ -12,19 +12,18 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
                 <div>
                     <p class="text-pink-600">>> WHOAMI</p>
                     <p class="text-pink-100 pl-3 border-l border-pink-900">
-                        Gabriel Estrela (21y) — dev, artista e player de CS.
+                        Bom, meu codinome eh TheStarArt_ e tenho 21 anos, esse projeto eh uma tentativa de expressar meu sentimento por tudo que vivo que gosto nesse mundo. ┐(´～｀)┌
                     </p>
                 </div>
 
                 <div>
                     <p class="text-pink-600">>> CURRENT_INTERESTS</p>
                     <ul class="text-pink-100 pl-3 space-y-1">
-                        <li>- Análise de demos de CS2</li>
-                        <li>- UI retro / pixel / industrial</li>
-                        <li>- Wordpress + Webflow (mesmo este ser Vue + Laravel)</li>
-                        <li>- Lapis de cor</li>
+                        <li>- Jogar Cs2 de Awp</li>
+                        <li>- Programacao com Vue, Php, Wordpress, Webflow e gosto de ambientes linux tmb 🐧</li>
+                        <li>- Lapis de cor (estou voltando a desenhar mais)</li>
                         <li>- Anime - Geek World</li>
-                        <li>- Muita musica</li>
+                        <li>- Muita musica, mas muita musica (nao consigo ficar sem escutar)</li>
                     </ul>
                 </div>
 

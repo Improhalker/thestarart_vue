@@ -3,12 +3,12 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
 </script>
 <template>
 
-    <div class="container-style-dark p-4">
+    <div class="container-style-dark ">
         <CardWindowHeader title="System_Profile" />
 
-        <div class="mt-4 space-y-3 text-sm text-pink-100 leading-relaxed">
+        <div class="p-4 space-y-3 text-sm text-pink-100 leading-relaxed">
             <p>
-                Realizei o objetivo de trabalhar em home office para uma empresa da gringa,
+                Realizei meu objetivo de trabalhar em home office para uma empresa da gringa,
                 desenvolvendo automações e soluções com <span class="text-pink-400">Python, n8n e Zapier</span>.
             </p>
 
@@ -20,7 +20,7 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
             </p>
 
             <p>
-                Este projeto nasce exatamente das minhas raizes, usando o que aprendi e me divertindo com o processo de criar algo único e pessoal. Stacks: Laravel e Vue.
+                Este projeto nasce exatamente dessas minhas raizes, usando o que aprendi e me divertindo com o processo de criar algo único e pessoal com as stacks: Laravel e Vue.
             </p>
         </div>
     </div>

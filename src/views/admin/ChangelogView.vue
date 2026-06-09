@@ -26,7 +26,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
 </script>
 
 <template>
-  <div class="font-pixel space-y-4 relative overflow-hidden"
+  <div class="space-y-4 relative overflow-hidden"
     :class="[
       isPink && 'container-style-dark',
 
@@ -44,7 +44,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
         props.fullHeight ? 'h-full' : 'h-[400px] resize-y'
       ]"
     >
-      <div class="space-y-4 relative pb-4">
+      <div class="space-y-4 relative lg:pb-4">
         <div
           class="absolute left-[9px] top-0 bottom-0 w-[2px] hidden md:block"
           :class="
@@ -58,7 +58,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
         <div
           v-for="(log, index) in logs"
           :key="log.version"
-          class="relative md:pl-5 mb-6"
+          class="relative px-2 md:pl-5 mb-6"
         >
           <div
             class="absolute left-[4px] top-1 w-3 h-3 border-2 hidden md:block z-10 transition-colors"
@@ -84,9 +84,10 @@ const isPink = computed(() => props.variant === 'retro-pink')
             <CardWindowHeader
               :title="`BUILD_${log.version.replace('.', '_')}`"
               :icon="Terminal"
+              :hide-window-buttons="true"  
             >
               <template #right>
-                <span class="text-[8px] md:text-[10px] font-bold mr-2 text-white">
+                <span class="text-[10px] font-bold mr-2 text-white">
                   {{ log.date }}
                 </span>
               </template>
@@ -118,7 +119,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
               </ul>
             </div>
             <div
-              class="p-1 px-3 text-[8px] flex justify-between uppercase"
+              class="p-1 px-3 text-[10px] flex justify-between uppercase"
               :class="
                 isPink
                   ? 'container-blog '
@@ -162,7 +163,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
 
 <style scoped>
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -171,7 +172,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #690454;
+  background: #ffffff;
   border: 1px solid #000;
 }
 

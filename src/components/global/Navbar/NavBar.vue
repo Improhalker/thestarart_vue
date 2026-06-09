@@ -7,8 +7,8 @@ import './Navbar.css'
 
 <template>
     <header class="
-    container
-    px-0
+            container
+            px-0!
             bg-black
             relative
             overflow-hidden
@@ -25,7 +25,12 @@ import './Navbar.css'
                 animate-banner-scroll
             "></div>
 
-        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/70" />
+        <div class="
+            absolute 
+            inset-0 
+            bg-gradient-to-r 
+            from-black/70 via-black/40 to-black/70" />
+
 
         <div class="relative z-10">
             <NavbarTopBar />

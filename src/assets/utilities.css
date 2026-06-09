@@ -43,7 +43,7 @@ body {
 
 /* End Theme and container colors */
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 768px) {
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
