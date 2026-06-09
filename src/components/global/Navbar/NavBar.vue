@@ -28,8 +28,7 @@ import './Navbar.css'
         <div class="
             absolute 
             inset-0 
-            bg-gradient-to-r 
-            from-black/70 via-black/40 to-black/70" />
+            bg-gradient-to-r from-[var(--ts-primary-pink)]/50 to-[#2d0240]" />
 
 
         <div class="relative z-10">

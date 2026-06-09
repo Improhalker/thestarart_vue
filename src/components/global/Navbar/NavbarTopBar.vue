@@ -16,7 +16,7 @@ const currentVersion =
       flex
       items-center
       justify-between
-      bg-black/70
+      bg-black/50
       border-b
       border-white/10
     "
