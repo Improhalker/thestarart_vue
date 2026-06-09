@@ -31,29 +31,36 @@ const router = createRouter({
           component: () => import('@/views/ChangelogView.vue'),
         },
         {
-          path: 'justcryatthispoint',
-          name: 'justcryatthispoint',
-          component: () => import('@/views/FourthView.vue'),
-        },
+          path: 'diary',
+          name: 'diary',
+          component: () => import('@/views/themes/MiraiNikki/Diary.vue'),
+        }
       ],
-    },
-    {
-      path: '/noaccess',
-      name: 'noaccess',
-      component: TryAccess,
-     
-    },
-    {
-      path: '/AllTheThingsSheSaid',
-      name: 'AllTheThingsSheSaid',
-      component: AllTheThingsSheSaid,
-     
     },
     {
       path: '/choose-your-lang',
       name: 'choose-lang',
       component: LanguageSelector
     },
+    {
+      path: '/justcryatthispoint',
+      name: 'justcryatthispoint',
+      component: () => import('@/views/FourthView.vue'),
+
+    },
+    {
+      path: '/noaccess',
+      name: 'noaccess',
+      component: TryAccess,
+
+    },
+    {
+      path: '/AllTheThingsSheSaid',
+      name: 'AllTheThingsSheSaid',
+      component: AllTheThingsSheSaid,
+
+    },
+
     {
       path: '/admin',
       component: AdminLayout,

@@ -1,5 +1,14 @@
 [
   {
+    "version": "0.7.1",
+    "date": "09/06/2026",
+    "status": "DEV",
+    "changes": [
+      "[FEATURE] Nova pagina de Diario disponivel",
+      "[Fix] Correcoes de layout, principalmente no componente ChangeLog.vue"
+    ]
+  },
+  {
     "version": "0.7.0",
     "date": "01/06/2026",
     "status": "DEV",
