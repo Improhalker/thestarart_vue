@@ -87,7 +87,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
               :hide-window-buttons="true"  
             >
               <template #right>
-                <span class="text-[10px] font-bold mr-2 text-white">
+                <span class="text-[10px] font-mono font-bold mr-2 text-white">
                   {{ log.date }}
                 </span>
               </template>
