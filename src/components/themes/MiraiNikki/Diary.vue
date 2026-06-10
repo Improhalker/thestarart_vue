@@ -1,7 +1,7 @@
 <template>
   <div
     class="py-8 bg-cover bg-no-repeat"
-    style="background: url('/public/images/mirainikkibackground.jpg')"
+    style="background: url('/images/mirainikkibackground.jpg')"
   >
     <div
       class="flex flex-col w-72 h-[980px] diary-blue rounded-3xl border-4 border-[#21454c] place-self-center mx-auto my-10"
