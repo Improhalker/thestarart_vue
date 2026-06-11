@@ -75,6 +75,22 @@ const router = createRouter({
           name: 'admin.musics',
           component: () => import('@/views/admin/MusicListView.vue'),
         },
+        {
+          path: 'blog',
+          children: [
+            {
+              path: '',
+              name: 'admin.blog.list',
+              component: () => import('@/views/admin/blog/BlogListView.vue'),
+            },
+
+            {
+              path: 'editor/:id?',
+              name: 'admin.blog.editor',
+              component: () => import('@/views/admin/blog/BlogEditView.vue'),
+            }
+          ]
+        }
       ],
     },
   ],
