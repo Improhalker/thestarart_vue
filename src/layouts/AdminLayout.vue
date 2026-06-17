@@ -12,7 +12,7 @@ import {
 import { RouterView, useRouter, useRoute } from "vue-router";
 import AdminPet from "@/components/admin/madoka/AdminPet.vue";
 import RightSidebar from "@/components/admin/madoka/RightSidebar.vue";
-
+import Logout from "@/components/login/Logout.vue";
 const isCollapsed = ref(false);
 const router = useRouter();
 const route = useRoute();
@@ -25,6 +25,17 @@ const menuItems = [
 ];
 
 const isActive = (path: string) => route.path === path;
+
+router.beforeEach((to, from, next) => {
+  const isLogged = localStorage.getItem("auth");
+
+  if (to.path.startsWith("/admin") && !isLogged) {
+    next("/login");
+    return;
+  }
+
+  next();
+});
 </script>
 
 <template>
@@ -49,6 +60,7 @@ const isActive = (path: string) => route.path === path;
             >TheStar_Admin</span
           >
         </div>
+
         <Button
           variant="ghost"
           size="icon"
@@ -59,6 +71,7 @@ const isActive = (path: string) => route.path === path;
           <ChevronRight v-else />
         </Button>
       </div>
+      <Logout />
 
       <img
         src="https://blob.gifcities.org/gifcities/2D3MVJ5SCCI2ZFMKTZ3MOETJ5NE7T52S.gif"

@@ -93,6 +93,11 @@ const router = createRouter({
         }
       ],
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/auth/LoginView.vue'),
+    }
   ],
 })
 
@@ -106,6 +111,13 @@ router.beforeEach((to, from, next) => {
         redirect: to.fullPath
       }
     })
+    return
+  }
+
+  const isLogged = localStorage.getItem('auth')
+
+  if (to.path.startsWith('/admin') && !isLogged) {
+    next('/login')
     return
   }
 
