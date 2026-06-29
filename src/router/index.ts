@@ -34,6 +34,16 @@ const router = createRouter({
           path: 'diary',
           name: 'diary',
           component: () => import('@/views/themes/MiraiNikki/Diary.vue'),
+        },
+        {
+          path: 'blog',
+          name: 'blog',
+          component: () => import('@/views/blog/BlogView.vue'),
+        },
+        {
+          path: 'post/:slug',
+          name: 'post.show',
+          component: () => import('@/views/blog/PostView.vue'),
         }
       ],
     },
