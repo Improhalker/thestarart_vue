@@ -9,6 +9,7 @@ export interface Post {
   tags: string[];
   publish_date: string;
   visibility: number;
+  lang: string;
 }
 
 export interface PostCreateDTO {

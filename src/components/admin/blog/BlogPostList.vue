@@ -53,15 +53,33 @@
         </div>
 
         <div class="flex flex-col gap-4">
-          <button
-            class="border-2 border-black px-4 py-2 bg-white shadow-[3px_3px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
-            @click="$router.push(`/admin/blog/editor/${post.id}`)"
-          >
-            Editar
-          </button>
+          <div class="flex gap-2">
+            <button
+              class="border-2 border-black px-3 py-1 bg-yellow-200 shadow-[2px_2px_0px_black]"
+              @click="emit('toggle-visibility', post)"
+            >
+              {{ post.visibility === 1 ? "Arquivar" : "Desarquivar" }}
+            </button>
+
+            <button
+              class="border-2 border-black px-3 py-1 bg-red-200 shadow-[2px_2px_0px_black]"
+              @click="emit('delete-post', post.id)"
+            >
+              Excluir
+            </button>
+
+            <button
+              class="border-2 border-black px-4 py-2 bg-white shadow-[3px_3px_0px_black]"
+              @click="$router.push(`/admin/blog/editor/${post.id}`)"
+            >
+              Editar
+            </button>
+          </div>
+
           <div class="text-left md:text-right shrink-0">
             <p class="text-xs font-bold font-mono">
-              Created in: {{ new Date(post.publish_date).toLocaleDateString("pt-BR") }}
+              Created in:
+              {{ new Date(post.publish_date).toLocaleDateString("pt-BR") }}
             </p>
           </div>
         </div>
@@ -77,5 +95,10 @@ defineProps<{
   posts: Post[];
   pending: boolean;
   error: string | null;
+}>();
+
+const emit = defineEmits<{
+  (e: "toggle-visibility", post: Post): void;
+  (e: "delete-post", id: string): void;
 }>();
 </script>

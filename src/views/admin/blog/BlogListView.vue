@@ -29,7 +29,13 @@
     </div>
 
     <section>
-      <BlogPostList :posts="posts" :pending="pending" :error="error" />
+      <BlogPostList
+        :posts="posts"
+        :pending="pending"
+        :error="error"
+        @toggle-visibility="toggleVisibility"
+        @delete-post="deletePost"
+      />
     </section>
   </div>
 </template>
@@ -46,7 +52,9 @@ const {
   fetchPosts,
   totalPosts,
   draftPosts,
+  toggleVisibility,
   publishedPosts,
+  deletePost,
 } = usePosts();
 
 onMounted(async () => {

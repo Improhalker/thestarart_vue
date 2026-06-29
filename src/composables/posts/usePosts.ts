@@ -52,6 +52,42 @@ export const usePosts = () => {
       pending.value = false;
     }
   };
+  const toggleVisibility = async (post: Post) => {
+    pending.value = true;
+    error.value = null;
+
+    try {
+      const response = await repo.update(post.id, {
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        publish_date: post.publish_date,
+        visibility: post.visibility === 1 ? 0 : 1,
+        lang: post.lang,
+        tags: post.tags,
+        thumbnail: null,
+      });
+
+      const index = posts.value.findIndex((p) => p.id === post.id);
+
+      if (index !== -1) {
+        posts.value[index] = response.data;
+      }
+    } catch (e) {
+      error.value = "Erro ao atualizar visibilidade";
+      throw e;
+    } finally {
+      pending.value = false;
+    }
+  };
+  const deletePost = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir?")) return;
+
+    await repo.delete(id);
+
+    posts.value = posts.value.filter(p => p.id !== id);
+  };
 
   return {
     posts,
@@ -62,5 +98,7 @@ export const usePosts = () => {
     draftPosts,
     fetchPosts,
     createPost,
+    toggleVisibility,
+    deletePost
   };
 };

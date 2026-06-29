@@ -66,5 +66,16 @@ export const usePostsRepository = () => {
         method: "GET",
       });
     },
+    toggleVisibility(id: string) {
+      return client(`/posts/${id}/visibility`, {
+        method: "PATCH",
+      });
+    },
+
+    delete(id: string) {
+      return client(`/posts/${id}`, {
+        method: "DELETE",
+      });
+    },
   };
 };
