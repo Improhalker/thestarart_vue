@@ -31,10 +31,13 @@ export const usePostsRepository = () => {
       });
     },
 
-    update(id: string, data: PostCreateDTO): Promise<{ data: Post }> {
+    update(id: string, data: PostCreateDTO) {
       return client(`/posts/${id}`, {
-        method: "POST", 
+        method: "POST",
         body: toFormData(data),
+        headers: {
+          "X-HTTP-Method-Override": "PUT",
+        },
       });
     },
 
