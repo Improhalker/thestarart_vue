@@ -1,42 +1,40 @@
 export function useTranslate() {
-function applyLang(lang: string) {
-    const select = document.querySelector('.goog-te-combo') as HTMLSelectElement | null
+    function applyLang(lang: string) {
+        const select = document.querySelector(
+            ".goog-te-combo"
+        ) as HTMLSelectElement | null;
 
-    if (lang === 'pt') {
-        const alreadyReset = sessionStorage.getItem('translate-reset')
+        if (lang === "pt") {
+            const alreadyReset = sessionStorage.getItem("translate-reset");
 
-        if (alreadyReset) {
-            console.log('✅ Reset já aplicado, evitando loop')
-            sessionStorage.removeItem('translate-reset')
-            return
+            if (alreadyReset) {
+                sessionStorage.removeItem("translate-reset");
+                return;
+            }
+
+            sessionStorage.setItem("translate-reset", "true");
+
+            document.cookie =
+                "googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+            document.cookie = `googtrans=;path=/;domain=${window.location.hostname};expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+
+            window.location.reload();
+            return;
         }
 
-        console.log('🔄 Resetando tradução para PT (original)')
+        document.cookie = `googtrans=/pt/${lang};path=/`;
+        document.cookie = `googtrans=/pt/${lang};path=/;domain=${window.location.hostname}`;
 
-        sessionStorage.setItem('translate-reset', 'true')
+        if (!select) {
+            return;
+        }
 
-        document.cookie = 'googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'
-        document.cookie = `googtrans=;path=/;domain=${window.location.hostname};expires=Thu, 01 Jan 1970 00:00:00 GMT`
-
-        window.location.reload()
-        return
+        setTimeout(() => {
+            select.value = lang;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+        }, 500);
     }
-
-    console.log('🌍 Aplicando idioma:', lang)
-
-    document.cookie = `googtrans=/pt/${lang};path=/`
-    document.cookie = `googtrans=/pt/${lang};path=/;domain=${window.location.hostname}`
-
-    if (!select) {
-        console.warn('Select não encontrado, usando só cookie')
-        return
-    }
-
-    setTimeout(() => {
-        select.value = lang
-        select.dispatchEvent(new Event('change', { bubbles: true }))
-    }, 500)
-}
 
     function initGoogleTranslate() {
 
