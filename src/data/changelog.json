@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.7.2",
+    "date": "17/06/2026",
+    "status": "DEV",
+    "changes": [
+      "[FEATURE] Novo Modulo - Blog - Cadastro de posts e edicoes ja sao possiveis para Admin"
+    ]
+  },
+  {
     "version": "0.7.1",
     "date": "09/06/2026",
     "status": "DEV",

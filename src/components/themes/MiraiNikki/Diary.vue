@@ -19,8 +19,8 @@
               <MailIcon class="absolute left-2" />
               <span class="text-2xl mx-auto">Diary</span>
             </div>
-            <div class="content text-black p-2">
-              <div v-for="entry in diaryEntries" :key="entry.id" class="mb-4">
+            <div class="content text-sm font-mono text-black p-2">
+              <div v-for="entry in diaryEntries" class="mb-4">
                 <span class="font-bold">
                   {{ entry.date }}
                 </span>
@@ -29,7 +29,7 @@
                   {{ entry.time }}
                 </span>
 
-                <p class="hyphens-auto">{{ entry.content }}</p>
+                <p class="hyphens-auto font-mono">{{ entry.content }}</p>
               </div>
             </div>
           </div>
@@ -198,20 +198,29 @@ const keypad = [
 
 const diaryEntries = [
   {
-    id: 1,
+    date: "Jun 23, 2026",
+    time: "09:06 AM",
+    content:
+      "Na verdade deu tudo errado, a Furia perdeu a final de um major, eu e meu time perdemos na semifinal de um campeonato que queriamos muito ganhar. Estive conversansdo ontem na terapia sobre muita coisa, tenho bastante coisa a melhorar.",
+  },
+  {
+    date: "Jun 18, 2026",
+    time: "13:06 PM",
+    content:
+      "Hoje esta para ser um dia bem divertido, vou assistir a Furia CS disputar as quartas de finais no Major, amanha terei um churras com os crias, sabado cinema com minha namorada... enfim, vai ser um final de semana bem divertido, Deus nos abencoe.",
+  },
+  {
     date: "Jun 9, 2026",
     time: "15:56 PM",
     content:
       "Essa é minha primeira anotação nesse diário e inclusive uma previa do sistema do diario sera lancada",
   },
   {
-    id: 2,
     date: "Jun 08, 2026",
     time: "08:12 AM",
     content: "Sem muitas anotacoes para dias anteriores, apenas visualizacao de layout.",
   },
   {
-    id: 3,
     date: "Jun 11, 2026",
     time: "23:48 PM",
     content: "DEAD END",

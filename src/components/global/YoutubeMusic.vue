@@ -9,10 +9,9 @@ const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
   {
-    id: "2sBRnnnZyFw",
-    title: "Twenty One Pilots - Choker (Official Video)",
-    reason:
-      "Musica mto gostosa de se ouvir, sincermanete, minha namorada que me recomendou",
+    id: "8F2s8ivKXNY",
+    title: "Oliver Tree - Life Goes On",
+    reason: "Sentirei saudades Oliver.",
   },
   { id: "IKgp6n21XpM", title: "Lofi relax", reason: "Boa pra desenhar à noite" },
   {

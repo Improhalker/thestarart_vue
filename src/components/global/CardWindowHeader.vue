@@ -1,46 +1,57 @@
 <script setup lang="ts">
 import type { Component } from "vue";
-import { useAchievements } from '@/composables/useAchievements'
+import { useAchievements } from "@/composables/useAchievements";
 interface Props {
-  title: string
-  icon?: Component
-  hideWindowButtons?: boolean
+  title: string;
+  icon?: Component;
+  hideWindowButtons?: boolean;
 }
 
-defineProps<Props>()
+defineProps<Props>();
 
-const { unlock } = useAchievements()
+const { unlock } = useAchievements();
 
 const handleInutilClick = () => {
   unlock({
-    id: 'useless_buttons',
-    title: 'FALTA DE CRIATIVIDADE',
-    description: 'Esses botões são meramente visuais. Parabéns, achou mais uma inutilidade no projeto!',
-    icon: '⚙️'
-  })
-}
-
+    id: "useless_buttons",
+    title: "FALTA DE CRIATIVIDADE",
+    description:
+      "Esses botões são meramente visuais. Parabéns, achou mais uma inutilidade no projeto!",
+    icon: "⚙️",
+  });
+};
 </script>
-
 <template>
-  <div class="font-pixel flex items-center justify-between px-2 py-1 border-b border-black
-           bg-gradient-to-r from-[var(--ts-primary-pink)] to-[#2d0240]">
+  <div>
+    <div
+      class="font-pixel flex items-center justify-between px-2 py-1 border-b border-black bg-gradient-to-r from-[var(--ts-primary-pink)] to-[#2d0240]"
+    >
+      <div class="flex items-center gap-1.5">
+        <div v-if="icon" class="bg-black p-[3px] border border-white/20">
+          <component :is="icon" :size="14" class="text-pink-400" />
+        </div>
 
-    <div class="flex items-center gap-1.5">
-      <div v-if="icon" class="bg-black p-[3px] border border-white/20">
-        <component :is="icon" :size="14" class="text-pink-400" />
+        <span class="text-[13px] font-bold text-white uppercase tracking-[0.1em]">
+          {{ title }}
+        </span>
       </div>
 
-      <span class="text-[13px] font-bold text-white uppercase tracking-[0.1em]">
-        {{ title }}
-      </span>
-    </div>
-    <slot name="right" />
+      <slot name="right" />
 
-    <div v-if="!hideWindowButtons" class="flex gap-1">
-      <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">_</button>
-      <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">X</button>
+      <div v-if="!hideWindowButtons" class="flex gap-1">
+        <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">
+          _
+        </button>
+        <button @click="handleInutilClick" class="retro-btn w-6 h-5 text-[10px]">
+          X
+        </button>
+      </div>
     </div>
 
+    <img
+      src="https://blob.gifcities.org/gifcities/GMDDALK3JY66R4JMDJGJ6LANDTF3OPUB.gif"
+      alt=""
+      class="w-full h-[6px] object-cover pointer-events-none select-none"
+    />
   </div>
 </template>

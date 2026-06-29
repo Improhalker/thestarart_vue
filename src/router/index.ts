@@ -34,6 +34,16 @@ const router = createRouter({
           path: 'diary',
           name: 'diary',
           component: () => import('@/views/themes/MiraiNikki/Diary.vue'),
+        },
+        {
+          path: 'blog',
+          name: 'blog',
+          component: () => import('@/views/blog/BlogView.vue'),
+        },
+        {
+          path: 'post/:slug',
+          name: 'post.show',
+          component: () => import('@/views/blog/PostView.vue'),
         }
       ],
     },
@@ -75,6 +85,22 @@ const router = createRouter({
           name: 'admin.musics',
           component: () => import('@/views/admin/MusicListView.vue'),
         },
+        {
+          path: 'blog',
+          children: [
+            {
+              path: '',
+              name: 'admin.blog.list',
+              component: () => import('@/views/admin/blog/BlogListView.vue'),
+            },
+
+            {
+              path: 'editor/:id?',
+              name: 'admin.blog.editor',
+              component: () => import('@/views/admin/blog/BlogEditView.vue'),
+            }
+          ]
+        }
       ],
     },
     {

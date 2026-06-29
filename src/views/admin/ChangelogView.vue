@@ -1,47 +1,47 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import changelogData from '@/data/changelog.json'
-import CardWindowHeader from '@/components/global/CardWindowHeader.vue'
-import { Terminal, Headphones } from 'lucide-vue-next'
+import { computed } from "vue";
+import changelogData from "@/data/changelog.json";
+import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
+import { Terminal, Headphones } from "lucide-vue-next";
 
 interface Props {
-  variant?: 'default' | 'retro-pink' | 'crimson'
-  limit?: number | null
-  fullHeight?: boolean
+  variant?: "default" | "retro-pink" | "crimson";
+  limit?: number | null;
+  fullHeight?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'retro-pink',
+  variant: "retro-pink",
   limit: 5,
-  fullHeight: false
-})
-
+  fullHeight: false,
+});
 
 const logs = computed(() => {
-  return props.limit ? changelogData.slice(0, props.limit) : changelogData
-})
+  return props.limit ? changelogData.slice(0, props.limit) : changelogData;
+});
 
-const isCrimson = computed(() => props.variant === 'crimson')
-const isPink = computed(() => props.variant === 'retro-pink')
+const isCrimson = computed(() => props.variant === "crimson");
+const isPink = computed(() => props.variant === "retro-pink");
 </script>
 
 <template>
-  <div class="space-y-4 relative overflow-hidden"
+  <div
+    class="space-y-4 relative overflow-hidden"
     :class="[
       isPink && 'container-style-dark',
 
-      isCrimson && 'bg-gradient-to-r from-[var(--crimson-bg)] via-[var(--crimson-secondary)] to-[var(--crimson-tertiary)] border-2 border-[var(--crimson-border)] border-r-[var(--crimson-border-dark)] border-b-[var(--crimson-border-dark)] shadow-[0_0_20px_rgba(255,0,0,0.15)]',
+      isCrimson &&
+        'bg-gradient-to-r from-[var(--crimson-bg)] via-[var(--crimson-secondary)] to-[var(--crimson-tertiary)] border-2 border-[var(--crimson-border)] border-r-[var(--crimson-border-dark)] border-b-[var(--crimson-border-dark)] shadow-[0_0_20px_rgba(255,0,0,0.15)]',
 
-      !isPink && !isCrimson && 'bg-white'
+      !isPink && !isCrimson && 'bg-white',
     ]"
   >
-
     <CardWindowHeader title="System_Logs.txt" :icon="Headphones" />
 
     <div
       :class="[
         'overflow-auto pr-1 custom-scrollbar',
-        props.fullHeight ? 'h-full' : 'h-[400px] resize-y'
+        props.fullHeight ? 'h-full' : 'h-[400px] resize-y',
       ]"
     >
       <div class="space-y-4 relative lg:pb-4">
@@ -51,8 +51,8 @@ const isPink = computed(() => props.variant === 'retro-pink')
             isPink
               ? 'bg-[var(--ui-accent-soft)]/60'
               : isCrimson
-                ? 'bg-red-900/60'
-                : 'bg-black/10'
+              ? 'bg-red-900/60'
+              : 'bg-black/10'
           "
         ></div>
         <div
@@ -70,21 +70,23 @@ const isPink = computed(() => props.variant === 'retro-pink')
                 ? isCrimson
                   ? 'bg-[var(--crimson-accent)] shadow-[0_0_10px_red]'
                   : 'bg-[var(--ui-accent)] shadow-[0_0_8px_var(--ui-accent)]'
-                : 'bg-white/60'
+                : 'bg-white/60',
             ]"
           ></div>
           <div
             class="overflow-hidden border-2 backdrop-blur-sm"
             :class="[
-              isPink && 'border-[var(--ui-border)] border-r-[var(--ui-border-dark)] border-b-[var(--ui-border-dark)] bg-[var(--ui-bg)]/60',
+              isPink &&
+                'border-[var(--ui-border)] border-r-[var(--ui-border-dark)] border-b-[var(--ui-border-dark)] bg-[var(--ui-bg)]/60',
 
-              isCrimson && 'border-[var(--crimson-border)] border-r-[var(--crimson-border-dark)] border-b-[var(--crimson-border-dark)] bg-[var(--crimson-bg)]/70'
+              isCrimson &&
+                'border-[var(--crimson-border)] border-r-[var(--crimson-border-dark)] border-b-[var(--crimson-border-dark)] bg-[var(--crimson-bg)]/70',
             ]"
           >
             <CardWindowHeader
               :title="`BUILD_${log.version.replace('.', '_')}`"
               :icon="Terminal"
-              :hide-window-buttons="true"  
+              :hide-window-buttons="true"
             >
               <template #right>
                 <span class="text-[10px] font-mono font-bold mr-2 text-white">
@@ -98,8 +100,8 @@ const isPink = computed(() => props.variant === 'retro-pink')
                 isPink
                   ? 'container-blog text-[var(--ui-text)]'
                   : isCrimson
-                    ? 'bg-black/40 text-[var(--crimson-text)]'
-                    : 'bg-white text-black'
+                  ? 'bg-black/40 text-[var(--crimson-text)]'
+                  : 'bg-white text-black'
               "
             >
               <ul class="space-y-1.5 max-h-[200px] overflow-y-auto custom-scrollbar pr-1">
@@ -108,9 +110,7 @@ const isPink = computed(() => props.variant === 'retro-pink')
                   :key="item"
                   class="flex gap-2 leading-tight"
                 >
-                  <span class="font-black shrink-0 text-[var(--ui-accent)]">
-                    >>
-                  </span>
+                  <span class="font-black shrink-0 text-[var(--ui-accent)]"> >> </span>
 
                   <span class="font-bold uppercase tracking-tighter">
                     {{ item }}
@@ -124,17 +124,14 @@ const isPink = computed(() => props.variant === 'retro-pink')
                 isPink
                   ? 'container-blog '
                   : isCrimson
-                    ? 'bg-black/50 border-t border-[var(--crimson-border)] text-red-300'
-                    : 'bg-gray-50 border-t border-gray-200 text-gray-400'
+                  ? 'bg-black/50 border-t border-[var(--crimson-border)] text-red-300'
+                  : 'bg-gray-50 border-t border-gray-200 text-gray-400'
               "
             >
               <span class="text-black">Kernel_v4.2</span>
 
-              <span class="font-bold text-green-500">
-                ● {{ log.status }}
-              </span>
+              <span class="font-bold text-green-500"> ● {{ log.status }} </span>
             </div>
-
           </div>
         </div>
       </div>
@@ -151,8 +148,8 @@ const isPink = computed(() => props.variant === 'retro-pink')
           isPink
             ? 'text-[var(--ui-text-soft)]'
             : isCrimson
-              ? 'text-red-300'
-              : 'text-black'
+            ? 'text-red-300'
+            : 'text-black'
         "
       >
         SCROLL_FOR_HISTORY.
@@ -160,22 +157,3 @@ const isPink = computed(() => props.variant === 'retro-pink')
     </div>
   </div>
 </template>
-
-<style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #0f0120;
-  border-left: 1px solid #48054a;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #ffffff;
-  border: 1px solid #000;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #c1277c;
-}</style>

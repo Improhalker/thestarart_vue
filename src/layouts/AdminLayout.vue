@@ -20,6 +20,7 @@ const route = useRoute();
 const menuItems = [
   { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { name: "Músicas", path: "/admin/musics", icon: Music },
+  { name: "Blog", path: "/admin/blog", icon: History },
   { name: "Logs_Sistema", path: "/admin/changelog", icon: History },
 ];
 

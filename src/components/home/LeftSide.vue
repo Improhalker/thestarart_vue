@@ -5,6 +5,7 @@
     <Coupon />
     <VisualSuffer />
     <SystemResource />
+    <Calendar />
   </div>
 </template>
 
@@ -14,6 +15,5 @@ import Coupon from "../global/neomaker/Coupon.vue";
 import Slider from "../drawing/Slider.vue";
 import VisualSuffer from "../global/VisualSuffer.vue";
 import SystemResource from "../global/SystemResource.vue";
-
-
+import Calendar from "../global/Calendar.vue";
 </script>
