@@ -15,7 +15,7 @@ export const useAuthRepository = () => {
 
   return {
     login(credentials: LoginCredentials): Promise<LoginResponse> {
-      return client("/api/user/login", {
+      return client("/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export const useAuthRepository = () => {
       localStorage.clear();
 
       // TODO - Quando o Laravel tiver o endpoint pronto, usar linha abaixo:
-      // await client("/api/user/logout", { method: "POST" });
+      // await client("/user/logout", { method: "POST" });
       
       return Promise.resolve();
     }
