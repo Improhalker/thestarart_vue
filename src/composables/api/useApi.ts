@@ -3,7 +3,7 @@ export const useApi = () => {
 
   const client = async (endpoint: string, options: RequestInit = {}) => {
     const baseUrl =
-      import.meta.env.VITE_API_URL_LOCAL ||
+      import.meta.env.VITE_API_URL ||
       "http://thestarartlaravelback.test";
 
     const headers = new Headers(options.headers);
