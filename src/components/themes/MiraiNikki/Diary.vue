@@ -20,7 +20,7 @@
               <span class="text-2xl mx-auto">Diary</span>
             </div>
             <div class="content text-sm font-mono text-black p-2">
-              <div v-for="entry in diaryEntries" :key="entry.id" class="mb-4">
+              <div v-for="entry in diaryEntries" class="mb-4">
                 <span class="font-bold">
                   {{ entry.date }}
                 </span>
