@@ -37,8 +37,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
-
+import { useAuthRepository } from "@/composables/useAuth";
+const authRepo = useAuthRepository();
 const router = useRouter();
 
 const email = ref("");
@@ -46,21 +46,19 @@ const password = ref("");
 
 const login = async () => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/login`, {
+    const data = await authRepo.login({
       email: email.value,
       password: password.value,
     });
 
-    const token = response.data.token;
-    //remover do local storage futuramente
+    const token = data.token;
+
     localStorage.setItem("auth", "true");
     localStorage.setItem("token", token);
-
     router.push("/admin");
-  } catch (error) {
-    console.error(error);
-
-    alert("Email ou senha inválidos.");
+  } catch (error: any) {
+    console.error("Erro na tentativa de login:", error);
+    alert(error.message || "Email ou senha inválidos.");
   }
 };
 </script>
