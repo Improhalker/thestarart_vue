@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Editor } from "@tiptap/vue-3";
 import { ref } from "vue";
+import { usePostsRepository } from "@/composables/posts/usePostRepository";
 
 import { Bold, Italic, Underline, Link, Image, Youtube } from "lucide-vue-next";
 
@@ -14,6 +15,7 @@ const openImagePicker = () => {
   imageInput.value?.click();
 };
 
+const postsRepo = usePostsRepository();
 const handleImageUpload = async (event: Event) => {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
@@ -23,24 +25,12 @@ const handleImageUpload = async (event: Event) => {
   const formData = new FormData();
   formData.append("image", file);
 
-  const token = localStorage.getItem("token");
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/upload/image`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) throw new Error("Erro no upload");
-
-    const data = await response.json();
-
+    const data = await postsRepo.uploadImage(formData);
     props.editor.chain().focus().setImage({ src: data.url }).run();
-  } catch (error) {
-    console.error("Erro ao subir imagem:", error);
+  } catch (error: any) {
+    console.error("Erro ao subir imagem no componente:", error);
+    alert(error.message || "Não foi possível carregar a imagem.");
   } finally {
     input.value = "";
   }
