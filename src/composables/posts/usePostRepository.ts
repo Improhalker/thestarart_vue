@@ -1,5 +1,6 @@
 import { useApi } from "../api/useApi";
 import type { Post, PostCreateDTO } from "./types";
+import { toFormData } from "../../utils/toFormData";
 
 type PostListResponse = {
   data: Post[];
@@ -23,16 +24,17 @@ export const usePostsRepository = () => {
       });
     },
 
-    create(data: FormData): Promise<PostCreateResponse> {
+    create(data: PostCreateDTO): Promise<PostCreateResponse> {
       return client("/api/posts", {
         method: "POST",
-        body: data,
+        body: toFormData(data),
       });
     },
-    update(id: string, data: FormData): Promise<{ data: Post }> {
+
+    update(id: string, data: PostCreateDTO): Promise<{ data: Post }> {
       return client(`/api/posts/${id}`, {
-        method: "POST",
-        body: data,
+        method: "POST", 
+        body: toFormData(data),
       });
     },
 
@@ -55,13 +57,11 @@ export const usePostsRepository = () => {
         method: "GET",
       });
     },
+
     getBySlug(id: string): Promise<{ data: Post }> {
       return client(`/api/posts/slug/${id}`, {
         method: "GET",
       });
     },
-
-
-
   };
 };
