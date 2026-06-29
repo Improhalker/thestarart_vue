@@ -90,32 +90,23 @@ const submit = async () => {
   isSubmitting.value = true;
 
   try {
-    const formData = new FormData();
-
-    formData.append("title", form.title);
-    formData.append("slug", form.slug);
-    formData.append("excerpt", form.excerpt);
-    formData.append("content", form.content);
-    formData.append("publish_date", form.publish_date);
-    formData.append("visibility", String(form.visibility));
-    formData.append("lang", form.lang);
-
-    form.tags.forEach((tag) => {
-      formData.append("tags[]", tag);
-    });
-
-    if (thumbnailFile.value) {
-      formData.append("thumbnail", thumbnailFile.value);
-    }
+    const payload = {
+      title: form.title,
+      slug: form.slug,
+      excerpt: form.excerpt,
+      content: form.content,
+      publish_date: form.publish_date,
+      visibility: form.visibility,
+      lang: form.lang,
+      tags: form.tags,
+      thumbnail: thumbnailFile.value,
+    };
 
     if (isEditing) {
-      formData.append("_method", "PUT");
-      await postsRepo.update(postId!, formData);
-
+      await postsRepo.update(postId!, payload);
       successMessage.value = "✅ Post atualizado com sucesso!";
     } else {
-      await postsRepo.create(formData);
-
+      await postsRepo.create(payload);
       resetForm();
       successMessage.value = "✅ Post criado com sucesso!";
     }
