@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import BlogGrid from "@/components/global/blog/BlogGrid.vue";
+import { onMounted } from "vue";
+
+import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
+import PostGrid from "@/components/global/blog/PostGrid.vue";
+import { usePosts } from "@/composables/posts/usePosts";
+
+const { posts, pending, error, fetchPosts } = usePosts();
+
+onMounted(async () => {
+  await fetchPosts();
+});
 </script>
 
 <template>
@@ -13,19 +23,17 @@ import BlogGrid from "@/components/global/blog/BlogGrid.vue";
         style="background-image: url('/images/blog-banner.jpg')"
       />
 
-      <!-- overlay -->
       <div class="absolute inset-0 bg-black/60" />
 
-      <!-- content -->
       <div class="relative z-10 h-full flex flex-col justify-center p-4">
-        <h1 class="text-xl font-black text-white uppercase">Bem Vindo a Area do Blog</h1>
+        <h1 class="text-xl font-black text-white uppercase">Bem-vindo à Área do Blog</h1>
 
         <p class="text-xs text-gray-300 mt-1">
-          pensamentos · desenhos · dev notes · atualizacoes de sistema
+          pensamentos · desenhos · dev notes · atualizações de sistema
         </p>
       </div>
     </div>
 
-    <BlogGrid />
+    <PostGrid :posts="posts" :loading="pending" :error="error" />
   </div>
 </template>
