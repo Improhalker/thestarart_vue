@@ -1,5 +1,14 @@
 [
   {
+    "version": "0.7.3",
+    "date": "30/06/2026",
+    "status": "DEV",
+    "changes": [
+      "[FEATURE] Correcoes de layout e responsividade no componente PostGrid.vue",
+      "[FEATURE] Adicionado suporte a paginação e carregamento de posts via API"
+    ]
+  },
+  {
     "version": "0.7.2",
     "date": "17/06/2026",
     "status": "DEV",
