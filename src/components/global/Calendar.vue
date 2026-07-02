@@ -1,56 +1,77 @@
 <template>
   <div
-    class="border-2 border-[var(--color-ts-ui-border-dark)] bg-[var(--color-ts-ui-bg)] p-3"
+    class="border-2 border-[var(--color-ts-ui-border-dark)] bg-[var(--color-ts-ui-bg)] p-2"
   >
     <!-- Header -->
-    <div class="flex text-[var(--color-ts-ui-text)] items-center justify-between mb-3">
-      <button class="text-xs font-bold uppercase hover:opacity-70" @click="prevMonth">
+    <div
+      class="flex items-center justify-between border-2 border-[var(--color-ts-ui-border-dark)] bg-[var(--color-ts-ui-bg-secondary)] px-2 py-1 mb-2"
+    >
+      <button
+        class="w-6 h-6 border border-[var(--color-ts-ui-border-dark)] bg-[var(--color-ts-ui-bg)] text-[var(--color-ts-ui-text)] hover:bg-[var(--color-ts-ui-bg-tertiary)] active:translate-y-px"
+        @click="prevMonth"
+      >
         ◀
       </button>
 
-      <div class="text-xs font-black tracking-widest">
-        {{ monthNames[currentMonth] }} {{ currentYear }}
+      <div
+        class="text-[11px] font-black uppercase tracking-widest text-[var(--color-ts-ui-text)]"
+      >
+        Calendar.exe — {{ monthNames[currentMonth] }} {{ currentYear }}
       </div>
 
-      <button class="text-xs font-bold uppercase hover:opacity-70" @click="nextMonth">
+      <button
+        class="w-6 h-6 border border-[var(--color-ts-ui-border-dark)] bg-[var(--color-ts-ui-bg)] text-[var(--color-ts-ui-text)] hover:bg-[var(--color-ts-ui-bg-tertiary)] active:translate-y-px"
+        @click="nextMonth"
+      >
         ▶
       </button>
     </div>
 
-    <!-- Dias da semana -->
+    <!-- Dias -->
     <div
-      class="grid grid-cols-7 text-[var(--color-ts-ui-text)] text-[9px] text-center mb-2 opacity-70"
+      class="grid grid-cols-7 border border-[var(--color-ts-ui-border-dark)] bg-[var(--color-ts-ui-bg-secondary)] text-[9px] font-bold uppercase text-center text-[var(--color-ts-ui-text-soft)] mb-1"
     >
-      <div>SU</div>
-      <div>MO</div>
-      <div>TU</div>
-      <div>WE</div>
-      <div>TH</div>
-      <div>FR</div>
-      <div>SA</div>
+      <div class="py-1 border-r border-[var(--color-ts-ui-border-dark)]">SU</div>
+      <div class="py-1 border-r border-[var(--color-ts-ui-border-dark)]">MO</div>
+      <div class="py-1 border-r border-[var(--color-ts-ui-border-dark)]">TU</div>
+      <div class="py-1 border-r border-[var(--color-ts-ui-border-dark)]">WE</div>
+      <div class="py-1 border-r border-[var(--color-ts-ui-border-dark)]">TH</div>
+      <div class="py-1 border-r border-[var(--color-ts-ui-border-dark)]">FR</div>
+      <div class="py-1">SA</div>
     </div>
 
     <!-- Calendário -->
-    <div class="grid grid-cols-7 gap-1 text-[10px]">
+    <div class="grid grid-cols-7 gap-px bg-[var(--color-ts-ui-border-dark)]">
       <div
         v-for="(day, index) in days"
         :key="index"
-        class="h-8 flex items-center justify-center border transition"
+        class="aspect-square flex items-center justify-center text-[10px] font-bold bg-[var(--color-ts-ui-bg)] transition-colors"
         :class="
           day
             ? [
-                'border-[var(--color-ts-ui-border-dark)] cursor-pointer hover:bg-[var(--color-ts-ui-bg-tertiary)]',
+                'cursor-pointer hover:bg-[var(--color-ts-ui-bg-tertiary)]',
+
                 isToday(day)
-                  ? 'bg-[var(--color-ts-ui-accent)] text-white font-black shadow-md'
+                  ? 'bg-[var(--color-ts-ui-accent)] text-black'
                   : isPast(day)
-                  ? 'bg-[var(--color-ts-ui-bg-tertiary)] text-[var(--color-ts-ui-text-soft)] opacity-70'
+                  ? 'text-[var(--color-ts-ui-text-soft)]'
                   : 'text-[var(--color-ts-ui-text)]',
               ]
-            : 'border-transparent'
+            : 'bg-[var(--color-ts-ui-bg-secondary)]'
         "
       >
-        {{ day ? day.getDate() : "" }}
+        <span v-if="day">
+          {{ day.getDate() }}
+        </span>
       </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="mt-2 border border-[var(--color-ts-ui-border-dark)] bg-[var(--color-ts-ui-bg-secondary)] px-2 py-1 text-[9px] uppercase flex justify-between text-[var(--color-ts-ui-text-soft)]"
+    >
+      <span>System Calendar v1.0</span>
+      <span>{{ today.toLocaleDateString("pt-BR") }}</span>
     </div>
   </div>
 </template>

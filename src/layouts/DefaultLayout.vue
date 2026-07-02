@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import NavBar from "@/components/global/Navbar/NavBar.vue";
-import OldNavBar from "@/components/global/OldNavBar.vue";
+import NavBar from "@/components/global/Navbar/Navbar.vue";
 import StartupPopup from "@/components/global/StartupPopup.vue";
 import ChangelogView from "@/views/ChangelogView.vue";
 import LeftSide from "@/components/home/LeftSide.vue";
@@ -42,7 +41,7 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
       </div>
       <div class="pb-[100px] md:pb-0">
         <footer
-          class="container relative overflow-hidden border-t-[3px] border-[var(--ts-primary-pink)] bg-black px-0"
+          class="w-full relative overflow-hidden border-t-[3px] border-[var(--ts-primary-pink)] bg-black px-0"
         >
           <div
             class="absolute inset-0 opacity-40 bg-[url('/images/banner.webp')] bg-repeat-x bg-cover bg-[position:center_-100px]"

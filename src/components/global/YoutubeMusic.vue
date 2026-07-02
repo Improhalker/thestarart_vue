@@ -9,9 +9,9 @@ const isMd = useMediaQuery("(min-width: 768px)");
 
 const musics = [
   {
-    id: "8F2s8ivKXNY",
-    title: "Oliver Tree - Life Goes On",
-    reason: "Sentirei saudades Oliver.",
+    id: "zMVxXzB38Cs",
+    title: " DARLING in the FRANXX - Ending 3 | Beautiful World",
+    reason: "Estou com hiperfoco em darling in the franxx de novo.",
   },
   { id: "IKgp6n21XpM", title: "Lofi relax", reason: "Boa pra desenhar à noite" },
   {

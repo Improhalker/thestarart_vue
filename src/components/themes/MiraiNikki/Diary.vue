@@ -4,7 +4,7 @@
     style="background: url('/images/mirainikkibackground.jpg')"
   >
     <div
-      class="flex flex-col w-72 h-[980px] diary-blue rounded-3xl border-4 border-[#21454c] place-self-center mx-auto my-10"
+      class="scale-75 flex flex-col w-72 h-[1070px] diary-blue rounded-3xl border-4 border-[#21454c] place-self-center mx-auto my-10"
     >
       <div
         class="h-full px-5 pt-8 pb-0 border-4 rounded-2xl border-[#21454c] rounded-b-none"
