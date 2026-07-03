@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NavBar from "@/components/global/Navbar/Navbar.vue";
+import Navbar from "@/components/global/Navbar/Navbar.vue";
 import StartupPopup from "@/components/global/StartupPopup.vue";
 import ChangelogView from "@/views/ChangelogView.vue";
 import LeftSide from "@/components/home/LeftSide.vue";
@@ -15,7 +15,7 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
       style="background-image: url('/images/bluebox.gif')"
     >
       <section class="px-0 pb-4 lg:pb-16 pt-0 lg:pt-24">
-        <NavBar />
+        <Navbar />
 
         <div
           class="container relative z-10 place-self-center h-full py-4 grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-5 items-start"
