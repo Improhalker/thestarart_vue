@@ -13,6 +13,7 @@ import { Cpu, Gamepad2, GripHorizontal } from "lucide-vue-next";
 
 import { navigationLinks } from "./navigation";
 
+
 const currentVersion = changelog[0]?.version ?? "0.0.0";
 </script>
 

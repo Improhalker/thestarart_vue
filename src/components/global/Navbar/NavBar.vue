@@ -2,6 +2,7 @@
 import { useAchievements } from "@/composables/useAchievements";
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import NavbarMobile from "./NavbarMobile.vue";
+
 const { unlock } = useAchievements();
 import { navigationLinks } from "./navigation";
 </script>
