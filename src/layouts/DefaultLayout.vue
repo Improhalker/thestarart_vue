@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Navbar from "@/components/global/Navbar/Navbar.vue";
+import Navbar from "@/components/global/NewNavbar/Navbar.vue";
 import StartupPopup from "@/components/global/StartupPopup.vue";
 import ChangelogView from "@/views/ChangelogView.vue";
 import LeftSide from "@/components/home/LeftSide.vue";
