@@ -1,5 +1,19 @@
 [
   {
+    "version": "0.8.0",
+    "date": "06/07/2026",
+    "status": "DEV",
+    "changes": [
+      "VERSAO 0.8",
+      "[FEATURE] Implementada transição suave entre páginas (RouterView + Transition)",
+      "[IMPROVEMENT] Reestruturação do layout principal (Left / Content / Right) com melhor organização no desktop",
+      "[IMPROVEMENT] Ajustes na Navbar para melhor consistência visual e alinhamento no header",
+      "[IMPROVEMENT] Correções de responsividade no mobile (ordem dos componentes e grid layout)",
+      "[IMPROVEMENT] Ajustes gerais no Blog (layout, espaçamento e comportamento de renderização)",
+      "[FIX] Correção de comportamento visual durante troca de páginas (remoção de flash branco)"
+    ]
+  },
+  {
     "version": "0.7.3",
     "date": "30/06/2026",
     "status": "DEV",

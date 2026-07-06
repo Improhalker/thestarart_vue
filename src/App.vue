@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import AchievementBadge from '@/components/global/AchievementBadge.vue'
-import { useTranslate } from '@/composables/useTranslate'
+import { onMounted } from "vue";
+import AchievementBadge from "@/components/global/AchievementBadge.vue";
+import { useTranslate } from "@/composables/useTranslate";
 
-const { initGoogleTranslate } = useTranslate()
+const { initGoogleTranslate } = useTranslate();
 
 onMounted(() => {
-  initGoogleTranslate()
-})
+  initGoogleTranslate();
+});
 </script>
 
 <template>
-  <div id="google_translate_element" style="display: none;"></div>
+  <div id="google_translate_element" style="display: none"></div>
 
-  <RouterView />
+  <RouterView v-slot="{ Component, route }">
+    <Transition name="page" mode="out-in">
+      <component :is="Component" :key="route.fullPath" />
+    </Transition>
+  </RouterView>
   <AchievementBadge />
 </template>

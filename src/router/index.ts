@@ -5,7 +5,7 @@ import AllTheThingsSheSaid from '@/components/global/access/AllTheThingsSheSaid.
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import LanguageSelector from '@/components/global/translate/LanguageSelector.vue'
-
+import ErrorView from "@/views/ErrorView.vue";
 import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
@@ -107,8 +107,22 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/auth/LoginView.vue'),
-    }
+    },
+
+
+    {
+      path: "/error/:code",
+      name: "error",
+      component: ErrorView,
+      props: true,
+    },
+
+    {
+      path: "/:pathMatch(.*)*",
+      redirect: "/error/404",
+    },
   ],
+
 })
 
 router.beforeEach((to, from, next) => {

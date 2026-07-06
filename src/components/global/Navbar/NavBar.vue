@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { useAchievements } from "@/composables/useAchievements";
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import NavbarMobile from "./NavbarMobile.vue";
 
-const { unlock } = useAchievements();
 import { navigationLinks } from "./navigation";
 </script>
 
 <template>
   <nav
-    class="container hidden lg:block bg-[var(--ts-secondary-black)] border-[2px] border-[var(--ts-primary-pink)] mb-6 shadow-[4px_4px_0px_var(--ts-primary-black)]"
+    class="container hidden lg:block bg-[var(--ts-secondary-black)] border-[2px] border-[var(--ts-primary-pink)] shadow-[4px_4px_0px_var(--ts-primary-black)]"
   >
     <CardWindowHeader title="THESTARART.EXE" />
 
@@ -42,7 +40,7 @@ import { navigationLinks } from "./navigation";
       </div>
     </div>
   </nav>
-  <div class="lg:hidden">
+  <div class="lg:hidden flex justify-end mr-4 pt-4">
     <NavbarMobile />
   </div>
 </template>

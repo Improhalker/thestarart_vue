@@ -15,22 +15,78 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
       style="background-image: url('/images/bluebox.gif')"
     >
       <section class="px-0 pb-4 lg:pb-16 pt-0 lg:pt-24">
+        <div
+          class="container hidden md:flex mx-auto lg:mb-8 items-center gap-4 py-1 px-2 text-[11px] text-white"
+        >
+          <a
+            href="https://www.instagram.com/thestarart_/"
+            target="_blank"
+            class="flex items-center gap-1 hover:text-white transition"
+          >
+            <img src="/images/social/instagram.png" class="w-4 h-4 pixelated" />
+            Instagram
+          </a>
+          <a
+            href="https://youtube.com/@improhalkeryg254"
+            target="_blank"
+            class="flex items-center gap-1 hover:text-white transition"
+          >
+            <img src="/images/social/youtube.png" class="w-4 h-4 pixelated" />
+            Arte e Filosofia
+          </a>
+
+          <a
+            href="https://www.youtube.com/@estrela_cs_yg"
+            target="_blank"
+            class="flex items-center gap-1 hover:text-white transition"
+          >
+            <img src="/images/social/youtube.png" class="w-4 h-4 pixelated" />
+            Jogos
+          </a>
+
+          <a
+            href="https://www.tiktok.com/@improhalker"
+            target="_blank"
+            class="flex items-center gap-1 hover:text-white transition"
+          >
+            <img src="/images/social/tiktok.png" class="w-4 h-4 pixelated" />
+            TikTok
+          </a>
+
+          <a
+            href="https://github.com/Improhalker"
+            target="_blank"
+            class="flex items-center gap-1 hover:text-white transition"
+          >
+            <img src="/images/social/github.png" class="w-4 h-4 pixelated" />
+            GitHub
+          </a>
+
+          <a
+            href="mailto:contato@contact.thestarart@gmail.com"
+            class="flex items-center gap-1 hover:text-white transition"
+          >
+            ✉ Email
+          </a>
+        </div>
         <Navbar />
 
         <div
           class="container relative z-10 place-self-center h-full py-4 grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-5 items-start"
         >
-          <div class="lg:sticky top-2">
+          <div class="lg:sticky top-2 order-2 md:order-1">
             <LeftSide />
           </div>
 
-          <div class="rounded-xl">
+          <div class="rounded-xl order-1 md:order-2">
             <RouterView />
           </div>
 
-          <div class="lg:sticky top-2 space-y-4 self-start overflow-x-hidden">
+          <div
+            class="lg:sticky top-2 space-y-4 self-start overflow-x-hidden order-3 md:order-3"
+          >
             <YoutubeMusic />
-            <Chat />
+            <Chat class="pb-4" />
             <ChangelogView variant="retro-pink" :limit="5" :fullHeight="false" />
           </div>
         </div>

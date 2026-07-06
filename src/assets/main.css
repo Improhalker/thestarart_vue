@@ -162,4 +162,24 @@
   }
 }
 
+body {
+  background-color: var(--color-ts-black);
+  overflow-x: hidden;
+}
 
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.28s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: scale(0.98) translateY(6px);
+  filter: blur(2px) brightness(0.7);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: scale(1.01) translateY(-6px);
+  filter: blur(3px) brightness(0.6);
+}

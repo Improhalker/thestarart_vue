@@ -6,6 +6,7 @@ import CardWindowHeader from "../global/CardWindowHeader.vue";
 import About from "./About.vue";
 import Thought from "./Thought.vue";
 import CsGallery from "./CsGallery.vue";
+import DrawingProcess from "../drawing/DrawingProcess.vue";
 import { usePosts } from "@/composables/posts/usePosts";
 
 const { posts, pending, error, fetchPosts } = usePosts();
@@ -20,6 +21,7 @@ onMounted(async () => {
     <Thought />
 
     <About />
+    <DrawingProcess />
     <div class="container-style-dark">
       <CardWindowHeader title="Blog.exe" />
       <PostGrid

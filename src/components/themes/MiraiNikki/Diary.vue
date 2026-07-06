@@ -19,7 +19,7 @@
               <MailIcon class="absolute left-2" />
               <span class="text-2xl mx-auto">Diary</span>
             </div>
-            <div class="content text-sm font-mono text-black p-2">
+            <div class="content text-[12px] font-mono text-black p-2">
               <div v-for="entry in diaryEntries" class="mb-4">
                 <span class="font-bold">
                   {{ entry.date }}
@@ -197,6 +197,12 @@ const keypad = [
 ];
 
 const diaryEntries = [
+  {
+    date: "Jul 06, 2026",
+    time: "10:43 AM",
+    content:
+      "Brasil foi eliminado da copa do mundo, nao acompanho muito futebol, mas e sempre um prazer torcer pela selecao... Descobri que apesar de so jogar jogos competitivos, e ter participado da aton gaming, eu nao gosto de competicao.",
+  },
   {
     date: "Jun 23, 2026",
     time: "09:06 AM",
