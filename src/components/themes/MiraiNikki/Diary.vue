@@ -36,7 +36,7 @@
           <div class="bg-white w-16 h-2 place-self-center mt-1"></div>
         </div>
       </div>
-      <div class="border-[#21454c] border-2 flex h-[200px] bg-[#21454c] pb-2">
+      <div class="border-[#21454c] border-2 flex h-[75px] lg:h-[200px] bg-[#21454c] pb-2">
         <div class="w-16 bg-[#4596a9] rounded-2xl rounded-t-none border-t-0"></div>
         <div class="relative w-full h-full bg-[#4596a9]">
           <div

@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
 
     <aside
       :class="[
-        'relative z-[60]   border-r-4 border-black transition-all duration-300 flex flex-col',
+        'relative z-[60] bg-white border-r-4 border-black transition-all duration-300 flex flex-col',
         isCollapsed ? 'w-20' : 'w-64',
       ]"
     >
