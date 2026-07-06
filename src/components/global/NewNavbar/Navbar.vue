@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import NavbarMobile from "./NavbarMobile.vue";
-
+import UiSelector from "@/components/global/translate/UiSelector.vue";
 import { navigationLinks } from "./navigation";
 </script>
 
