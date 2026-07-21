@@ -49,7 +49,7 @@ const {
   posts,
   error,
   pending,
-  fetchPosts,
+  fetchAdminPosts,
   totalPosts,
   draftPosts,
   toggleVisibility,
@@ -58,7 +58,7 @@ const {
 } = usePosts();
 
 onMounted(async () => {
-  await fetchPosts();
+  await fetchAdminPosts();
 });
 
 const router = useRouter();

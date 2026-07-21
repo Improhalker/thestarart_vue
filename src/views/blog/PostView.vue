@@ -20,9 +20,7 @@ onMounted(async () => {
   try {
     const slug = route.params.slug as string;
 
-    const response = (await postsRepo.getBySlug)
-      ? await postsRepo.getBySlug(slug)
-      : await postsRepo.getById(slug);
+    const response = await postsRepo.getPublicPost(slug);
 
     post.value = response.data;
   } catch (e) {

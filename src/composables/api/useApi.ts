@@ -1,12 +1,12 @@
 export const useApi = () => {
-  const token = localStorage.getItem("token");
-
   const client = async (endpoint: string, options: RequestInit = {}) => {
+    const token = localStorage.getItem("token");
     const baseUrl =
       import.meta.env.VITE_API_URL ||
       "http://thestarartlaravelback.test";
 
     const headers = new Headers(options.headers);
+    headers.set("Accept", "application/json");
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);

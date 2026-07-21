@@ -34,7 +34,7 @@ onMounted(async () => {
   isLoading.value = true;
 
   try {
-    const response = await postsRepo.getById(postId!);
+    const response = await postsRepo.getAdminPost(postId!);
     const post = response.data;
 
     form.title = post.title;
@@ -45,6 +45,7 @@ onMounted(async () => {
     form.tags = [...post.tags];
     form.publish_date = post.publish_date;
     form.visibility = post.visibility;
+    form.lang = post.lang;
 
     editorKey.value++;
   } catch (error) {

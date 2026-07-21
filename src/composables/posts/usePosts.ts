@@ -17,12 +17,27 @@ const draftPosts = computed(() =>
 export const usePosts = () => {
   const repo = usePostsRepository();
 
-  const fetchPosts = async () => {
+  const fetchPublicPosts = async () => {
     pending.value = true;
     error.value = null;
 
     try {
-      const response = await repo.getAll();
+      const response = await repo.getPublicPosts();
+
+      posts.value = response.data;
+    } catch (e) {
+      error.value = "Erro ao carregar posts";
+    } finally {
+      pending.value = false;
+    }
+  };
+
+  const fetchAdminPosts = async () => {
+    pending.value = true;
+    error.value = null;
+
+    try {
+      const response = await repo.getAdminPosts();
 
       posts.value = response.data;
 
@@ -63,7 +78,7 @@ export const usePosts = () => {
         excerpt: post.excerpt,
         content: post.content,
         publish_date: post.publish_date,
-        visibility: post.visibility === 1 ? 0 : 1,
+        visibility: post.visibility === 1 ? 2 : 1,
         lang: post.lang,
         tags: post.tags,
         thumbnail: null,
@@ -96,7 +111,8 @@ export const usePosts = () => {
     totalPosts,
     publishedPosts,
     draftPosts,
-    fetchPosts,
+    fetchPosts: fetchPublicPosts,
+    fetchAdminPosts,
     createPost,
     toggleVisibility,
     deletePost
