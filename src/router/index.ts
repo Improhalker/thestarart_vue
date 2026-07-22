@@ -7,6 +7,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue'
 import LanguageSelector from '@/components/global/translate/LanguageSelector.vue'
 import ErrorView from "@/views/ErrorView.vue";
 import HomeView from '@/views/HomeView.vue'
+import { useAuth } from "@/composables/useAuth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -86,6 +87,11 @@ const router = createRouter({
           component: () => import('@/views/admin/MusicListView.vue'),
         },
         {
+          path: 'changelog',
+          name: 'admin.changelog',
+          component: () => import('@/views/admin/ChangelogView.vue'),
+        },
+        {
           path: 'blog',
           children: [
             {
@@ -125,27 +131,42 @@ const router = createRouter({
 
 })
 
-router.beforeEach((to, from, next) => {
-  const lang = localStorage.getItem('lang')
+router.beforeEach(async (to, from) => {
+  const auth = useAuth();
 
-  if (!lang && to.path !== '/choose-your-lang') {
-    next({
+  if (to.path.startsWith('/admin')) {
+    const isInternalAdminNavigation = from.path.startsWith('/admin');
+    const user = auth.isAuthenticated.value
+      ? auth.user.value
+      : isInternalAdminNavigation
+        ? null
+        : await auth.checkSession();
+
+    if (!user) {
+      return {
+        name: 'login',
+        query: { redirect: to.fullPath },
+      };
+    }
+  }
+
+  if (to.name === 'login') {
+    const user = await auth.checkSession();
+    const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/admin';
+
+    if (user && redirect.startsWith('/') && !redirect.startsWith('//')) {
+      return redirect;
+    }
+  }
+
+  const lang = localStorage.getItem('lang');
+
+  if (!lang && to.path !== '/choose-your-lang' && to.name !== 'login') {
+    return {
       path: '/choose-your-lang',
-      query: {
-        redirect: to.fullPath
-      }
-    })
-    return
+      query: { redirect: to.fullPath },
+    };
   }
-
-  const isLogged = localStorage.getItem('auth')
-
-  if (to.path.startsWith('/admin') && !isLogged) {
-    next('/login')
-    return
-  }
-
-  next()
 })
 
 export default router
