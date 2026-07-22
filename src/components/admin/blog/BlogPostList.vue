@@ -29,9 +29,14 @@
           <div class="flex items-center gap-2 flex-wrap">
             <span
               class="text-[10px] font-black uppercase px-2 py-0.5 border border-black shadow-[1px_1px_0px_black]"
-              :class="post.visibility === 1 ? 'bg-emerald-300' : 'bg-amber-300'"
+              :class="{
+                'bg-emerald-300': post.status === 'published',
+                'bg-amber-300': post.status === 'draft',
+                'bg-blue-300': post.status === 'scheduled',
+                'bg-gray-300': post.status === 'archived',
+              }"
             >
-              {{ post.visibility === 1 ? "Publicado" : "Rascunho" }}
+              {{ { draft: "Rascunho", scheduled: "Agendado", published: "Publicado", archived: "Arquivado" }[post.status] }}
             </span>
 
             <span
@@ -55,10 +60,11 @@
         <div class="flex flex-col gap-4">
           <div class="flex gap-2">
             <button
+              v-if="post.status === 'published'"
               class="border-2 border-black px-3 py-1 bg-yellow-200 shadow-[2px_2px_0px_black]"
               @click="emit('toggle-visibility', post)"
             >
-              {{ post.visibility === 1 ? "Arquivar" : "Desarquivar" }}
+              Arquivar
             </button>
 
             <button
@@ -78,8 +84,8 @@
 
           <div class="text-left md:text-right shrink-0">
             <p class="text-xs font-bold font-mono">
-              Created in:
-              {{ new Date(post.publish_date).toLocaleDateString("pt-BR") }}
+              {{ post.deleted_at ? "Removido em:" : "Publicação:" }}
+              {{ new Date(post.deleted_at || post.published_at || Date.now()).toLocaleDateString("pt-BR") }}
             </p>
           </div>
         </div>

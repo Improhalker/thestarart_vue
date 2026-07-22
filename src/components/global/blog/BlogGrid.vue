@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { usePosts } from "@/composables/posts/usePosts";
+import { usePublicPosts } from "@/composables/posts/usePublicPosts";
 
-const { posts, pending, error, fetchPosts } = usePosts();
+const { posts, pending, error, fetchPublicPosts } = usePublicPosts();
 
 onMounted(async () => {
-  await fetchPosts();
+  await fetchPublicPosts({ perPage: 4 });
 });
 </script>
 
@@ -85,7 +85,7 @@ onMounted(async () => {
             </p>
 
             <span class="text-[10px] text-gray-300">
-              {{ new Date(post.publish_date).toLocaleDateString("pt-BR") }}
+              {{ new Date(post.published_at!).toLocaleDateString("pt-BR") }}
             </span>
           </div>
 

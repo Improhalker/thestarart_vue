@@ -8,36 +8,21 @@ const error = ref<string | null>(null);
 
 const totalPosts = computed(() => posts.value.length);
 const publishedPosts = computed(() =>
-  posts.value.filter((p) => p.visibility === 1).length
+  posts.value.filter((p) => p.status === "published").length
 );
 const draftPosts = computed(() =>
-  posts.value.filter((p) => p.visibility !== 1).length
+  posts.value.filter((p) => p.status === "draft").length
 );
 
 export const usePosts = () => {
   const repo = usePostsRepository();
 
-  const fetchPublicPosts = async () => {
+  const fetchAdminPosts = async (filters: { status?: Post["status"]; trashed?: "without" | "with" | "only" } = {}) => {
     pending.value = true;
     error.value = null;
 
     try {
-      const response = await repo.getPublicPosts();
-
-      posts.value = response.data;
-    } catch (e) {
-      error.value = "Erro ao carregar posts";
-    } finally {
-      pending.value = false;
-    }
-  };
-
-  const fetchAdminPosts = async () => {
-    pending.value = true;
-    error.value = null;
-
-    try {
-      const response = await repo.getAdminPosts();
+      const response = await repo.getAdminPosts(filters);
 
       posts.value = response.data;
 
@@ -77,11 +62,12 @@ export const usePosts = () => {
         slug: post.slug,
         excerpt: post.excerpt,
         content: post.content,
-        publish_date: post.publish_date,
-        visibility: post.visibility === 1 ? 2 : 1,
+        published_at: post.published_at,
+        status: post.status === "published" ? "archived" : "published",
         lang: post.lang,
         tags: post.tags,
         thumbnail: null,
+        slug_manually_edited: false,
       });
 
       const index = posts.value.findIndex((p) => p.id === post.id);
@@ -111,7 +97,6 @@ export const usePosts = () => {
     totalPosts,
     publishedPosts,
     draftPosts,
-    fetchPosts: fetchPublicPosts,
     fetchAdminPosts,
     createPost,
     toggleVisibility,

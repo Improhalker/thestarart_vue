@@ -1,33 +1,49 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { Post } from "@/composables/posts/types";
+import type { PaginationMeta, PublicPostSummary } from "@/composables/posts/types";
 import PostCard from "./PostCard.vue";
 
 const props = withDefaults(
   defineProps<{
-    posts: Post[];
+    posts: PublicPostSummary[];
     loading?: boolean;
     error?: string | null;
     limit?: number;
     showViewAll?: boolean;
+    pagination?: PaginationMeta | null;
   }>(),
   {
     loading: false,
     error: null,
     showViewAll: false,
+    pagination: null,
   }
 );
+
+const emit = defineEmits<{
+  (event: "change-page", page: number): void;
+}>();
 
 const visiblePosts = computed(() => {
   if (!props.limit) return props.posts;
 
   return props.posts.slice(0, props.limit);
 });
+
+const visiblePages = computed(() => {
+  if (!props.pagination) return [];
+
+  const { current_page: currentPage, last_page: lastPage } = props.pagination;
+  const start = Math.max(1, Math.min(currentPage - 2, lastPage - 4));
+  const end = Math.min(lastPage, start + 4);
+
+  return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+});
 </script>
 
 <template>
   <div class="p-4 space-y-4">
-    <div v-if="loading">
+    <div v-if="loading && visiblePosts.length === 0">
       <p>Carregando posts...</p>
 
       <img
@@ -39,7 +55,7 @@ const visiblePosts = computed(() => {
     </div>
 
     <!-- Error -->
-    <div v-else-if="error" class="border-2 border-red-500 bg-red-50 p-4 text-sm">
+    <div v-else-if="error && visiblePosts.length === 0" class="border-2 border-red-500 bg-red-50 p-4 text-sm">
       <p class="font-black uppercase text-red-700">
         ⚠️ Não foi possível carregar os posts.
       </p>
@@ -77,6 +93,49 @@ const visiblePosts = computed(() => {
     >
       Nenhum post encontrado.
     </div>
+
+    <nav
+      v-if="pagination && pagination.last_page > 1"
+      class="flex flex-wrap items-center justify-center gap-2 border-t border-[var(--color-ts-ui-border)] pt-4 text-xs"
+      aria-label="Paginação dos posts"
+    >
+      <button
+        type="button"
+        class="retro-btn px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+        :disabled="loading || pagination.current_page <= 1"
+        @click="emit('change-page', pagination.current_page - 1)"
+      >
+        Anterior
+      </button>
+
+      <button
+        v-for="page in visiblePages"
+        :key="page"
+        type="button"
+        class="min-w-8 border-2 px-2 py-1 font-bold disabled:cursor-not-allowed"
+        :class="page === pagination.current_page
+          ? 'border-white bg-white/10 text-white'
+          : 'border-[var(--color-ts-ui-border)] hover:bg-white/10'"
+        :aria-current="page === pagination.current_page ? 'page' : undefined"
+        :disabled="loading"
+        @click="emit('change-page', page)"
+      >
+        {{ page }}
+      </button>
+
+      <button
+        type="button"
+        class="retro-btn px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+        :disabled="loading || pagination.current_page >= pagination.last_page"
+        @click="emit('change-page', pagination.current_page + 1)"
+      >
+        Próxima
+      </button>
+
+      <p class="basis-full text-center text-[11px] text-gray-400">
+        Página {{ pagination.current_page }} de {{ pagination.last_page }} · {{ pagination.total }} posts
+      </p>
+    </nav>
 
     <!-- View All -->
     <div v-if="showViewAll && visiblePosts.length" class="pt-2 text-center">

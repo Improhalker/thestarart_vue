@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Post } from "@/composables/posts/types";
+import type { PublicPostSummary } from "@/composables/posts/types";
 
 defineProps<{
-  post: Post;
+  post: PublicPostSummary;
 }>();
 </script>
 
@@ -42,7 +42,7 @@ defineProps<{
         </p>
 
         <span class="text-[10px] text-gray-300">
-          {{ new Date(post.publish_date).toLocaleDateString("pt-BR") }}
+          {{ new Date(post.published_at!).toLocaleDateString("pt-BR") }}
         </span>
       </div>
 

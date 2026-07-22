@@ -1,15 +1,19 @@
 import { useApi } from "../api/useApi";
-import type { Post, PostCreateDTO } from "./types";
+import type {
+  PaginationMeta,
+  Post,
+  PostCreateDTO,
+  PublicLikeResult,
+  PublicPost,
+  PublicPostListFilters,
+  PublicPostSummary,
+  PublicViewResult,
+} from "./types";
 import { toFormData } from "../../utils/toFormData";
 
-type PostListResponse = {
-  data: Post[];
-  meta?: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  };
+type PostListResponse<T> = {
+  data: T[];
+  meta: PaginationMeta;
 };
 
 type PostCreateResponse = {
@@ -24,14 +28,24 @@ export const usePostsRepository = () => {
   const { client } = useApi();
 
   return {
-    getPublicPosts(): Promise<PostListResponse> {
-      return client("/public/posts", {
+    getPublicPosts(filters: PublicPostListFilters = {}): Promise<PostListResponse<PublicPostSummary>> {
+      const params = new URLSearchParams();
+      if (filters.page) params.set("page", String(filters.page));
+      if (filters.perPage) params.set("per_page", String(filters.perPage));
+      if (filters.lang) params.set("lang", filters.lang);
+      if (filters.order) params.set("order", filters.order);
+
+      return client(`/public/posts${params.size ? `?${params}` : ""}`, {
         method: "GET",
       });
     },
 
-    getAdminPosts(): Promise<PostListResponse> {
-      return client("/admin/posts", {
+    getAdminPosts(filters: { status?: Post["status"]; trashed?: "without" | "with" | "only" } = {}): Promise<PostListResponse<Post>> {
+      const params = new URLSearchParams();
+      if (filters.status) params.set("status", filters.status);
+      if (filters.trashed) params.set("trashed", filters.trashed);
+
+      return client(`/admin/posts${params.size ? `?${params}` : ""}`, {
         method: "GET",
       });
     },
@@ -73,9 +87,41 @@ export const usePostsRepository = () => {
       });
     },
 
-    getPublicPost(slug: string): Promise<{ data: Post }> {
+    getPublicPost(slug: string): Promise<{ data: PublicPost }> {
       return client(`/public/posts/${encodeURIComponent(slug)}`, {
         method: "GET",
+      });
+    },
+
+    recordPublicView(slug: string, visitorId: string): Promise<{ data: PublicViewResult }> {
+      return client(`/public/posts/${encodeURIComponent(slug)}/views`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ visitor_id: visitorId }),
+      });
+    },
+
+    getPublicLikeState(slug: string, visitorId: string): Promise<{ data: PublicLikeResult }> {
+      const params = new URLSearchParams({ visitor_id: visitorId });
+
+      return client(`/public/posts/${encodeURIComponent(slug)}/likes?${params}`, {
+        method: "GET",
+      });
+    },
+
+    addPublicLike(slug: string, visitorId: string): Promise<{ data: PublicLikeResult }> {
+      return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ visitor_id: visitorId }),
+      });
+    },
+
+    removePublicLike(slug: string, visitorId: string): Promise<{ data: PublicLikeResult }> {
+      return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ visitor_id: visitorId }),
       });
     },
 
