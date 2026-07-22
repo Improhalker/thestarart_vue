@@ -24,27 +24,50 @@ const menuItems = [
   { name: "Logs_Sistema", path: "/admin/changelog", icon: History },
 ];
 
-const isActive = (path: string) => route.path === path;
+const isActive = (path: string) =>
+  route.path === path || (path !== "/admin" && route.path.startsWith(`${path}/`));
 
-router.beforeEach((to, from, next) => {
-  const isLogged = localStorage.getItem("auth");
-
-  if (to.path.startsWith("/admin") && !isLogged) {
-    next("/login");
-    return;
-  }
-
-  next();
-});
 </script>
 
 <template>
-  <div class="min-h-screen flex font-mono text-ts-black overflow-hidden">
+  <div class="min-h-screen font-mono text-ts-black overflow-x-hidden md:flex">
     <div class="scanline-overlay"></div>
+
+    <header class="relative z-[60] border-b-4 border-black bg-white md:hidden">
+      <div class="flex items-center justify-between gap-3 p-3">
+        <div class="flex min-w-0 items-center gap-2">
+          <img
+            src="https://blob.gifcities.org/gifcities/JFFM5775ELYWARHSCWKVECD4PZ6IFSBB.gif"
+            class="h-4 shrink-0 pixelated"
+            alt=""
+          />
+          <span class="truncate text-xs font-bold uppercase tracking-tighter italic">TheStar_Admin</span>
+        </div>
+        <Logout />
+      </div>
+
+      <nav class="flex gap-2 overflow-x-auto border-t-2 border-black px-3 py-2" aria-label="Navegação administrativa">
+        <Button
+          v-for="item in menuItems"
+          :key="item.path"
+          variant="ghost"
+          type="button"
+          :aria-current="isActive(item.path) ? 'page' : undefined"
+          @click="router.push(item.path)"
+          :class="[
+            'shrink-0 gap-1.5 rounded-none border-2 border-black px-2 py-1.5 text-[10px] font-black uppercase shadow-none',
+            isActive(item.path) ? 'bg-ts-pink text-white' : 'bg-white hover:bg-gray-100',
+          ]"
+        >
+          <component :is="item.icon" :size="15" aria-hidden="true" />
+          {{ item.name }}
+        </Button>
+      </nav>
+    </header>
 
     <aside
       :class="[
-        'relative z-[60] bg-white border-r-4 border-black transition-all duration-300 flex flex-col',
+        'relative z-[60] hidden bg-white border-r-4 border-black transition-all duration-300 md:flex md:flex-col',
         isCollapsed ? 'w-20' : 'w-64',
       ]"
     >
@@ -57,7 +80,7 @@ router.beforeEach((to, from, next) => {
             class="h-4 pixelated"
           />
           <span class="font-bold uppercase tracking-tighter italic text-xs"
-            >TheStar_Admin</span
+            >TheStarArt_</span
           >
         </div>
 
@@ -149,7 +172,7 @@ router.beforeEach((to, from, next) => {
     </aside>
 
     <main
-      class="flex-1 relative z-10 p-6 overflow-y-auto custom-scrollbar"
+      class="relative z-10 h-screen min-w-0 flex-1 p-3 sm:p-4 md:p-6 md:overflow-y-auto custom-scrollbar"
       style="
         background-image: url('https://blob.gifcities.org/gifcities/2D3MVJ5SCCI2ZFMKTZ3MOETJ5NE7T52S.gif');
         background-repeat: repeat;
@@ -157,7 +180,7 @@ router.beforeEach((to, from, next) => {
       "
     >
       <div
-        class="bg-white/95 border-4 border-black p-6 shadow-[8px_8px_0px_0px_black] min-h-full relative overflow-hidden"
+        class="relative min-h-full overflow-hidden border-4 border-black bg-white/95 p-3 shadow-[5px_5px_0px_0px_black] sm:p-4 sm:shadow-[8px_8px_0px_0px_black] md:p-6"
       >
         <div
           class="absolute top-0 right-0 w-12 h-12 border-l-2 border-b-2 border-black/10 flex items-center justify-center"
@@ -174,7 +197,7 @@ router.beforeEach((to, from, next) => {
     </main>
 
     <RightSidebar />
-    <AdminPet />
+    <AdminPet class="hidden sm:flex" />
   </div>
 </template>
 
