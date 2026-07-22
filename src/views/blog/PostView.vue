@@ -1,19 +1,103 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onBeforeUnmount, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { Eye, Heart } from "lucide-vue-next";
+import { usePostEngagement } from "@/composables/posts/usePostEngagement";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
+import type { PublicPost } from "@/composables/posts/types";
+import { sanitizePostHtml } from "@/utils/sanitizePostHtml";
 
 const route = useRoute();
 const postsRepo = usePostsRepository();
+const engagement = usePostEngagement();
 
-const post = ref<any>(null);
+const post = ref<PublicPost | null>(null);
 const pending = ref(true);
 const error = ref(false);
+const liked = ref(false);
+const likePending = ref(false);
+const engagementError = ref("");
+
+const minimumReadingTimeMs = 5000;
+let viewTimer: ReturnType<typeof setTimeout> | null = null;
+let viewRequestSent = false;
 
 const fallbackImage = "https://via.placeholder.com/1200x600/1a1a1a/ffffff?text=No+Image";
 
-const formatDate = (date: string) => {
+const formatDate = (date: string | null) => {
+  if (!date) return "data indisponÃ­vel";
+
   return new Date(date).toLocaleDateString("pt-BR");
+};
+
+const safeContent = (content: string) => sanitizePostHtml(content);
+
+const clearViewTimer = () => {
+  if (viewTimer !== null) {
+    clearTimeout(viewTimer);
+    viewTimer = null;
+  }
+};
+
+const recordViewAfterReading = () => {
+  if (!post.value || viewRequestSent || document.visibilityState !== "visible") return;
+
+  clearViewTimer();
+  viewTimer = setTimeout(async () => {
+    if (!post.value || document.visibilityState !== "visible") return;
+
+    viewRequestSent = true;
+
+    try {
+      const response = await engagement.recordView(post.value.slug);
+      post.value.views_count = response.data.views_count;
+    } catch {
+      // O contador Ã© complementar: o conteÃºdo do post nÃ£o deve falhar se ele nÃ£o puder ser registrado.
+      viewRequestSent = false;
+    }
+  }, minimumReadingTimeMs);
+};
+
+const onVisibilityChange = () => {
+  if (document.visibilityState === "visible") {
+    recordViewAfterReading();
+    return;
+  }
+
+  clearViewTimer();
+};
+
+const toggleLike = async () => {
+  if (!post.value || likePending.value) return;
+
+  likePending.value = true;
+  engagementError.value = "";
+
+  try {
+    const response = liked.value
+      ? await engagement.removeLike(post.value.slug)
+      : await engagement.addLike(post.value.slug);
+
+    liked.value = response.data.liked;
+    post.value.likes_count = response.data.likes_count;
+  } catch {
+    engagementError.value = "NÃ£o foi possÃ­vel atualizar o like. Tente novamente.";
+  } finally {
+    likePending.value = false;
+  }
+};
+
+const loadLikeState = async (slug: string) => {
+  try {
+    const likes = await engagement.getLikeState(slug);
+
+    if (post.value?.slug !== slug) return;
+
+    liked.value = likes.data.liked;
+    post.value.likes_count = likes.data.likes_count;
+  } catch {
+    // Likes sÃ£o opcionais para a leitura; a pÃ¡gina continua Ãºtil sem esse estado inicial.
+  }
 };
 
 onMounted(async () => {
@@ -22,12 +106,22 @@ onMounted(async () => {
 
     const response = await postsRepo.getPublicPost(slug);
 
-    post.value = response.data;
+    const currentPost = response.data;
+    post.value = currentPost;
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    recordViewAfterReading();
+    void loadLikeState(currentPost.slug);
   } catch (e) {
     error.value = true;
   } finally {
     pending.value = false;
   }
+});
+
+onBeforeUnmount(() => {
+  clearViewTimer();
+  document.removeEventListener("visibilitychange", onVisibilityChange);
 });
 </script>
 <template>
@@ -47,6 +141,10 @@ onMounted(async () => {
       Não foi possível carregar o post.
     </div>
 
+    <div v-else-if="!post" class="p-4 text-sm text-red-500">
+      Não foi possível carregar o post.
+    </div>
+
     <div v-else class="p-4 space-y-6">
       <!-- Heading -->
       <div class="text-center space-y-2">
@@ -55,7 +153,30 @@ onMounted(async () => {
         </h1>
 
         <p class="text-[11px] text-gray-400 uppercase">
-          publicado em {{ formatDate(post.publish_date) }}
+          publicado em {{ formatDate(post.published_at) }}
+        </p>
+
+        <div class="flex items-center justify-center gap-3 text-[11px] text-gray-300 uppercase">
+          <span class="inline-flex items-center gap-1" :aria-label="`${post.views_count} visualizaÃ§Ãµes`">
+            <Eye :size="14" aria-hidden="true" />
+            {{ post.views_count }} visualizaÃ§Ãµes
+          </span>
+
+          <button
+            type="button"
+            class="inline-flex items-center gap-1 border border-[var(--color-ts-ui-border)] px-2 py-1 transition-colors hover:bg-white/10 disabled:cursor-wait disabled:opacity-60"
+            :class="liked ? 'text-[var(--color-ts-primary-pink)]' : ''"
+            :aria-pressed="liked"
+            :disabled="likePending"
+            @click="toggleLike"
+          >
+            <Heart :size="14" :fill="liked ? 'currentColor' : 'none'" aria-hidden="true" />
+            {{ post.likes_count }} {{ liked ? 'curtido' : 'curtidas' }}
+          </button>
+        </div>
+
+        <p v-if="engagementError" class="text-xs text-red-400" role="alert">
+          {{ engagementError }}
         </p>
       </div>
 
@@ -70,7 +191,7 @@ onMounted(async () => {
       <!-- Content -->
       <div
         class="prose prose-invert max-w-none text-gray-200 leading-relaxed"
-        v-html="post.content"
+        v-html="safeContent(post.content)"
       />
     </div>
   </div>

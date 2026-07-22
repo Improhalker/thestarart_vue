@@ -1,20 +1,42 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
 import TiptapEditor from "@/components/admin/blog/editor/TiptapEditor.vue";
+import { ApiError } from "@/composables/api/useApi";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
+import type { Post } from "@/composables/posts/types";
+import { normalizePostSlug } from "@/utils/postSlug";
+import { sanitizePostHtml } from "@/utils/sanitizePostHtml";
+
+type PostStatus = Post["status"];
 
 const route = useRoute();
 const postsRepo = usePostsRepository();
-
 const postId = route.params.id as string | undefined;
-const isEditing = !!postId;
+const isEditing = Boolean(postId);
+const statuses: Array<{ value: PostStatus; label: string }> = [
+  { value: "draft", label: "Rascunho" },
+  { value: "scheduled", label: "Agendado" },
+  { value: "published", label: "Publicado" },
+  { value: "archived", label: "Arquivado" },
+];
 
 const tagInput = ref("");
 const isSubmitting = ref(false);
 const isLoading = ref(false);
 const editorKey = ref(0);
 const successMessage = ref("");
+const errorMessage = ref("");
+const slugManuallyEdited = ref(false);
+const thumbnailFile = ref<File | null>(null);
+const thumbnailPreview = ref<string | null>(null);
+const savedFingerprint = ref("");
+const fieldErrors = ref<Record<string, string[]>>({});
+
+const localDateTime = (date = new Date()) => {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
+};
 
 const form = reactive({
   title: "",
@@ -23,34 +45,72 @@ const form = reactive({
   content: "",
   thumbnail: null as string | null,
   tags: [] as string[],
-  publish_date: new Date().toISOString(),
-  visibility: 1,
+  published_at: "",
+  status: "draft" as PostStatus,
   lang: "pt",
 });
 
+const safePreview = computed(() => sanitizePostHtml(form.content));
+const wordCount = computed(() => {
+  const text = new DOMParser().parseFromString(safePreview.value, "text/html").body.textContent || "";
+  return text.trim() ? text.trim().split(/\s+/).length : 0;
+});
+const readingMinutes = computed(() => Math.max(1, Math.ceil(wordCount.value / 200)));
+const fingerprint = computed(() => JSON.stringify({ ...form, thumbnail: thumbnailFile.value?.name || null }));
+const hasUnsavedChanges = computed(() => fingerprint.value !== savedFingerprint.value);
+const currentThumbnail = computed(() => thumbnailPreview.value || form.thumbnail);
+
+watch(
+  () => form.title,
+  (title) => {
+    if (!slugManuallyEdited.value) form.slug = normalizePostSlug(title);
+  },
+  { immediate: true },
+);
+
+watch(
+  () => form.status,
+  (status) => {
+    if (["draft", "archived"].includes(status)) {
+      form.published_at = "";
+    } else if (!form.published_at) {
+      form.published_at = localDateTime();
+    }
+  },
+  { immediate: true },
+);
+
+const toLocalDateTime = (value: string | null) => (value ? localDateTime(new Date(value)) : "");
+
+const setSavedFingerprint = async () => {
+  await nextTick();
+  savedFingerprint.value = fingerprint.value;
+};
+
 onMounted(async () => {
-  if (!isEditing) return;
+  if (!isEditing) {
+    await setSavedFingerprint();
+    return;
+  }
 
   isLoading.value = true;
 
   try {
-    const response = await postsRepo.getAdminPost(postId!);
-    const post = response.data;
-
+    const { data: post } = await postsRepo.getAdminPost(postId!);
     form.title = post.title;
     form.slug = post.slug;
     form.excerpt = post.excerpt;
     form.content = post.content;
     form.thumbnail = post.thumbnail;
     form.tags = [...post.tags];
-    form.publish_date = post.publish_date;
-    form.visibility = post.visibility;
+    form.published_at = toLocalDateTime(post.published_at);
+    form.status = post.status;
     form.lang = post.lang;
-
+    slugManuallyEdited.value = true;
     editorKey.value++;
-  } catch (error) {
-    console.error(error);
-    alert("Não foi possível carregar o post.");
+    await setSavedFingerprint();
+  } catch {
+    errorMessage.value = "Não foi possível carregar o post.";
   } finally {
     isLoading.value = false;
   }
@@ -58,46 +118,67 @@ onMounted(async () => {
 
 const addTag = () => {
   const tag = tagInput.value.trim().toLowerCase();
-
   if (!tag || form.tags.includes(tag)) return;
 
   form.tags.push(tag);
   tagInput.value = "";
 };
 
-const removeTag = (index: number) => {
-  form.tags.splice(index, 1);
+const removeTag = (index: number) => form.tags.splice(index, 1);
+
+const updateSlug = (event: Event) => {
+  slugManuallyEdited.value = true;
+  form.slug = normalizePostSlug((event.target as HTMLInputElement).value);
 };
 
-const resetForm = () => {
+const clearThumbnailPreview = () => {
+  if (thumbnailPreview.value) URL.revokeObjectURL(thumbnailPreview.value);
+  thumbnailPreview.value = null;
+};
+
+const handleThumbnailUpload = (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+
+  clearThumbnailPreview();
+  thumbnailFile.value = file;
+  thumbnailPreview.value = URL.createObjectURL(file);
+};
+
+const resetForm = async () => {
+  clearThumbnailPreview();
   form.title = "";
   form.slug = "";
   form.excerpt = "";
   form.content = "";
+  form.thumbnail = null;
   form.tags = [];
-  form.publish_date = new Date().toISOString();
-  form.visibility = 1;
+  form.published_at = "";
+  form.status = "draft";
   form.lang = "pt";
-
   tagInput.value = "";
-  editorKey.value++;
-
   thumbnailFile.value = null;
+  slugManuallyEdited.value = false;
+  editorKey.value++;
+  await setSavedFingerprint();
 };
 
 const submit = async () => {
   if (isSubmitting.value) return;
 
   isSubmitting.value = true;
+  errorMessage.value = "";
+  fieldErrors.value = {};
 
   try {
     const payload = {
       title: form.title,
       slug: form.slug,
+      slug_manually_edited: slugManuallyEdited.value,
       excerpt: form.excerpt,
       content: form.content,
-      publish_date: form.publish_date,
-      visibility: form.visibility,
+      published_at: form.published_at ? new Date(form.published_at).toISOString() : null,
+      status: form.status,
       lang: form.lang,
       tags: form.tags,
       thumbnail: thumbnailFile.value,
@@ -105,132 +186,116 @@ const submit = async () => {
 
     if (isEditing) {
       await postsRepo.update(postId!, payload);
-      successMessage.value = "✅ Post atualizado com sucesso!";
+      successMessage.value = "Post atualizado com sucesso!";
+      await setSavedFingerprint();
     } else {
       await postsRepo.create(payload);
-      resetForm();
-      successMessage.value = "✅ Post criado com sucesso!";
+      successMessage.value = "Post criado com sucesso!";
+      await resetForm();
     }
 
-    setTimeout(() => {
-      successMessage.value = "";
-    }, 3000);
+    window.setTimeout(() => (successMessage.value = ""), 3000);
   } catch (error) {
-    console.error(error);
+    if (error instanceof ApiError && error.status === 422) {
+      const payload = error.payload as { errors?: Record<string, string[]> };
+      fieldErrors.value = payload.errors || {};
+      errorMessage.value = "Revise os campos destacados.";
+    } else {
+      errorMessage.value = error instanceof ApiError ? error.message : "Não foi possível salvar o post.";
+    }
   } finally {
     isSubmitting.value = false;
   }
 };
 
-const thumbnailFile = ref<File | null>(null);
-const thumbnailPreview = ref<string | null>(null);
+onBeforeRouteLeave(() => {
+  if (!hasUnsavedChanges.value) return true;
+  return window.confirm("Há alterações não salvas. Deseja sair mesmo assim?");
+});
 
-const handleThumbnailUpload = (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-
-  if (!file) return;
-
-  thumbnailFile.value = file;
-  thumbnailPreview.value = URL.createObjectURL(file);
-};
+onBeforeUnmount(clearThumbnailPreview);
 </script>
 
 <template>
-  <div class="p-6 space-y-4">
-    <h1 class="text-2xl font-bold">
-      {{ isEditing ? "Editar Post" : "Criar Post" }}
-    </h1>
+  <div class="p-3 space-y-4 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h1 class="text-2xl font-bold">{{ isEditing ? "Editar Post" : "Criar Post" }}</h1>
+      <p class="text-xs font-bold" :class="hasUnsavedChanges ? 'text-amber-700' : 'text-emerald-700'">
+        {{ hasUnsavedChanges ? "Alterações não salvas" : "Tudo salvo" }}
+      </p>
+    </div>
 
-    <div v-if="isLoading">
+    <div v-if="isLoading" class="space-y-2">
       <p>Carregando post...</p>
-      <img
-        width="173"
-        height="120"
-        src="https://blob.gifcities.org/gifcities/3CCTKJPWEPVDFGJ6YSRXG7732XOYGHQS.gif"
-      />
+      <img width="173" height="120" src="https://blob.gifcities.org/gifcities/3CCTKJPWEPVDFGJ6YSRXG7732XOYGHQS.gif" alt="Carregando" />
     </div>
 
     <template v-else>
-      <input v-model="form.title" placeholder="Título" class="border p-2 w-full" />
+      <div class="space-y-1">
+        <label for="post-title" class="text-sm font-bold">Título</label>
+        <input id="post-title" v-model="form.title" placeholder="Título" class="border p-2 w-full" />
+      </div>
 
-      <input v-model="form.slug" placeholder="Slug" class="border p-2 w-full" />
+      <div class="space-y-1">
+        <label for="post-slug" class="text-sm font-bold">Slug</label>
+        <input id="post-slug" :value="form.slug" maxlength="255" placeholder="slug-do-post" class="border p-2 w-full" @input="updateSlug" />
+        <p class="text-xs text-gray-600">
+          {{ slugManuallyEdited ? "Slug definida manualmente." : "Gerada automaticamente a partir do título." }}
+        </p>
+        <p v-if="fieldErrors.slug" class="text-xs font-bold text-red-800">{{ fieldErrors.slug[0] }}</p>
+      </div>
 
-      <textarea v-model="form.excerpt" placeholder="Excerpt" class="border p-2 w-full" />
-      <div class="space-y-2">
-        <label class="font-bold text-sm">Thumbnail</label>
-
-        <label
-          class="flex items-center justify-between border-2 border-black px-3 py-2 bg-white shadow cursor-pointer hover:bg-gray-50 transition"
-        >
-          <span class="text-xs font-bold">
-            {{ thumbnailFile ? thumbnailFile.name : "Selecionar imagem..." }}
-          </span>
-
-          <span class="text-[10px] uppercase opacity-70"> choose file </span>
-
-          <input
-            type="file"
-            accept="image/*"
-            class="hidden"
-            @change="handleThumbnailUpload"
-          />
-        </label>
-
-        <!-- preview opcional -->
-        <div v-if="thumbnailPreview" class="mt-2">
-          <img
-            :src="thumbnailPreview"
-            class="max-h-40 border-2 border-black object-cover"
-          />
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="space-y-1">
+          <label for="post-status" class="text-sm font-bold">Status</label>
+          <select id="post-status" v-model="form.status" class="border p-2 w-full">
+            <option v-for="status in statuses" :key="status.value" :value="status.value">{{ status.label }}</option>
+          </select>
+        </div>
+        <div v-if="form.status === 'published' || form.status === 'scheduled'" class="space-y-1">
+          <label for="post-published-at" class="text-sm font-bold">Data de publicação (horário local)</label>
+          <input id="post-published-at" v-model="form.published_at" type="datetime-local" required class="border p-2 w-full" />
+          <p v-if="fieldErrors.published_at" class="text-xs font-bold text-red-800">{{ fieldErrors.published_at[0] }}</p>
         </div>
       </div>
+
+      <textarea v-model="form.excerpt" placeholder="Resumo do post" class="border p-2 w-full" rows="3" />
+
+      <div class="space-y-2">
+        <label class="font-bold text-sm">Thumbnail</label>
+        <label class="flex items-center justify-between gap-3 border-2 border-black px-3 py-2 bg-white shadow cursor-pointer hover:bg-gray-50 transition">
+          <span class="truncate text-xs font-bold">{{ thumbnailFile ? thumbnailFile.name : "Selecionar imagem..." }}</span>
+          <span class="shrink-0 text-[10px] uppercase opacity-70">choose file</span>
+          <input type="file" accept="image/png,image/jpeg,image/webp" class="hidden" @change="handleThumbnailUpload" />
+        </label>
+        <img v-if="currentThumbnail" :src="currentThumbnail" class="max-h-40 border-2 border-black object-cover" alt="Prévia da thumbnail" />
+      </div>
+
       <TiptapEditor :key="editorKey" v-model="form.content" />
+      <p class="text-xs text-gray-600">{{ wordCount }} palavras · cerca de {{ readingMinutes }} min de leitura</p>
+
+      <details class="border-2 border-black bg-white">
+        <summary class="cursor-pointer px-3 py-2 font-bold">Prévia segura</summary>
+        <div class="prose max-w-none border-t-2 border-black p-3" v-html="safePreview" />
+      </details>
 
       <div class="space-y-2">
         <label class="font-bold text-sm">Tags</label>
-
-        <input
-          v-model="tagInput"
-          @keydown.enter.prevent="addTag"
-          placeholder="Digite uma tag e pressione Enter"
-          class="border p-2 w-full"
-        />
-
+        <input v-model="tagInput" @keydown.enter.prevent="addTag" placeholder="Digite uma tag e pressione Enter" class="border p-2 w-full" />
         <div class="flex flex-wrap gap-2">
-          <span
-            v-for="(tag, index) in form.tags"
-            :key="tag"
-            class="border-2 border-black px-2 py-1 text-xs font-bold flex items-center gap-2"
-          >
+          <span v-for="(tag, index) in form.tags" :key="tag" class="border-2 border-black px-2 py-1 text-xs font-bold flex items-center gap-2">
             #{{ tag }}
-
-            <button @click="removeTag(index)">✕</button>
+            <button type="button" aria-label="Remover tag" @click="removeTag(index)">×</button>
           </span>
         </div>
       </div>
 
-      <button
-        @click="submit"
-        :disabled="isSubmitting"
-        class="border-2 border-black px-4 py-2 bg-white shadow disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {{
-          isSubmitting
-            ? isEditing
-              ? "Atualizando..."
-              : "Salvando..."
-            : isEditing
-            ? "Atualizar"
-            : "Salvar"
-        }}
+      <button @click="submit" :disabled="isSubmitting" class="border-2 border-black px-4 py-2 bg-white shadow disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isSubmitting ? (isEditing ? "Atualizando..." : "Salvando...") : (isEditing ? "Atualizar" : "Salvar") }}
       </button>
 
-      <p
-        v-if="successMessage"
-        class="border-2 border-black bg-green-100 p-2 text-sm font-bold"
-      >
-        {{ successMessage }}
-      </p>
+      <p v-if="successMessage" class="border-2 border-black bg-green-100 p-2 text-sm font-bold">{{ successMessage }}</p>
+      <p v-if="errorMessage" role="alert" class="border-2 border-red-800 bg-red-100 p-2 text-sm font-bold text-red-900">{{ errorMessage }}</p>
     </template>
   </div>
 </template>

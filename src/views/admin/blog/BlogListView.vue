@@ -1,6 +1,6 @@
 <template>
   <div class="p-6 space-y-4">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-wrap items-center justify-between gap-3">
       <h1 class="text-2xl font-black uppercase">Blog Admin</h1>
 
       <button
@@ -9,6 +9,25 @@
       >
         + Novo Post
       </button>
+    </div>
+
+    <div class="flex flex-wrap gap-2 border-2 border-black bg-white p-3 text-sm">
+      <label class="flex items-center gap-2">Status
+        <select v-model="statusFilter" class="border border-black p-1" @change="loadPosts">
+          <option value="">Todos</option>
+          <option value="draft">Rascunhos</option>
+          <option value="scheduled">Agendados</option>
+          <option value="published">Publicados</option>
+          <option value="archived">Arquivados</option>
+        </select>
+      </label>
+      <label class="flex items-center gap-2">Removidos
+        <select v-model="trashedFilter" class="border border-black p-1" @change="loadPosts">
+          <option value="without">Ocultar</option>
+          <option value="with">Incluir</option>
+          <option value="only">Somente removidos</option>
+        </select>
+      </label>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -41,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import BlogPostList from "@/components/admin/blog/BlogPostList.vue";
 import { usePosts } from "@/composables/posts/usePosts";
 import { useRouter } from "vue-router";
@@ -57,9 +76,14 @@ const {
   deletePost,
 } = usePosts();
 
-onMounted(async () => {
-  await fetchAdminPosts();
+const statusFilter = ref<"" | "draft" | "scheduled" | "published" | "archived">("");
+const trashedFilter = ref<"without" | "with" | "only">("without");
+const loadPosts = () => fetchAdminPosts({
+  status: statusFilter.value || undefined,
+  trashed: trashedFilter.value,
 });
+
+onMounted(loadPosts);
 
 const router = useRouter();
 

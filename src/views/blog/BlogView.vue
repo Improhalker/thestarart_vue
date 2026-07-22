@@ -1,15 +1,48 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import PostGrid from "@/components/global/blog/PostGrid.vue";
-import { usePosts } from "@/composables/posts/usePosts";
+import { usePublicPosts } from "@/composables/posts/usePublicPosts";
 import UnderConstruction from "@/components/global/UnderConstruction.vue";
-const { posts, pending, error, fetchPosts } = usePosts();
 
-onMounted(async () => {
-  await fetchPosts();
-});
+const route = useRoute();
+const router = useRouter();
+const pageSize = 8;
+const { posts, pagination, pending, error, fetchPublicPosts } = usePublicPosts();
+
+const pageFromRoute = (): number => {
+  const page = Number(route.query.page);
+
+  return Number.isInteger(page) && page > 0 ? page : 1;
+};
+
+const loadPage = async () => {
+  const requestedPage = pageFromRoute();
+  const response = await fetchPublicPosts({ page: requestedPage, perPage: pageSize });
+
+  if (response && requestedPage > response.meta.last_page && response.meta.last_page > 0) {
+    await router.replace({
+      query: { ...route.query, page: String(response.meta.last_page) },
+    });
+  }
+};
+
+const changePage = async (page: number) => {
+  if (!pagination.value || pending.value || page === pagination.value.current_page) return;
+
+  await router.push({
+    query: {
+      ...route.query,
+      page: page === 1 ? undefined : String(page),
+    },
+  });
+};
+
+watch(() => route.query.page, () => {
+  void loadPage();
+}, { immediate: true });
 </script>
 
 <template>
@@ -37,7 +70,13 @@ onMounted(async () => {
         </div>
       </div>
 
-      <PostGrid :posts="posts" :loading="pending" :error="error" />
+      <PostGrid
+        :posts="posts"
+        :loading="pending"
+        :error="error"
+        :pagination="pagination"
+        @change-page="changePage"
+      />
     </div>
     <UnderConstruction />
   </div>
