@@ -39,7 +39,7 @@ As referências externas indicadas pelo autor, como `adilene.net` e `lilithdev.n
 ### Integrações conhecidas
 
 - API REST Laravel via `VITE_API_URL` e `useApi`;
-- autenticação por token Bearer no cliente atual;
+- autenticação administrativa por sessão Laravel Sanctum e cookies HttpOnly;
 - upload de thumbnail e imagem pelo repositório de posts;
 - Google Translate, YouTube IFrame API e Chatango como integrações de terceiros;
 - backend Laravel e Supabase pertencem à arquitetura do produto, mas não devem ser alterados em uma tarefa exclusivamente de frontend sem solicitação explícita.
@@ -174,7 +174,7 @@ View ou componente coordenador
 → API Laravel
 ```
 
-- `useApi.ts`: cria requests com `VITE_API_URL` e adiciona `Authorization: Bearer` quando há token.
+- `useApi.ts`: usa `VITE_API_URL`, `credentials: "include"` e o cookie CSRF do Sanctum; não envia Bearer token.
 - `composables/posts/usePostRepository.ts`: acesso a `/posts`, post por ID/slug e uploads em `/upload/thumbnail` e `/upload/image`.
 - `composables/posts/usePosts.ts`: estado compartilhado de posts, pendência, erro, contadores, criação, visibilidade e exclusão.
 - `composables/posts/types.ts`: tipos atuais `Post` e `PostCreateDTO`.
@@ -183,8 +183,8 @@ View ou componente coordenador
 Exceções atuais que devem ser preservadas ou corrigidas incrementalmente, nunca ignoradas:
 
 - `PostView.vue`, `BlogEditView.vue` e `TiptapToolbar.vue` chamam `usePostsRepository` diretamente; isso é aceitável apenas enquanto a responsabilidade estiver clara, mas não deve proliferar.
-- `MusicService.ts` usa Axios e URL própria, em vez de `useApi`; mudanças nessa área devem primeiro definir uma única estratégia de cliente HTTP e autenticação.
-- `useAuth.ts` expõe `useAuthRepository`, com login e logout local. O guard de rota usa `localStorage`; ele melhora a navegação, mas não é uma barreira de segurança. Laravel deve continuar sendo a autoridade de autorização.
+- `MusicService.ts` usa o mesmo `useApi` do restante da aplicação para compartilhar cookies, CSRF e tratamento de sessão.
+- `useAuth.ts` centraliza usuário em memória, verificação de `/api/me`, login, logout e sessão expirada. O guard consulta a API antes de liberar o admin; Laravel continua sendo a autoridade de autorização.
 - `useTranslate.ts` usa Google Translate e cookies `googtrans`; isso não constitui i18n editorial. O campo `Post.lang` existe, mas ainda não há fluxo explícito de conteúdo PT/EN/ES.
 - `useAchievements.ts` mantém conquistas em memória e áudio local. `usePlayer.ts` existe como estado compartilhado, mas a implementação atual de `YoutubeMusic.vue` mantém seu próprio player.
 - `stores/counter.ts` é o store padrão do Pinia e não deve ser tomado como estado de domínio consolidado.
@@ -193,7 +193,7 @@ Não fazer chamadas a API em componentes de apresentação novos. Preferir repos
 
 ## 8. Segurança e conteúdo
 
-- O token atual é armazenado em `localStorage`. Não tratar a flag `auth` do cliente como autorização real.
+- O painel não armazena token nem flag de autenticação em `localStorage`. O estado em memória melhora a interface, mas nunca é autorização real.
 - `PostView.vue` renderiza `post.content` com `v-html`. Antes de ampliar editor, embeds ou fontes de conteúdo, verificar sanitização e validação no Laravel.
 - Links externos com `target="_blank"` devem usar `rel="noopener noreferrer"` quando forem tocados.
 - Uploads devem validar tipo, tamanho e resposta no backend; `accept="image/*"` no frontend não é segurança.
