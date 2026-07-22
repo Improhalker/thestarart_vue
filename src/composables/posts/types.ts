@@ -35,6 +35,14 @@ export interface PublicPostListFilters {
   order?: "asc" | "desc";
 }
 
+export interface AdminPostListFilters {
+  status?: Post["status"];
+  trashed?: "without" | "with" | "only";
+  lang?: "pt" | "en" | "es";
+  page?: number;
+  perPage?: number;
+}
+
 export interface PublicViewResult {
   views_count: number;
   recorded: boolean;

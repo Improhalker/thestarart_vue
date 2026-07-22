@@ -1,5 +1,6 @@
 import { useApi } from "../api/useApi";
 import type {
+  AdminPostListFilters,
   PaginationMeta,
   Post,
   PostCreateDTO,
@@ -40,10 +41,13 @@ export const usePostsRepository = () => {
       });
     },
 
-    getAdminPosts(filters: { status?: Post["status"]; trashed?: "without" | "with" | "only" } = {}): Promise<PostListResponse<Post>> {
+    getAdminPosts(filters: AdminPostListFilters = {}): Promise<PostListResponse<Post>> {
       const params = new URLSearchParams();
       if (filters.status) params.set("status", filters.status);
       if (filters.trashed) params.set("trashed", filters.trashed);
+      if (filters.lang) params.set("lang", filters.lang);
+      if (filters.page) params.set("page", String(filters.page));
+      if (filters.perPage) params.set("per_page", String(filters.perPage));
 
       return client(`/admin/posts${params.size ? `?${params}` : ""}`, {
         method: "GET",

@@ -7,7 +7,7 @@ import { Bold, Code2, Heading2, Heading3, Image, Italic, Link, List, ListOrdered
 const props = defineProps<{ editor: Editor }>();
 const imageInput = ref<HTMLInputElement | null>(null);
 const postsRepo = usePostsRepository();
-const btn = "p-1 border-2 border-black bg-white shadow-[2px_2px_0px_black] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#ff4d6d] transition-all flex items-center justify-center";
+const btn = "shrink-0 p-1 border-2 border-black bg-white shadow-[2px_2px_0px_black] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#ff4d6d] transition-all flex items-center justify-center";
 const isActive = (type: string, attributes?: Record<string, unknown>) => props.editor.isActive(type, attributes) ? "bg-black text-white" : "";
 
 const handleImageUpload = async (event: Event) => {
@@ -72,7 +72,7 @@ const insertYoutube = () => {
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-1 p-2 border-b-2 border-black bg-ts-retro-gray" aria-label="Ferramentas do editor">
+  <div class="flex items-center gap-1 overflow-x-auto p-2 border-b-2 border-black bg-ts-retro-gray sm:flex-wrap" aria-label="Ferramentas do editor">
     <button type="button" :class="[btn, isActive('bold')]" aria-label="Negrito" @click="props.editor.chain().focus().toggleBold().run()"><Bold :size="12" /></button>
     <button type="button" :class="[btn, isActive('italic')]" aria-label="Itálico" @click="props.editor.chain().focus().toggleItalic().run()"><Italic :size="12" /></button>
     <button type="button" :class="[btn, isActive('underline')]" aria-label="Sublinhado" @click="props.editor.chain().focus().toggleUnderline().run()"><Underline :size="12" /></button>
