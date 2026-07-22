@@ -1,32 +1,41 @@
-import axios from 'axios'
+import { useApi } from "@/composables/api/useApi";
 
-const api = axios.create({
-  baseURL: 'https://srv906410.hstgr.cloud/api', 
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
-})
+type Music = {
+  id: number;
+  title: string;
+  youtube_id: string;
+  description: string | null;
+  day_of_week: number;
+};
 
+type MusicListResponse = {
+  data: Music[];
+};
+
+const { client } = useApi();
 
 export const MusicService = {
-  // Listar todas
-  getAll() {
-    return api.get('/musics')
+  getAll(): Promise<MusicListResponse> {
+    return client("/musics", { method: "GET" });
   },
 
-  // Criar nova
-  create(payload: any) {
-    return api.post('/musics', payload)
+  create(payload: Record<string, unknown>) {
+    return client("/musics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
   },
 
-  // Atualizar (usaremos depois)
-  update(id: number, payload: any) {
-    return api.put(`/musics/${id}`, payload)
+  update(id: number, payload: Record<string, unknown>) {
+    return client(`/musics/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
   },
 
-  // Deletar (usaremos depois)
   delete(id: number) {
-    return api.delete(`/musics/${id}`)
-  }
-}
+    return client(`/musics/${id}`, { method: "DELETE" });
+  },
+};

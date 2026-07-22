@@ -9,6 +9,11 @@ export function toFormData<T extends Record<string, any>>(data: T): FormData {
       return;
     }
 
+    if (typeof value === "boolean") {
+      formData.append(key, value ? "1" : "0");
+      return;
+    }
+
     formData.append(key, value);
   });
 

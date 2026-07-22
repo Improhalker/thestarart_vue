@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2, Database } from "lucide-vue-next";
+import { ApiError } from "@/composables/api/useApi";
 
 // --- ESTADOS ---
 const isOpen = ref(false);
@@ -40,9 +41,8 @@ const openEditModal = (music: any) => {
 const fetchMusics = async () => {
   isLoadingFetch.value = true;
   try {
-    const { data } = await MusicService.getAll();
-    // Ajuste conforme a estrutura do seu retorno (data.data ou apenas data)
-    musics.value = Array.isArray(data) ? data : data.data;
+    const response = await MusicService.getAll();
+    musics.value = response.data;
   } catch (error) {
     console.error("Falha ao carregar músicas:", error);
   } finally {
@@ -69,10 +69,11 @@ const handleSaveMusic = async (payload: any) => {
     isOpen.value = false;
     fetchMusics();
     editingMusic.value = null;
-  } catch (error: any) {
+  } catch (error) {
     // Tratamento de erro 422 (Validação do Laravel)
-    if (error.response && error.response.status === 422) {
-      serverErrors.value = error.response.data.errors;
+    if (error instanceof ApiError && error.status === 422) {
+      const payload = error.payload as { errors?: unknown } | null;
+      serverErrors.value = payload?.errors ?? null;
       console.error("Falha na validação:", serverErrors.value);
       alert("ERRO_DE_VALIDACAO: Verifique os campos destacados.");
     } else {

@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard-view space-y-6">
-    <div class="flex items-center gap-4 border-b-2 border-black pb-2">
+    <div class="flex flex-col items-start gap-2 border-b-2 border-black pb-2 sm:flex-row sm:items-center sm:gap-4">
        <span class="bg-ts-red text-white px-2 py-1 text-xs uppercase font-bold">System: Active</span>
-       <h1 class="text-3xl font-black italic tracking-tighter uppercase text-ts-black">Painel de Controle</h1>
+       <h1 class="text-2xl font-black italic tracking-tighter uppercase text-ts-black sm:text-3xl">Painel de Controle</h1>
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="bg-ts-blue/10 border-l-4 border-ts-blue p-4 mt-8">
+    <div class="bg-ts-blue/10 border-l-4 border-ts-blue p-3 sm:p-4 mt-8">
       <p class="text-sm leading-tight font-bold italic">
         > Bem-vindo, Gabriel. <br>
         > Aguardando entrada de dados no <span class="notranslate">TheStarArt_</span>...
