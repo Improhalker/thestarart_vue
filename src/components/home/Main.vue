@@ -7,12 +7,12 @@ import About from "./About.vue";
 import Thought from "./Thought.vue";
 import CsGallery from "./CsGallery.vue";
 import DrawingProcess from "../drawing/DrawingProcess.vue";
-import { usePosts } from "@/composables/posts/usePosts";
+import { usePublicPosts } from "@/composables/posts/usePublicPosts";
 
-const { posts, pending, error, fetchPosts } = usePosts();
+const { posts, pending, error, fetchPublicPosts } = usePublicPosts();
 
 onMounted(async () => {
-  await fetchPosts();
+  await fetchPublicPosts({ perPage: 4 });
 });
 </script>
 
