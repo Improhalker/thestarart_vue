@@ -1,0 +1,54 @@
+%% Fluxo real de login/sessão no frontend Vue. Atualizado em 2026-07-22.
+flowchart LR
+    BROWSER["Navegador<br/>cookies da origem Laravel<br/>sem token em localStorage"]
+
+    subgraph ROUTES["1. Inicialização, rota e interface"]
+        MAIN["src/main.ts<br/>checkSession() inicial<br/>handler global de 401"]
+        ROUTER["src/router/index.ts<br/>/login e beforeEach para /admin/*"]
+        LOGINVIEW["views/auth/LoginView.vue<br/>wrapper da tela"]
+        LOGINUI["components/login/Login.vue<br/>e-mail, senha, feedback e redirect seguro"]
+        LOGOUTUI["components/login/Logout.vue<br/>ação no AdminLayout.vue"]
+        WALLPAPER["components/login/loginWallpapers.ts<br/>imagem decorativa e fallback"]
+    end
+
+    subgraph AUTH["2. Estado e transporte"]
+        USEAUTH["composables/useAuth.ts<br/>user em memória; checkSession,<br/>login, logout e erros conhecidos"]
+        USEAPI["composables/api/useApi.ts<br/>fetch, credentials include, XSRF,<br/>ApiError e opt-out do 401"]
+        REDIRECT["router.replace('/login')<br/>redirect + reason=expired"]
+    end
+
+    subgraph LARAVEL["3. API Laravel / Sanctum"]
+        CSRF["GET /sanctum/csrf-cookie<br/>emite XSRF e sessão"]
+        LOGINAPI["POST /api/login<br/>JSON e-mail/senha<br/>sessão regenerada"]
+        MEAPI["GET /api/me<br/>auth:sanctum"]
+        LOGOUTAPI["POST /api/logout<br/>auth:sanctum; invalida sessão"]
+        SESSION[("cookies HttpOnly + tabela sessions<br/>configurados pelo Laravel")]
+    end
+
+    BROWSER --> MAIN --> USEAUTH
+    BROWSER --> ROUTER
+    ROUTER --> LOGINVIEW --> LOGINUI
+    ROUTER --> USEAUTH
+    LOGINUI --> WALLPAPER
+    LOGINUI --> USEAUTH
+    LOGOUTUI --> USEAUTH
+
+    USEAUTH --> USEAPI
+    USEAPI --> CSRF
+    USEAPI --> LOGINAPI
+    USEAPI --> MEAPI
+    USEAPI --> LOGOUTAPI
+    LOGINAPI --> SESSION
+    MEAPI --> SESSION
+    LOGOUTAPI --> SESSION
+
+    USEAPI --> REDIRECT
+    REDIRECT --> ROUTER
+
+    classDef route fill:#e9f2ff,stroke:#2563eb,color:#111827
+    classDef auth fill:#fff7ed,stroke:#ea580c,color:#111827
+    classDef api fill:#ecfdf5,stroke:#059669,color:#111827
+
+    class MAIN,ROUTER,LOGINVIEW,LOGINUI,LOGOUTUI,WALLPAPER route
+    class USEAUTH,USEAPI,REDIRECT auth
+    class CSRF,LOGINAPI,MEAPI,LOGOUTAPI,SESSION api

@@ -1,0 +1,66 @@
+%% Fluxo real e resumido do Blog no frontend Vue. Atualizado em 2026-07-22.
+flowchart LR
+    BROWSER["Navegador<br/>Vue SPA; cookies Sanctum<br/>visitor_id anônimo em localStorage"]
+
+    subgraph ROUTING["1. Rotas e layouts"]
+        ROUTER["src/router/index.ts<br/>createWebHistory + beforeEach"]
+        PUBLICROUTES["DefaultLayout.vue<br/>/ → Home/Main.vue<br/>/blog → BlogView.vue<br/>/post/:slug → PostView.vue"]
+        ADMINROUTES["AdminLayout.vue<br/>/admin/blog → BlogListView.vue<br/>/admin/blog/editor/:id? → BlogEditView.vue"]
+    end
+
+    subgraph UI["2. Views e componentes do Blog"]
+        PUBLICUI["PostGrid.vue + PostCard.vue<br/>prévia de 4 posts na home;<br/>lista pública de 8, paginação e estados"]
+        DETAILUI["PostView.vue<br/>conteúdo, views depois de 5 s,<br/>likes e v-html defensivo"]
+        ADMINLIST["BlogPostList.vue<br/>filtro/status, editar, arquivar, excluir"]
+        EDITOR["BlogEditView.vue + editor/Tiptap*.vue<br/>form, slug, tags, preview, thumbnail,<br/>Tiptap, imagem/YouTube e aviso de saída"]
+        SUPPORT["utils/postSlug.ts<br/>utils/sanitizePostHtml.ts (DOMPurify)<br/>utils/toFormData.ts"]
+    end
+
+    subgraph CLIENT["3. Estado e integração HTTP"]
+        PUBLICSTATE["usePublicPosts.ts<br/>posts, pagination, pending, error"]
+        ENGAGEMENT["usePostEngagement.ts<br/>UUID, CSRF, recordView, likes"]
+        ADMINSTATE["usePosts.ts<br/>lista administrativa e ações"]
+        AUTH["useAuth.ts<br/>checkSession, login, logout<br/>estado em memória"]
+        REPO["usePostRepository.ts<br/>get/create/update/delete/upload<br/>contratos tipados de posts"]
+        API["api/useApi.ts<br/>fetch + credentials include<br/>XSRF, ApiError e 401 global"]
+    end
+
+    subgraph LARAVEL["4. API Laravel externa"]
+        SANCTUM["/sanctum/csrf-cookie<br/>/api/login, /api/me, /api/logout<br/>auth:sanctum é a autorização real"]
+        PUBLICAPI["/api/public/posts<br/>/{slug}, /views e /likes"]
+        ADMINAPI["/api/admin/posts<br/>/{id}, /thumbnail<br/>/api/upload/image"]
+        DATA[("PostgreSQL e Storage<br/>controlados pelo backend")]
+    end
+
+    BROWSER --> ROUTER
+    ROUTER --> PUBLICROUTES
+    ROUTER --> AUTH
+    AUTH --> ADMINROUTES
+
+    PUBLICROUTES --> PUBLICUI
+    PUBLICROUTES --> DETAILUI
+    PUBLICUI --> PUBLICSTATE --> REPO
+    DETAILUI --> ENGAGEMENT --> REPO
+    DETAILUI --> REPO
+
+    ADMINROUTES --> ADMINLIST --> ADMINSTATE --> REPO
+    ADMINROUTES --> EDITOR --> SUPPORT
+    SUPPORT --> REPO
+    EDITOR --> REPO
+
+    AUTH --> API --> SANCTUM
+    REPO --> API
+    API --> PUBLICAPI
+    API --> ADMINAPI
+    PUBLICAPI --> DATA
+    ADMINAPI --> DATA
+
+    classDef route fill:#e9f2ff,stroke:#2563eb,color:#111827
+    classDef ui fill:#f3e8ff,stroke:#7e22ce,color:#111827
+    classDef client fill:#fff7ed,stroke:#ea580c,color:#111827
+    classDef api fill:#ecfdf5,stroke:#059669,color:#111827
+
+    class ROUTER,PUBLICROUTES,ADMINROUTES route
+    class PUBLICUI,DETAILUI,ADMINLIST,EDITOR,SUPPORT ui
+    class PUBLICSTATE,ENGAGEMENT,ADMINSTATE,AUTH,REPO,API client
+    class SANCTUM,PUBLICAPI,ADMINAPI,DATA api
