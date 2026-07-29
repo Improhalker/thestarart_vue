@@ -3,6 +3,11 @@ import { usePostsRepository } from "./usePostRepository";
 
 const VISITOR_STORAGE_KEY = "thestarart_visitor_id";
 let memoryVisitorId: string | null = null;
+let csrfCookieRequest: Promise<void> | null = null;
+
+type LikeSyncOptions = {
+  keepalive?: boolean;
+};
 
 const createAnonymousVisitorId = (): string => {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -51,22 +56,42 @@ export const usePostEngagement = () => {
 
   const visitorId = () => anonymousVisitorId();
 
+  const prepareCsrfCookie = () => {
+    if (!csrfCookieRequest) {
+      csrfCookieRequest = requestCsrfCookie().finally(() => {
+        csrfCookieRequest = null;
+      });
+    }
+
+    return csrfCookieRequest;
+  };
+
+  const syncLike = async (slug: string, liked: boolean, options: LikeSyncOptions = {}) => {
+    await prepareCsrfCookie();
+
+    return liked
+      ? postsRepository.addPublicLike(slug, visitorId(), options)
+      : postsRepository.removePublicLike(slug, visitorId(), options);
+  };
+
   return {
     getLikeState: (slug: string) => postsRepository.getPublicLikeState(slug, visitorId()),
 
+    prepareCsrfCookie,
+
     async recordView(slug: string) {
-      await requestCsrfCookie();
+      await prepareCsrfCookie();
       return postsRepository.recordPublicView(slug, visitorId());
     },
 
     async addLike(slug: string) {
-      await requestCsrfCookie();
-      return postsRepository.addPublicLike(slug, visitorId());
+      return syncLike(slug, true);
     },
 
     async removeLike(slug: string) {
-      await requestCsrfCookie();
-      return postsRepository.removePublicLike(slug, visitorId());
+      return syncLike(slug, false);
     },
+
+    syncLike,
   };
 };

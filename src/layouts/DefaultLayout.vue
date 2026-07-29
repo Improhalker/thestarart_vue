@@ -82,7 +82,11 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
           </div>
 
           <div class="rounded-xl order-1 md:order-2">
-            <RouterView />
+            <RouterView v-slot="{ Component, route }">
+              <Transition name="page" mode="out-in">
+                <component :is="Component" :key="route.fullPath" />
+              </Transition>
+            </RouterView>
           </div>
 
           <div
@@ -98,7 +102,7 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
       <div class="relative z-20">
         <AdminPet />
       </div>
-      <div class="pb-[100px] md:pb-0">
+      <div class="pb-[180px] md:pb-0">
         <footer
           class="w-full relative overflow-hidden border-t-[3px] border-[var(--ts-primary-pink)] bg-black px-0"
         >

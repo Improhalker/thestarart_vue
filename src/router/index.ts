@@ -135,12 +135,13 @@ router.beforeEach(async (to, from) => {
   const auth = useAuth();
 
   if (to.path.startsWith('/admin')) {
-    const isInternalAdminNavigation = from.path.startsWith('/admin');
+    // O estado em memória pode ainda não estar preenchido ao trocar entre
+    // páginas administrativas (por exemplo, logo após um reload). Nesse caso,
+    // confirme a sessão antes de decidir pelo redirecionamento, em vez de
+    // abortar a navegação interna.
     const user = auth.isAuthenticated.value
       ? auth.user.value
-      : isInternalAdminNavigation
-        ? null
-        : await auth.checkSession();
+      : await auth.checkSession();
 
     if (!user) {
       return {

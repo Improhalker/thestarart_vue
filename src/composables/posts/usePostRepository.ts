@@ -25,6 +25,147 @@ type UploadImageResponse = {
   url: string;
 };
 
+type BackgroundRequestOptions = {
+  /**
+   * Solicita ao navegador que tente concluir a mutação mesmo durante a saída
+   * da página. O payload de likes é pequeno e cabe no limite de keepalive.
+   */
+  keepalive?: boolean;
+};
+
+type PublicCacheEntry<T> = {
+  expiresAt: number;
+  value: T;
+};
+
+const PUBLIC_POST_CACHE_PREFIX = "thestarart:posts:public:v1:";
+const PUBLIC_POST_CACHE_TTL_MS = 5 * 60 * 1000;
+
+const publicCache = new Map<string, PublicCacheEntry<unknown>>();
+const publicRequests = new Map<string, Promise<unknown>>();
+let publicCacheGeneration = 0;
+
+const cacheStorage = (): Storage | null => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    return window.sessionStorage;
+  } catch {
+    return null;
+  }
+};
+
+const clonePublicPostSummary = (post: PublicPostSummary): PublicPostSummary => ({
+  ...post,
+  tags: [...post.tags],
+});
+
+const clonePublicPost = (post: PublicPost): PublicPost => ({
+  ...clonePublicPostSummary(post),
+  content: post.content,
+});
+
+const clonePublicPostListResponse = (response: PostListResponse<PublicPostSummary>): PostListResponse<PublicPostSummary> => ({
+  data: response.data.map(clonePublicPostSummary),
+  meta: { ...response.meta },
+});
+
+const clonePublicPostResponse = (response: { data: PublicPost }): { data: PublicPost } => ({
+  data: clonePublicPost(response.data),
+});
+
+const readPublicCache = <T>(key: string): T | null => {
+  const now = Date.now();
+  const inMemoryEntry = publicCache.get(key) as PublicCacheEntry<T> | undefined;
+
+  if (inMemoryEntry?.expiresAt && inMemoryEntry.expiresAt > now) return inMemoryEntry.value;
+  if (inMemoryEntry) publicCache.delete(key);
+
+  try {
+    const rawEntry = cacheStorage()?.getItem(key);
+    if (!rawEntry) return null;
+
+    const entry = JSON.parse(rawEntry) as Partial<PublicCacheEntry<T>>;
+    if (typeof entry.expiresAt !== "number" || entry.expiresAt <= now || entry.value === undefined) {
+      cacheStorage()?.removeItem(key);
+      return null;
+    }
+
+    const cacheEntry = { expiresAt: entry.expiresAt, value: entry.value } as PublicCacheEntry<T>;
+    publicCache.set(key, cacheEntry);
+
+    return cacheEntry.value;
+  } catch {
+    try {
+      cacheStorage()?.removeItem(key);
+    } catch {
+      // O cache é opcional e não pode impedir a leitura pública do blog.
+    }
+
+    return null;
+  }
+};
+
+const writePublicCache = <T>(key: string, value: T) => {
+  const entry: PublicCacheEntry<T> = {
+    expiresAt: Date.now() + PUBLIC_POST_CACHE_TTL_MS,
+    value,
+  };
+
+  publicCache.set(key, entry);
+
+  try {
+    cacheStorage()?.setItem(key, JSON.stringify(entry));
+  } catch {
+    // O cache em memória continua disponível quando o storage não puder ser usado.
+  }
+};
+
+const invalidatePublicPostCache = () => {
+  publicCacheGeneration += 1;
+  publicCache.clear();
+  publicRequests.clear();
+
+  try {
+    const storage = cacheStorage();
+    if (!storage) return;
+
+    for (let index = storage.length - 1; index >= 0; index -= 1) {
+      const key = storage.key(index);
+      if (key?.startsWith(PUBLIC_POST_CACHE_PREFIX)) storage.removeItem(key);
+    }
+  } catch {
+    // A invalidação persistida é uma otimização; a memória já foi limpa.
+  }
+};
+
+const requestPublicResource = <T>(
+  key: string,
+  request: () => Promise<T>,
+  clone: (value: T) => T,
+): Promise<T> => {
+  const cached = readPublicCache<T>(key);
+  if (cached) return Promise.resolve(clone(cached));
+
+  const pending = publicRequests.get(key) as Promise<T> | undefined;
+  if (pending) return pending.then(clone);
+
+  const requestGeneration = publicCacheGeneration;
+  const pendingRequest = request()
+    .then((response) => {
+      if (requestGeneration === publicCacheGeneration) writePublicCache(key, clone(response));
+
+      return response;
+    })
+    .finally(() => {
+      if (publicRequests.get(key) === pendingRequest) publicRequests.delete(key);
+    });
+
+  publicRequests.set(key, pendingRequest);
+
+  return pendingRequest.then(clone);
+};
+
 export const usePostsRepository = () => {
   const { client } = useApi();
 
@@ -36,9 +177,13 @@ export const usePostsRepository = () => {
       if (filters.lang) params.set("lang", filters.lang);
       if (filters.order) params.set("order", filters.order);
 
-      return client(`/public/posts${params.size ? `?${params}` : ""}`, {
-        method: "GET",
-      });
+      const path = `/public/posts${params.size ? `?${params}` : ""}`;
+
+      return requestPublicResource(
+        `${PUBLIC_POST_CACHE_PREFIX}list:${params.toString()}`,
+        () => client<PostListResponse<PublicPostSummary>>(path, { method: "GET" }),
+        clonePublicPostListResponse,
+      );
     },
 
     getAdminPosts(filters: AdminPostListFilters = {}): Promise<PostListResponse<Post>> {
@@ -54,21 +199,29 @@ export const usePostsRepository = () => {
       });
     },
 
-    create(data: PostCreateDTO): Promise<PostCreateResponse> {
-      return client("/admin/posts", {
+    async create(data: PostCreateDTO): Promise<PostCreateResponse> {
+      const response = await client<PostCreateResponse>("/admin/posts", {
         method: "POST",
         body: toFormData(data),
       });
+
+      invalidatePublicPostCache();
+
+      return response;
     },
 
-    update(id: string, data: PostCreateDTO) {
-      return client(`/admin/posts/${id}`, {
+    async update(id: string, data: PostCreateDTO): Promise<PostCreateResponse> {
+      const response = await client<PostCreateResponse>(`/admin/posts/${id}`, {
         method: "POST",
         body: toFormData(data),
         headers: {
           "X-HTTP-Method-Override": "PUT",
         },
       });
+
+      invalidatePublicPostCache();
+
+      return response;
     },
 
     uploadThumbnail(formData: FormData) {
@@ -92,9 +245,13 @@ export const usePostsRepository = () => {
     },
 
     getPublicPost(slug: string): Promise<{ data: PublicPost }> {
-      return client(`/public/posts/${encodeURIComponent(slug)}`, {
-        method: "GET",
-      });
+      const encodedSlug = encodeURIComponent(slug);
+
+      return requestPublicResource(
+        `${PUBLIC_POST_CACHE_PREFIX}post:${encodedSlug}`,
+        () => client<{ data: PublicPost }>(`/public/posts/${encodedSlug}`, { method: "GET" }),
+        clonePublicPostResponse,
+      );
     },
 
     recordPublicView(slug: string, visitorId: string): Promise<{ data: PublicViewResult }> {
@@ -113,26 +270,40 @@ export const usePostsRepository = () => {
       });
     },
 
-    addPublicLike(slug: string, visitorId: string): Promise<{ data: PublicLikeResult }> {
+    addPublicLike(
+      slug: string,
+      visitorId: string,
+      options: BackgroundRequestOptions = {},
+    ): Promise<{ data: PublicLikeResult }> {
       return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
         method: "POST",
+        keepalive: options.keepalive,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ visitor_id: visitorId }),
       });
     },
 
-    removePublicLike(slug: string, visitorId: string): Promise<{ data: PublicLikeResult }> {
+    removePublicLike(
+      slug: string,
+      visitorId: string,
+      options: BackgroundRequestOptions = {},
+    ): Promise<{ data: PublicLikeResult }> {
       return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
         method: "DELETE",
+        keepalive: options.keepalive,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ visitor_id: visitorId }),
       });
     },
 
-    delete(id: string) {
-      return client(`/admin/posts/${id}`, {
+    async delete(id: string) {
+      const response = await client(`/admin/posts/${id}`, {
         method: "DELETE",
       });
+
+      invalidatePublicPostCache();
+
+      return response;
     },
   };
 };

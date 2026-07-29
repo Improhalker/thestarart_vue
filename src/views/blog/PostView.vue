@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onBeforeUnmount, onMounted } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Eye, Heart } from "lucide-vue-next";
 import { usePostEngagement } from "@/composables/posts/usePostEngagement";
+import { useOptimisticLikes } from "@/composables/posts/useOptimisticLikes";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
 import type { PublicPost } from "@/composables/posts/types";
 import { sanitizePostHtml } from "@/utils/sanitizePostHtml";
@@ -10,13 +11,17 @@ import { sanitizePostHtml } from "@/utils/sanitizePostHtml";
 const route = useRoute();
 const postsRepo = usePostsRepository();
 const engagement = usePostEngagement();
+const optimisticLikes = useOptimisticLikes();
 
 const post = ref<PublicPost | null>(null);
 const pending = ref(true);
 const error = ref(false);
-const liked = ref(false);
-const likePending = ref(false);
-const engagementError = ref("");
+
+const currentLikeState = computed(() =>
+  post.value ? optimisticLikes.stateFor(post.value.slug) : null,
+);
+const liked = computed(() => currentLikeState.value?.liked ?? false);
+const likesCount = computed(() => currentLikeState.value?.likesCount ?? post.value?.likes_count ?? 0);
 
 const minimumReadingTimeMs = 5000;
 let viewTimer: ReturnType<typeof setTimeout> | null = null;
@@ -25,7 +30,7 @@ let viewRequestSent = false;
 const fallbackImage = "https://via.placeholder.com/1200x600/1a1a1a/ffffff?text=No+Image";
 
 const formatDate = (date: string | null) => {
-  if (!date) return "data indisponÃ­vel";
+  if (!date) return "data indisponível";
 
   return new Date(date).toLocaleDateString("pt-BR");
 };
@@ -52,7 +57,7 @@ const recordViewAfterReading = () => {
       const response = await engagement.recordView(post.value.slug);
       post.value.views_count = response.data.views_count;
     } catch {
-      // O contador Ã© complementar: o conteÃºdo do post nÃ£o deve falhar se ele nÃ£o puder ser registrado.
+      // O contador é complementar: o conteúdo do post não deve falhar se ele não puder ser registrado.
       viewRequestSent = false;
     }
   }, minimumReadingTimeMs);
@@ -67,24 +72,10 @@ const onVisibilityChange = () => {
   clearViewTimer();
 };
 
-const toggleLike = async () => {
-  if (!post.value || likePending.value) return;
+const toggleLike = () => {
+  if (!post.value) return;
 
-  likePending.value = true;
-  engagementError.value = "";
-
-  try {
-    const response = liked.value
-      ? await engagement.removeLike(post.value.slug)
-      : await engagement.addLike(post.value.slug);
-
-    liked.value = response.data.liked;
-    post.value.likes_count = response.data.likes_count;
-  } catch {
-    engagementError.value = "NÃ£o foi possÃ­vel atualizar o like. Tente novamente.";
-  } finally {
-    likePending.value = false;
-  }
+  optimisticLikes.toggle(post.value.slug);
 };
 
 const loadLikeState = async (slug: string) => {
@@ -93,10 +84,9 @@ const loadLikeState = async (slug: string) => {
 
     if (post.value?.slug !== slug) return;
 
-    liked.value = likes.data.liked;
-    post.value.likes_count = likes.data.likes_count;
+    optimisticLikes.reconcile(slug, likes.data);
   } catch {
-    // Likes sÃ£o opcionais para a leitura; a pÃ¡gina continua Ãºtil sem esse estado inicial.
+    // Likes são opcionais para a leitura; a página continua útil sem esse estado inicial.
   }
 };
 
@@ -108,11 +98,15 @@ onMounted(async () => {
 
     const currentPost = response.data;
     post.value = currentPost;
+    optimisticLikes.initialize(currentPost.slug, {
+      liked: false,
+      likesCount: currentPost.likes_count,
+    });
 
     document.addEventListener("visibilitychange", onVisibilityChange);
     recordViewAfterReading();
     void loadLikeState(currentPost.slug);
-  } catch (e) {
+  } catch {
     error.value = true;
   } finally {
     pending.value = false;
@@ -124,6 +118,7 @@ onBeforeUnmount(() => {
   document.removeEventListener("visibilitychange", onVisibilityChange);
 });
 </script>
+
 <template>
   <div class="container-style-dark max-w-xl">
     <CardWindowHeader :title="post?.title ?? 'loading.exe'" />
@@ -157,27 +152,22 @@ onBeforeUnmount(() => {
         </p>
 
         <div class="flex items-center justify-center gap-3 text-[11px] text-gray-300 uppercase">
-          <span class="inline-flex items-center gap-1" :aria-label="`${post.views_count} visualizaÃ§Ãµes`">
+          <span class="inline-flex items-center gap-1" :aria-label="`${post.views_count} visualizações`">
             <Eye :size="14" aria-hidden="true" />
-            {{ post.views_count }} visualizaÃ§Ãµes
+            {{ post.views_count }} visualizações
           </span>
 
           <button
             type="button"
-            class="inline-flex items-center gap-1 border border-[var(--color-ts-ui-border)] px-2 py-1 transition-colors hover:bg-white/10 disabled:cursor-wait disabled:opacity-60"
+            class="inline-flex items-center gap-1 border border-[var(--color-ts-ui-border)] px-2 py-1 transition-colors hover:bg-white/10"
             :class="liked ? 'text-[var(--color-ts-primary-pink)]' : ''"
             :aria-pressed="liked"
-            :disabled="likePending"
             @click="toggleLike"
           >
             <Heart :size="14" :fill="liked ? 'currentColor' : 'none'" aria-hidden="true" />
-            {{ post.likes_count }} {{ liked ? 'curtido' : 'curtidas' }}
+            {{ likesCount }} {{ liked ? 'curtido' : 'curtidas' }}
           </button>
         </div>
-
-        <p v-if="engagementError" class="text-xs text-red-400" role="alert">
-          {{ engagementError }}
-        </p>
       </div>
 
       <!-- Thumbnail -->

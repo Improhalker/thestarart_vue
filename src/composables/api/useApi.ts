@@ -19,10 +19,20 @@ export const setUnauthorizedHandler = (handler?: () => void) => {
   unauthorizedHandler = handler;
 };
 
-const apiBaseUrl = () =>
-  (import.meta.env.VITE_API_URL || "http://thestarartlaravelback.test/api").replace(/\/$/, "");
+export const resolveApiBaseUrl = (isDevelopment: boolean, configuredUrl?: string) => {
+  // Produção conversa com Laravel pelo reverse proxy da Vercel. Isso faz com
+  // que a sessão Sanctum seja de primeira parte, mesmo sem domínio próprio.
+  if (!isDevelopment) return "/api";
 
-const csrfUrl = () => `${new URL(apiBaseUrl()).origin}/sanctum/csrf-cookie`;
+  return (configuredUrl || "http://localhost:8000/api").replace(/\/$/, "");
+};
+
+export const resolveCsrfUrl = (apiBase: string, currentOrigin: string) =>
+  `${new URL(apiBase, currentOrigin).origin}/sanctum/csrf-cookie`;
+
+const apiBaseUrl = () => resolveApiBaseUrl(import.meta.env.DEV, import.meta.env.VITE_API_URL);
+
+const csrfUrl = () => resolveCsrfUrl(apiBaseUrl(), window.location.origin);
 
 const readXsrfToken = () => {
   const cookie = document.cookie

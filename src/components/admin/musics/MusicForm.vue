@@ -1,133 +1,167 @@
 <script setup lang="ts">
-import { reactive, watch } from "vue"; // Adicionado watch
-import RetroInput from "@/views/admin/global/RetroInput.vue";
+import { computed, reactive, ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
+import RetroInput from "@/views/admin/global/RetroInput.vue";
+import type { AdminMusic, MusicPayload } from "@/services/MusicService";
 
-// Definindo as Props
-const props = defineProps<{
-  initialData?: any; // Dados da música para edição
-  errors?: any; // Erros do Laravel
+type ValidationErrors = Record<string, string[]>;
+
+const props = withDefaults(
+  defineProps<{
+    initialData?: AdminMusic | null;
+    errors?: ValidationErrors | null;
+    isSaving?: boolean;
+  }>(),
+  {
+    initialData: null,
+    errors: null,
+    isSaving: false,
+  },
+);
+
+const emit = defineEmits<{
+  save: [payload: MusicPayload];
 }>();
 
-const emit = defineEmits(["save"]);
-
 const form = reactive({
+  youtube_url: "",
   title: "",
-  youtube_input: "",
-  description: "",
-  day_of_week: 0,
+  artist: "",
+  personal_note: "",
   is_active: true,
+});
+
+const localError = ref<string | null>(null);
+
+const fieldError = (field: keyof ValidationErrors) => props.errors?.[field]?.[0] ?? null;
+
+const previewVideoId = computed(() => {
+  try {
+    const url = new URL(form.youtube_url.trim());
+    const host = url.hostname.replace(/^www\./, "");
+
+    if (host === "youtu.be") return url.pathname.split("/").filter(Boolean)[0] ?? "";
+    if (["youtube.com", "m.youtube.com", "music.youtube.com"].includes(host)) {
+      if (url.pathname === "/watch") return url.searchParams.get("v") ?? "";
+
+      const [kind, id] = url.pathname.split("/").filter(Boolean);
+      return ["embed", "shorts", "v"].includes(kind ?? "") ? id ?? "" : "";
+    }
+  } catch {
+    return "";
+  }
+
+  return "";
 });
 
 watch(
   () => props.initialData,
-  (newVal) => {
-    if (newVal) {
-      form.title = newVal.title;
-      form.youtube_input = newVal.youtube_id;
-      form.description = newVal.description || "";
-      form.day_of_week = newVal.day_of_week;
-
-      form.is_active =
-        newVal.is_active === 1 || newVal.is_active === true || newVal.is_active === "1";
-    } else {
-      form.title = "";
-      form.youtube_input = "";
-      form.description = "";
-      form.day_of_week = 0;
-      form.is_active = true;
-    }
+  (music) => {
+    form.youtube_url = music?.youtube_url ?? "";
+    form.title = music?.title ?? "";
+    form.artist = music?.artist ?? "";
+    form.personal_note = music?.personal_note ?? "";
+    form.is_active = music?.is_active ?? true;
+    localError.value = null;
   },
-  { immediate: true, deep: true }
+  { immediate: true },
 );
-const extractYoutubeId = (input: string) => {
-  if (!input) return "";
-  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-  const match = input.match(regExp);
-  return match && match[7] && match[7].length === 11 ? match[7] : input;
-};
-
-const days = [
-  { val: 0, label: "Domingo" },
-  { val: 1, label: "Segunda-feira" },
-  { val: 2, label: "Terça-feira" },
-  { val: 3, label: "Quarta-feira" },
-  { val: 4, label: "Quinta-feira" },
-  { val: 5, label: "Sexta-feira" },
-  { val: 6, label: "Sábado" },
-];
 
 const submitForm = () => {
-  if (!form.title || !form.youtube_input) return alert("Campos obrigatórios!");
+  const youtubeUrl = form.youtube_url.trim();
+  const title = form.title.trim();
 
-  const payload = {
-    title: form.title,
-    youtube_id: extractYoutubeId(form.youtube_input),
-    description: form.description,
-    day_of_week: Number(form.day_of_week),
-    is_active: form.is_active ? 1 : 0,
-  };
-  emit("save", payload);
+  if (!youtubeUrl || !title) {
+    localError.value = "Informe o link do YouTube e o título da faixa.";
+    return;
+  }
+
+  localError.value = null;
+  emit("save", {
+    youtube_url: youtubeUrl,
+    title,
+    artist: form.artist.trim() || null,
+    personal_note: form.personal_note.trim() || null,
+    is_active: form.is_active,
+  });
 };
 </script>
 
 <template>
-  <form @submit.prevent="submitForm" class="space-y-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <RetroInput label="Título" v-model="form.title" placeholder="Nome da faixa" />
+  <form class="space-y-4" @submit.prevent="submitForm">
+    <p v-if="localError" role="alert" class="border-2 border-ts-pink bg-pink-50 p-2 text-xs font-bold text-ts-pink">
+      {{ localError }}
+    </p>
+
+    <div class="space-y-1">
       <RetroInput
-        label="YouTube (URL ou ID)"
-        v-model="form.youtube_input"
-        placeholder="Ex: azrZoMh_iMQ"
+        v-model="form.youtube_url"
+        label="Link do YouTube"
+        type="url"
+        placeholder="https://www.youtube.com/watch?v=..."
       />
+      <p v-if="fieldError('youtube_url')" role="alert" class="text-xs font-bold text-ts-pink">
+        {{ fieldError('youtube_url') }}
+      </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-      <div class="flex flex-col gap-1">
-        <label class="text-[10px] font-black uppercase tracking-widest text-ts-black"
-          >Dia da Semana</label
-        >
-        <select
-          v-model="form.day_of_week"
-          class="bg-white border-2 border-black p-2 text-xs font-bold outline-none appearance-none"
-        >
-          <option v-for="day in days" :key="day.val" :value="day.val">
-            {{ day.label }}
-          </option>
-        </select>
-      </div>
+    <div v-if="previewVideoId" class="flex items-center gap-3 border-2 border-black bg-white p-2">
+      <img
+        :src="`https://i.ytimg.com/vi/${previewVideoId}/default.jpg`"
+        alt="Prévia da thumbnail do vídeo"
+        class="h-12 w-20 border border-black object-cover"
+      />
+      <p class="text-[10px] font-bold uppercase text-ts-blue">Thumbnail gerada a partir do vídeo</p>
+    </div>
 
-      <div class="flex items-center gap-3 p-2 border-2 border-black bg-gray-200 h-[38px]">
-        <input
-          type="checkbox"
-          id="is_active"
-          v-model="form.is_active"
-          class="w-5 h-5 border-2 border-black rounded-none appearance-none cursor-pointer relative checked:bg-ts-blue checked:after:content-['X'] checked:after:text-white checked:after:absolute checked:after:left-[3px] checked:after:top-[-2px] checked:after:font-black"
-        />
-        <label for="is_active" class="text-[10px] font-black uppercase cursor-pointer"
-          >Status: {{ form.is_active ? "Ativo" : "Inativo" }}</label
-        >
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div class="space-y-1">
+        <RetroInput v-model="form.title" label="Título" placeholder="Nome da faixa" />
+        <p v-if="fieldError('title')" role="alert" class="text-xs font-bold text-ts-pink">
+          {{ fieldError('title') }}
+        </p>
+      </div>
+      <div class="space-y-1">
+        <RetroInput v-model="form.artist" label="Artista ou contexto" placeholder="Artista, obra ou contexto" />
+        <p v-if="fieldError('artist')" role="alert" class="text-xs font-bold text-ts-pink">
+          {{ fieldError('artist') }}
+        </p>
       </div>
     </div>
 
-    <div class="flex flex-col gap-1">
-      <label class="text-[10px] font-black uppercase tracking-widest text-ts-black"
-        >Descrição</label
-      >
+    <div class="space-y-1">
+      <label class="text-[10px] font-black uppercase tracking-widest text-ts-black">Personal_Note.txt</label>
       <textarea
-        v-model="form.description"
-        rows="3"
-        class="bg-white border-2 border-black p-2 text-xs font-bold outline-none resize-none"
-        placeholder="Informações adicionais..."
-      ></textarea>
+        v-model="form.personal_note"
+        rows="4"
+        maxlength="2000"
+        class="w-full resize-y border-2 border-black bg-white p-2 text-xs font-bold outline-none transition-shadow focus:bg-ts-blue/5 focus:shadow-[4px_4px_0px_0px_var(--ts-retro-shadow)]"
+        placeholder="Uma observação pessoal opcional sobre esta faixa..."
+      />
+      <p v-if="fieldError('personal_note')" role="alert" class="text-xs font-bold text-ts-pink">
+        {{ fieldError('personal_note') }}
+      </p>
     </div>
 
-    <div class="pt-4 border-t-2 border-black flex justify-end">
+    <label class="flex min-h-10 items-center gap-3 border-2 border-black bg-gray-200 p-2 text-[10px] font-black uppercase">
+      <input
+        v-model="form.is_active"
+        type="checkbox"
+        class="h-5 w-5 cursor-pointer appearance-none border-2 border-black checked:bg-ts-blue checked:after:absolute checked:after:ml-[3px] checked:after:mt-[-2px] checked:after:content-['X'] checked:after:text-base checked:after:text-white"
+      />
+      Status: {{ form.is_active ? "Ativa — disponível no player" : "Inativa — oculta no player" }}
+    </label>
+    <p v-if="fieldError('is_active')" role="alert" class="text-xs font-bold text-ts-pink">
+      {{ fieldError('is_active') }}
+    </p>
+
+    <div class="flex justify-end border-t-2 border-black pt-4">
       <Button
         type="submit"
-        class="bg-ts-blue text-white border-2 border-black rounded-none shadow-[4px_4px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-black uppercase text-xs"
+        :disabled="isSaving"
+        class="rounded-none border-2 border-black bg-ts-blue text-xs font-black uppercase text-white shadow-[4px_4px_0px_0px_black] transition-all hover:translate-x-[2px] hover:translate-y-[2px] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        [ {{ props.initialData ? "ATUALIZAR_BANCO.SYS" : "EXECUTAR_UPLOAD.SYS" }} ]
+        {{ isSaving ? "GRAVANDO..." : `[ ${initialData ? "ATUALIZAR_FAIXA.SYS" : "ADICIONAR_A_PLAYLIST.EXE"} ]` }}
       </Button>
     </div>
   </form>
