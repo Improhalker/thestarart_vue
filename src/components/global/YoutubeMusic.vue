@@ -149,11 +149,11 @@ const handleUnavailableVideo = () => {
   loadCurrentVideo(true);
 };
 
-const createPlayer = async () => {
+const createPlayer = async (youtubeApi: Promise<YouTubeApi> = loadYouTubeApi()) => {
   if (player.value || !playerHost.value || !currentMusic.value) return;
 
   try {
-    const youtube = await loadYouTubeApi();
+    const youtube = await youtubeApi;
 
     player.value = new youtube.Player(playerHost.value, {
       videoId: currentMusic.value.youtube_video_id,
@@ -249,8 +249,11 @@ const toggleMute = () => {
 watch([volume, isMuted], applyAudioPreferences);
 
 onMounted(async () => {
+  // Busca a API do YouTube enquanto a playlist é carregada. Antes, esse
+  // download só começava depois da resposta de músicas.
+  const youtubeApi = loadYouTubeApi();
   await load();
-  await createPlayer();
+  await createPlayer(youtubeApi);
 });
 
 onUnmounted(() => {

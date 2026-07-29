@@ -31,6 +31,4 @@ setUnauthorizedHandler(() => {
   }
 })
 
-void auth.checkSession()
-
 app.mount('#app')

@@ -60,10 +60,12 @@ export const useApi = () => {
     behavior: RequestBehavior = {},
   ): Promise<T> => {
     const headers = new Headers(options.headers);
-    headers.set("Accept", "application/json");
-    headers.set("X-Requested-With", "XMLHttpRequest");
+    const method = (options.method || "GET").toUpperCase();
 
-    if (!["GET", "HEAD", "OPTIONS"].includes((options.method || "GET").toUpperCase())) {
+    headers.set("Accept", "application/json");
+
+    if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
+      headers.set("X-Requested-With", "XMLHttpRequest");
       const token = readXsrfToken();
 
       if (token) headers.set("X-XSRF-TOKEN", token);

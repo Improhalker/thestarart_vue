@@ -1,5 +1,25 @@
 [
   {
+    "version": "0.8.1",
+    "date": "24/07/2026",
+    "status": "DEV",
+    "changes": [
+      "VERSÃO 0.8.1",
+      "[FEATURE] Implementado sistema de likes com Optimistic UI: coração e contador respondem instantaneamente.",
+      "[IMPROVEMENT] Likes agora possuem fila de sincronização, debounce contra cliques rápidos e reversão automática em caso de falha.",
+      "[IMPROVEMENT] Adicionado envio em background com keepalive para tentativas de sincronização durante navegação ou saída da página.",
+      "[FEATURE] Adicionado Toast discreto para falhas de sincronização de likes.",
+      "[SECURITY] Refatorada a arquitetura de autenticação para uso de proxy reverso da Vercel.",
+      "[SECURITY] Produção passa a consumir /api e /sanctum no mesmo domínio da SPA, preservando sessão Sanctum, CSRF e cookies HttpOnly.",
+      "[SECURITY] Removida a dependência de comunicação direta entre domínios para o login administrativo.",
+      "[IMPROVEMENT] Cache local adicionado para listagens e posts públicos do Blog.",
+      "[IMPROVEMENT] Cache local adicionado para músicas, com prevenção de requisições duplicadas.",
+      "[FIX] Player de música permanece ativo durante navegação entre páginas públicas.",
+      "[FIX] Corrigida a inconsistência de cliques na navegação administrativa.",
+      "[TEST] Adicionados testes para likes otimistas, cache de posts, resolução de URLs da API e sessão Sanctum pela origem da Vercel."
+    ]
+  },
+  {
     "version": "0.8.0",
     "date": "06/07/2026",
     "status": "DEV",
