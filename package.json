@@ -37,6 +37,7 @@
     "reka-ui": "^2.9.8",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
+    "three": "^0.185.1",
     "vaul-vue": "^0.4.1",
     "vue": "^3.5.22",
     "vue-draggable-plus": "^0.6.1",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.19.1",
+    "@types/three": "^0.185.1",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vitejs/plugin-vue-jsx": "^5.1.1",
     "@vue/eslint-config-typescript": "^14.6.0",

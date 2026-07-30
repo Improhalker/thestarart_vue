@@ -3,5 +3,5 @@ export const navigationLinks = [
   { name: "DIARIO", path: "/diary" },
   { name: "BLOG", path: "/blog" },
   { name: "CHANGELOG", path: "/changelog" },
-  { name: "Recrutador", path: "/recruiter" },
+  { name: "Recrutador", path: "/star-station" },
 ]

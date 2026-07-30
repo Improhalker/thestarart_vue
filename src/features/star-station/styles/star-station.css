@@ -1,0 +1,87 @@
+.star-station {
+  --star-station-background: var(--ts-primary-black);
+  --star-station-surface: color-mix(in srgb, var(--ts-secondary-black) 84%, var(--ts-primary-pink));
+  --star-station-primary: var(--ui-accent);
+  --star-station-secondary: var(--ts-light-blue);
+  --star-station-line: color-mix(in srgb, var(--ts-light-blue) 68%, var(--ts-primary-pink));
+  --star-station-glow: var(--ui-glow-pink);
+  --star-station-text: var(--onyx-text);
+  --star-station-muted: color-mix(in srgb, var(--onyx-text) 68%, var(--ts-light-blue));
+  --star-station-shadow: var(--ts-retro-shadow);
+
+  background:
+    radial-gradient(circle at 74% 21%, color-mix(in srgb, var(--star-station-primary) 17%, transparent), transparent 32rem),
+    radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--star-station-secondary) 20%, transparent), transparent 30rem),
+    var(--star-station-background);
+}
+
+.star-station__canvas {
+  cursor: default;
+}
+
+.star-station__canvas canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.star-station__intro::before,
+.star-station__scanlines {
+  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+.star-station__intro::before {
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.star-station__intro > div {
+  position: relative;
+}
+
+.star-station__telemetry {
+  text-shadow: 0 0 12px var(--star-station-glow);
+}
+
+.star-station__return-action {
+  animation: star-station-control-pulse 1.75s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.star-station__return-action:hover,
+.star-station__return-action:focus-visible {
+  animation-play-state: paused;
+}
+
+.star-station__return-action {
+  animation-duration: 1.15s !important;
+}
+
+@keyframes star-station-control-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--star-station-primary) 70%, transparent);
+    transform: scale(1.045);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-station *,
+  .star-station *::before,
+  .star-station *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .star-station__return-action {
+    animation: none;
+  }
+}

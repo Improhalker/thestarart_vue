@@ -54,6 +54,11 @@ const router = createRouter({
       component: LanguageSelector
     },
     {
+      path: '/star-station',
+      name: 'star-station',
+      component: () => import('@/features/star-station/views/StarStationView.vue'),
+    },
+    {
       path: '/justcryatthispoint',
       name: 'justcryatthispoint',
       component: () => import('@/views/FourthView.vue'),
