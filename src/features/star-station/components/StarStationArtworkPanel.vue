@@ -27,11 +27,11 @@ defineEmits<{ return: [] }>();
     </header>
 
     <div class="grid min-h-0 flex-1 gap-4 overflow-y-auto p-4 sm:grid-cols-[minmax(0,1fr)_15rem] sm:p-5">
-      <figure class="flex min-h-56 items-center justify-center border border-[var(--star-station-line)] bg-black/30 p-2">
+      <figure class="flex min-h-56 min-w-0 items-center justify-center overflow-hidden border border-[var(--star-station-line)] bg-black/30 p-2">
         <img
           :src="artwork.src"
           :alt="artwork.alt"
-          class="max-h-[52vh] w-full object-contain [image-rendering:auto]"
+          class="max-h-[52vh] max-w-full w-full object-contain [image-rendering:auto]"
         />
       </figure>
       <div class="self-start border-l-2 border-[var(--star-station-primary)] pl-4 text-sm leading-6 text-[var(--star-station-muted)]">
