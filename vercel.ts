@@ -1,9 +1,9 @@
 import { routes, type VercelConfig } from "@vercel/config/v1";
 
-const laravelApiOrigin = process.env.LARAVEL_API_ORIGIN?.replace(/\/+$/, "");
+const laravelApiOrigin = process.env.VITE_API_URL?.replace(/\/+$/, "");
 
 if (!laravelApiOrigin?.startsWith("https://")) {
-  throw new Error("LARAVEL_API_ORIGIN must be an HTTPS origin without the /api suffix.");
+  throw new Error("VITE_API_URL must be an HTTPS origin without the /api suffix.");
 }
 
 export const config: VercelConfig = {
