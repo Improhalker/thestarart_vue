@@ -58,6 +58,7 @@ export async function createStarStationScene({
   }
 
   const isMobile = window.matchMedia("(max-width: 767px)").matches;
+  const useStackedArtworkDetails = window.matchMedia("(max-width: 1023px)").matches;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x03010e);
   scene.fog = new THREE.FogExp2(0x010325, 0.026);
@@ -151,7 +152,7 @@ export async function createStarStationScene({
     renderer.domElement.style.touchAction = "manipulation";
     container.replaceChildren(renderer.domElement);
 
-    panels = await createArtworkPanels(artworks);
+    panels = await createArtworkPanels(artworks, { useStackedDetails: useStackedArtworkDetails });
     if (panels.length === 0) {
       throw new Error("No StarStation artwork texture could be loaded.");
     }
@@ -212,7 +213,11 @@ export async function createStarStationScene({
         );
       } else if (selectedPanel) {
         setCameraTarget(
-          new THREE.Vector3(selectedPanel.group.position.x, selectedPanel.group.position.y + 0.05, selectedPanel.group.position.z + 4.8),
+          new THREE.Vector3(
+            selectedPanel.group.position.x,
+            selectedPanel.group.position.y + (useStackedArtworkDetails ? -0.35 : 0.05),
+            selectedPanel.group.position.z + (useStackedArtworkDetails ? 7.2 : 6.1),
+          ),
           selectedPanel.group.position,
         );
       } else {
@@ -315,6 +320,7 @@ export async function createStarStationScene({
       navigationConstellation.update(deltaSeconds, reducedMotion);
       galleryConstellation.update(deltaSeconds, reducedMotion);
       aboutBeacon.update(deltaSeconds, elapsedSeconds, reducedMotion);
+      selectedPanel?.update(elapsedSeconds, reducedMotion);
       renderer.render(scene, camera);
       animationFrameId = window.requestAnimationFrame(animate);
     };

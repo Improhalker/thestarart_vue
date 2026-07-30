@@ -16,13 +16,13 @@ export interface StarStationAboutBeacon {
   dispose: () => void;
 }
 
-const ABOUT_POSITION = new THREE.Vector3(-6.1, 4.35, -7.6);
+const ABOUT_POSITION = new THREE.Vector3(-6, 4, -8);
 
 function createConstellationParticles(count: number): THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial> {
   const positions = new Float32Array(count * 3);
 
   for (let index = 0; index < count; index += 1) {
-    const angle = index * 2.399963229728653;
+    const angle = index * 2.4;
     const radius = 0.34 + (index % 7) * 0.09;
     const offset = index * 3;
     positions[offset] = Math.cos(angle) * radius;
@@ -54,10 +54,10 @@ function createTechnicalNetwork(): {
 } {
   const group = new THREE.Group();
   const nodePositions = [
-    new THREE.Vector3(-0.82, 0.46, 0),
-    new THREE.Vector3(-0.08, 0.72, 0.08),
-    new THREE.Vector3(0.76, 0.22, -0.04),
-    new THREE.Vector3(0.18, -0.68, 0.03),
+    new THREE.Vector3(-1.35, 0.45, 0),
+    new THREE.Vector3(-0.35, 1.12, 0.1),
+    new THREE.Vector3(1.28, 0.3, -0.05),
+    new THREE.Vector3(0.3, -1.08, 0.04),
   ];
   const nodeGeometry = new THREE.SphereGeometry(0.075, 10, 8);
   const nodeMaterials = [0x68b5ff, 0xff4fc4, 0x8b7bff, 0x68b5ff].map(

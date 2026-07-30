@@ -2,7 +2,6 @@
 import { ArrowLeft, CircuitBoard, House, ImageIcon, RotateCcw, Satellite, UserRound } from "lucide-vue-next";
 import { nextTick, onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
-import StarStationArtworkPanel from "../components/StarStationArtworkPanel.vue";
 import StarStationFallback from "../components/StarStationFallback.vue";
 import StarStationIntro from "../components/StarStationIntro.vue";
 import StarStationMePanel from "../components/StarStationMePanel.vue";
@@ -178,18 +177,18 @@ onBeforeUnmount(dispose);
         v-if="universeView === 'about-me'"
         @return="resetSelection"
       />
-      <StarStationArtworkPanel
-        v-if="selectedArtwork"
-        :artwork="selectedArtwork"
-        @return="returnToGallery"
-      />
-
       <p class="sr-only">
         StarStation is an interactive constellation navigator. The alternate controls expose the same destinations and drawings without using the canvas.
       </p>
       <div class="sr-only" aria-live="polite">
         {{ currentArtwork ? `Current artwork: ${currentArtwork.title}` : hoveredNavigation ? `Current destination: ${hoveredNavigation}` : 'Primary constellation ready' }}
       </div>
+      <article v-if="selectedArtwork" class="sr-only" aria-label="Selected artwork details">
+        <h2>{{ selectedArtwork.title }}</h2>
+        <p>{{ selectedArtwork.alt }}</p>
+        <p>Source: {{ selectedArtwork.src }}</p>
+        <p>Original archive artwork.</p>
+      </article>
     </section>
   </main>
 </template>

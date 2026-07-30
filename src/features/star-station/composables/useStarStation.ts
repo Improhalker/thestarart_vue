@@ -33,6 +33,7 @@ export function useStarStation(
     hoveredArtwork.value = null;
     hoveredNavigation.value = null;
     scene?.setView(view, artworkId);
+
   };
 
   const start = async (container: HTMLElement) => {
