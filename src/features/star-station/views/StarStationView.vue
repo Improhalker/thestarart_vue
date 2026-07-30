@@ -87,7 +87,7 @@ onBeforeUnmount(dispose);
       <div class="pointer-events-none absolute left-4 top-28 z-10 hidden max-w-xs border-l-2 border-[var(--star-station-secondary)] bg-[color:var(--star-station-background)]/65 px-3 py-2 text-xs leading-5 text-[var(--star-station-muted)] backdrop-blur-sm sm:block sm:left-6">
         <p class="font-pixel text-[10px] text-[var(--star-station-text)]">{{ universeView === 'main' ? 'PRIMARY CONSTELLATION' : universeView === 'gallery' ? 'GALLERY CONSTELLATION' : 'SIGNAL INSPECTION' }}</p>
         <p class="mt-1">
-          {{ universeView === 'main' ? 'Choose a signal to travel between the project, its creator, and the visual archive.' : universeView === 'gallery' ? 'Hover a drawing star to identify it, then select it to inspect the original signal.' : 'Use the return control to continue through the constellation map.' }}
+          {{ universeView === 'main' ? 'Choose a signal to travel between the project, its creator, and the visual archive.' : universeView === 'gallery' ? 'Hover a drawing star to identify it, then select it to inspect the original signal.' : universeView === 'artwork' ? 'On tablet or mobile, swipe or scroll vertically to inspect the full archive file.' : 'Use the return control to continue through the constellation map.' }}
         </p>
       </div>
 

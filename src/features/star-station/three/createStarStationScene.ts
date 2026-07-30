@@ -70,6 +70,8 @@ export async function createStarStationScene({
   const desiredCameraPosition = mainCameraPosition.clone();
   const desiredLookAt = mainLookAt.clone();
   const currentLookAt = mainLookAt.clone();
+  const artworkCameraPosition = new THREE.Vector3();
+  const artworkLookAt = new THREE.Vector3();
   const cursorOffset = new THREE.Vector2();
   const raycastPointer = new THREE.Vector2(2, 2);
   const raycaster = new THREE.Raycaster();
@@ -87,6 +89,9 @@ export async function createStarStationScene({
   let hoveredTarget: InteractiveTarget | null = null;
   let pointerStartX = 0;
   let pointerStartY = 0;
+  let pointerLastY = 0;
+  let isInspectingArtwork = false;
+  let artworkInspectionOffset = 0;
   let panels: StarStationArtworkPanel[] = [];
 
   const cosmicField = createCosmicField({ isMobile });
@@ -180,7 +185,42 @@ export async function createStarStationScene({
       desiredLookAt.copy(lookAt);
     };
 
+    const setArtworkCameraTarget = () => {
+      if (!selectedPanel) {
+        return;
+      }
+
+      const verticalOffset = useStackedArtworkDetails ? artworkInspectionOffset : 0;
+      artworkCameraPosition.set(
+        selectedPanel.group.position.x,
+        selectedPanel.group.position.y + (useStackedArtworkDetails ? -0.35 : 0.05) - verticalOffset,
+        selectedPanel.group.position.z + (useStackedArtworkDetails ? 7.2 : 6.1),
+      );
+      artworkLookAt.set(
+        selectedPanel.group.position.x,
+        selectedPanel.group.position.y - verticalOffset,
+        selectedPanel.group.position.z,
+      );
+      setCameraTarget(artworkCameraPosition, artworkLookAt);
+    };
+
+    const updateArtworkInspection = (offsetDelta: number) => {
+      if (!useStackedArtworkDetails || !selectedPanel) {
+        return;
+      }
+
+      artworkInspectionOffset = THREE.MathUtils.clamp(artworkInspectionOffset + offsetDelta, 0, 1.8);
+      setArtworkCameraTarget();
+    };
+
     const setView = (view: UniverseView, artworkId: string | null = null) => {
+      artworkInspectionOffset = 0;
+      isInspectingArtwork = false;
+      if (renderer) {
+        renderer.domElement.style.touchAction = useStackedArtworkDetails && view === "artwork"
+          ? "none"
+          : "manipulation";
+      }
       activeView = view;
       selectedPanel = view === "artwork"
         ? panels.find((panel) => panel.artwork.id === artworkId) ?? null
@@ -212,14 +252,7 @@ export async function createStarStationScene({
           aboutBeacon.position,
         );
       } else if (selectedPanel) {
-        setCameraTarget(
-          new THREE.Vector3(
-            selectedPanel.group.position.x,
-            selectedPanel.group.position.y + (useStackedArtworkDetails ? -0.35 : 0.05),
-            selectedPanel.group.position.z + (useStackedArtworkDetails ? 7.2 : 6.1),
-          ),
-          selectedPanel.group.position,
-        );
+        setArtworkCameraTarget();
       } else {
         setCameraTarget(mainCameraPosition, mainLookAt);
       }
@@ -249,6 +282,12 @@ export async function createStarStationScene({
     };
 
     const onPointerMove = (event: PointerEvent) => {
+      if (isInspectingArtwork) {
+        updateArtworkInspection((pointerLastY - event.clientY) * 0.009);
+        pointerLastY = event.clientY;
+        return;
+      }
+
       updatePointer(event);
       setHoveredTarget(resolveTargetAtPointer());
     };
@@ -257,9 +296,23 @@ export async function createStarStationScene({
       pointerStartX = event.clientX;
       pointerStartY = event.clientY;
       updatePointer(event);
+
+      if (useStackedArtworkDetails && activeView === "artwork" && event.pointerType === "touch") {
+        isInspectingArtwork = true;
+        pointerLastY = event.clientY;
+        renderer?.domElement.setPointerCapture(event.pointerId);
+      }
     };
 
     const onPointerUp = (event: PointerEvent) => {
+      if (isInspectingArtwork) {
+        isInspectingArtwork = false;
+        if (renderer?.domElement.hasPointerCapture(event.pointerId)) {
+          renderer.domElement.releasePointerCapture(event.pointerId);
+        }
+        return;
+      }
+
       const pointerTravel = Math.hypot(event.clientX - pointerStartX, event.clientY - pointerStartY);
       if (pointerTravel > 10) {
         return;
@@ -278,6 +331,15 @@ export async function createStarStationScene({
     const onPointerLeave = () => {
       cursorOffset.set(0, 0);
       setHoveredTarget(null);
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (!useStackedArtworkDetails || activeView !== "artwork" || !selectedPanel) {
+        return;
+      }
+
+      event.preventDefault();
+      updateArtworkInspection(event.deltaY * 0.0028);
     };
 
     const onResize = () => {
@@ -347,6 +409,7 @@ export async function createStarStationScene({
     renderer.domElement.addEventListener("pointerdown", onPointerDown);
     renderer.domElement.addEventListener("pointerup", onPointerUp);
     renderer.domElement.addEventListener("pointerleave", onPointerLeave);
+    renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("resize", onResize);
     document.addEventListener("visibilitychange", onVisibilityChange);
     setView("main");
@@ -365,6 +428,7 @@ export async function createStarStationScene({
         renderer?.domElement.removeEventListener("pointerdown", onPointerDown);
         renderer?.domElement.removeEventListener("pointerup", onPointerUp);
         renderer?.domElement.removeEventListener("pointerleave", onPointerLeave);
+        renderer?.domElement.removeEventListener("wheel", onWheel);
         window.removeEventListener("resize", onResize);
         document.removeEventListener("visibilitychange", onVisibilityChange);
         setHoveredTarget(null);
