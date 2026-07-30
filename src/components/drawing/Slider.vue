@@ -24,7 +24,7 @@ const images = [
   "/images/desenhos/kyoukai.jpg",
   "/images/desenhos/madoka.webp",
   "/images/desenhos/makima.webp",
-  "/images/desenhos/katarinaaaa.png",
+  "/images/desenhos/katarina.png",
 ];
 
 const openFullscreen = (img: string) => {
