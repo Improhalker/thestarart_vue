@@ -75,8 +75,8 @@ const visiblePages = computed(() => {
           📷 @thestarart_
         </a>
 
-        <a href="mailto:thestarart@gmail.com" class="underline hover:opacity-80">
-          ✉️ thestarart@gmail.com
+        <a href="mailto:contact.thestarart@gmail.com" class="underline hover:opacity-80">
+          ✉️ contact.thestarart@gmail.com
         </a>
       </div>
     </div>
