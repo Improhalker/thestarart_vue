@@ -1,5 +1,16 @@
 [
   {
+    "version": "0.8.2",
+    "date": "05/08/2026",
+    "status": "DEV",
+    "changes": [
+      "VERSÃO 0.8.2",
+      "[UI] Redesign do Calendar.exe com a paleta Dark Purple e os tokens visuais do TheStarArt.",
+      "[IMPROVEMENT] Melhorados os estados de navegação, seleção e destaque do dia atual no calendário.",
+      "[FIX] Corrigidos pequenos problemas visuais e de responsividade na página do Diário."
+    ]
+  },
+  {
     "version": "0.8.1",
     "date": "24/07/2026",
     "status": "DEV",
