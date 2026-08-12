@@ -308,7 +308,7 @@ onBeforeUnmount(clearThumbnailPreview);
 
       <details class="border-2 border-black bg-white">
         <summary class="cursor-pointer px-3 py-2 font-bold">Prévia segura</summary>
-        <div class="prose max-w-none border-t-2 border-black p-3" v-html="safePreview" />
+        <div class="post-rich-content prose max-w-none border-t-2 border-black p-3" v-html="safePreview" />
       </details>
 
       <div class="space-y-2">

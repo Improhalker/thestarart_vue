@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "./utilities.css";
 @import "./components/button.css";
+@import "./post-content.css";
 
 :root {
   --ts-primary-black: #03010e;

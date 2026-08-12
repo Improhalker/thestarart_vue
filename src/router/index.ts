@@ -24,8 +24,8 @@ const router = createRouter({
           name: 'home',
           component: HomeView,
           meta: seo({
-            title: "TheStarArt_ | Arte, tecnologia, jogos e experiências",
-            description: "Universo digital pessoal de TheStarArt_: arte, programação, jogos, pensamentos e cultura da internet.",
+            title: "TheStarArt_ - Animes, Arte e Programação",
+            description: "Universo digital pessoal do TheStarArt: arte, programação, jogos, pensamentos e cultura da internet.",
           }),
         },
         {
@@ -34,7 +34,7 @@ const router = createRouter({
           component: () => import('@/views/AboutView.vue'),
           meta: seo({
             title: "Sobre | TheStarArt_",
-            description: "Conheça TheStarArt_, artista, desenvolvedor e criador deste universo digital pessoal.",
+            description: "Conheça TheStarArt, artista, desenvolvedor e criador deste universo digital pessoal.",
           }),
         },
         {
@@ -52,7 +52,7 @@ const router = createRouter({
           component: () => import('@/views/themes/MiraiNikki/Diary.vue'),
           meta: seo({
             title: "Diário | TheStarArt_",
-            description: "Anotações e experiências pessoais dentro do universo TheStarArt_.",
+            description: "Anotações e experiências pessoais...",
           }),
         },
         {
@@ -91,7 +91,7 @@ const router = createRouter({
       path: '/justcryatthispoint',
       name: 'justcryatthispoint',
       component: () => import('@/views/FourthView.vue'),
-      meta: seo({ title: "TheStarArt_", description: "Universo digital pessoal de TheStarArt_", robots: "noindex, nofollow" }),
+      meta: seo({ title: "TheStarArt_", description: "Área restrita", robots: "noindex, nofollow" }),
 
     },
     {
@@ -105,7 +105,7 @@ const router = createRouter({
       path: '/AllTheThingsSheSaid',
       name: 'AllTheThingsSheSaid',
       component: AllTheThingsSheSaid,
-      meta: seo({ title: "TheStarArt_", description: "Universo digital pessoal de TheStarArt_", robots: "noindex, nofollow" }),
+      meta: seo({ title: "TheStarArt_", description: "Área restrita", robots: "noindex, nofollow" }),
 
     },
 
@@ -173,7 +173,7 @@ const router = createRouter({
 
 router.afterEach((to) => {
   applyRouteSeo(to);
-  if (to.name !== "post.show") trackPageView(to.fullPath);
+  trackPageView(to.fullPath);
 });
 
 router.beforeEach(async (to, from) => {

@@ -32,7 +32,7 @@ const editor = useEditor({
 <template>
   <div class="border-2 border-black shadow-[4px_4px_0px_0px_black] bg-white">
     <TiptapToolbar v-if="editor" :editor="editor" />
-    <div class="editor-content p-3"><EditorContent :editor="editor" /></div>
+    <div class="editor-content post-rich-content p-3"><EditorContent :editor="editor" /></div>
   </div>
 </template>
 

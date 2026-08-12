@@ -55,9 +55,13 @@ const cacheStorage = (): Storage | null => {
   }
 };
 
+const normalizeTags = (tags: unknown): string[] => (
+  Array.isArray(tags) ? tags.filter((tag): tag is string => typeof tag === "string") : []
+);
+
 const clonePublicPostSummary = (post: PublicPostSummary): PublicPostSummary => ({
   ...post,
-  tags: [...post.tags],
+  tags: normalizeTags(post.tags),
 });
 
 const clonePublicPost = (post: PublicPost): PublicPost => ({
@@ -72,6 +76,23 @@ const clonePublicPostListResponse = (response: PostListResponse<PublicPostSummar
 
 const clonePublicPostResponse = (response: { data: PublicPost }): { data: PublicPost } => ({
   data: clonePublicPost(response.data),
+});
+
+const normalizePostListResponse = <T extends PublicPostSummary>(
+  response: PostListResponse<T>,
+): PostListResponse<T> => ({
+  ...response,
+  data: response.data.map((post) => ({
+    ...post,
+    tags: normalizeTags(post.tags),
+  })),
+});
+
+const normalizePostResponse = (response: PostCreateResponse): PostCreateResponse => ({
+  data: {
+    ...response.data,
+    tags: normalizeTags(response.data.tags),
+  },
 });
 
 const readPublicCache = <T>(key: string): T | null => {
@@ -194,9 +215,9 @@ export const usePostsRepository = () => {
       if (filters.page) params.set("page", String(filters.page));
       if (filters.perPage) params.set("per_page", String(filters.perPage));
 
-      return client(`/admin/posts${params.size ? `?${params}` : ""}`, {
+      return client<PostListResponse<Post>>(`/admin/posts${params.size ? `?${params}` : ""}`, {
         method: "GET",
-      });
+      }).then(normalizePostListResponse);
     },
 
     async create(data: PostCreateDTO): Promise<PostCreateResponse> {
@@ -207,7 +228,7 @@ export const usePostsRepository = () => {
 
       invalidatePublicPostCache();
 
-      return response;
+      return normalizePostResponse(response);
     },
 
     async update(id: string, data: PostCreateDTO): Promise<PostCreateResponse> {
@@ -221,7 +242,7 @@ export const usePostsRepository = () => {
 
       invalidatePublicPostCache();
 
-      return response;
+      return normalizePostResponse(response);
     },
 
     uploadThumbnail(formData: FormData) {
@@ -239,9 +260,9 @@ export const usePostsRepository = () => {
     },
 
     getAdminPost(id: string): Promise<{ data: Post }> {
-      return client(`/admin/posts/${id}`, {
+      return client<PostCreateResponse>(`/admin/posts/${id}`, {
         method: "GET",
-      });
+      }).then(normalizePostResponse);
     },
 
     getPublicPost(slug: string): Promise<{ data: PublicPost }> {

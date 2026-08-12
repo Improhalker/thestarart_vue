@@ -28,8 +28,6 @@ const minimumReadingTimeMs = 5000;
 let viewTimer: ReturnType<typeof setTimeout> | null = null;
 let viewRequestSent = false;
 
-const fallbackImage = "https://via.placeholder.com/1200x600/1a1a1a/ffffff?text=No+Image";
-
 const formatDate = (date: string | null) => {
   if (!date) return "data indisponível";
 
@@ -183,7 +181,7 @@ onBeforeUnmount(() => {
 
       <!-- Content -->
       <div
-        class="prose prose-invert max-w-none text-gray-200 leading-relaxed"
+        class="post-rich-content prose prose-invert max-w-none text-gray-200 leading-relaxed"
         v-html="safeContent(post.content)"
       />
     </div>

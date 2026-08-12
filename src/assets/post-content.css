@@ -1,0 +1,76 @@
+/* Tipografia estrutural do HTML produzido pelo Tiptap e exibido no Blog. */
+.post-rich-content {
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  line-height: 1.75;
+}
+
+.post-rich-content :is(h1, h2, h3) {
+  margin: 1.6em 0 0.65em;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.post-rich-content h1 {
+  font-size: clamp(1.7rem, 1.35rem + 1.5vw, 2.35rem);
+}
+
+.post-rich-content h2 {
+  font-size: clamp(1.4rem, 1.2rem + 1vw, 1.85rem);
+}
+
+.post-rich-content h3 {
+  font-size: clamp(1.15rem, 1.05rem + 0.55vw, 1.45rem);
+}
+
+.post-rich-content :is(h1, h2, h3):first-child {
+  margin-top: 0;
+}
+
+.post-rich-content ol {
+  margin: 1em 0;
+  padding-left: 1.75rem;
+  list-style: decimal;
+}
+
+.post-rich-content ol li {
+  padding-left: 0.25rem;
+}
+
+.post-rich-content ol li::marker {
+  font-weight: 700;
+}
+
+.post-rich-content :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: 0.15rem;
+  background: rgb(0 0 0 / 12%);
+  font-size: 0.9em;
+}
+
+.post-rich-content pre {
+  margin: 1.25em 0;
+  overflow-x: auto;
+  border: 1px solid currentColor;
+  border-left-width: 4px;
+  background: rgb(0 0 0 / 16%);
+  padding: 0.9rem 1rem;
+  line-height: 1.55;
+}
+
+.post-rich-content pre code {
+  display: block;
+  min-width: max-content;
+  font-size: clamp(0.78rem, 0.74rem + 0.2vw, 0.9rem);
+}
+
+@media (max-width: 640px) {
+  .post-rich-content ol {
+    padding-left: 1.4rem;
+  }
+
+  .post-rich-content pre {
+    margin-inline: -0.25rem;
+    padding: 0.75rem;
+  }
+}

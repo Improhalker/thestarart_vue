@@ -7,7 +7,7 @@ import { Bold, Code2, Heading2, Heading3, Image, Italic, Link, List, ListOrdered
 const props = defineProps<{ editor: Editor }>();
 const imageInput = ref<HTMLInputElement | null>(null);
 const postsRepo = usePostsRepository();
-const btn = "shrink-0 p-1 border-2 border-black bg-white shadow-[2px_2px_0px_black] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#ff4d6d] transition-all flex items-center justify-center";
+const btn = "shrink-0 bg-[#8d8d8d] p-1 border-2 border-black shadow-[2px_2px_0px_black] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#ff4d6d] transition-all flex items-center justify-center";
 const isActive = (type: string, attributes?: Record<string, unknown>) => props.editor.isActive(type, attributes) ? "bg-black text-white" : "";
 
 const handleImageUpload = async (event: Event) => {
