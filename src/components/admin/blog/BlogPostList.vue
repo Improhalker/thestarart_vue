@@ -2,7 +2,7 @@
 import { Eye, Heart, Pencil, Trash2 } from "lucide-vue-next";
 import type { PaginationMeta, Post } from "@/composables/posts/types";
 
-const props = defineProps<{
+defineProps<{
   posts: Post[];
   pending: boolean;
   error: string | null;

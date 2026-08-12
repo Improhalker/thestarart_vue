@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /choose-your-lang
+Disallow: /error/
+Disallow: /noaccess
+Disallow: /AllTheThingsSheSaid
+Disallow: /justcryatthispoint
+
+Sitemap: https://thestarart-vue.vercel.app/sitemap.xml

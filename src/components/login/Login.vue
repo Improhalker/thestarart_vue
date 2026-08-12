@@ -79,7 +79,7 @@ const submit = async () => {
           </div>
         </div>
 
-        <div v-if="!isLoginReady || isCheckingSession" class="space-y-5 p-5 sm:p-6" aria-live="polite" aria-busy="true">
+        <div v-if="!isLoginReady || isCheckingSession" class="space-y-5 p-5 sm:p-6 min-h-[420px] min-w-[335px]" aria-live="polite" aria-busy="true">
           <div class="space-y-2">
             <div class="h-5 w-3/4 animate-pulse bg-ts-pink/30" />
             <div class="h-3 w-2/3 animate-pulse bg-white/10" />

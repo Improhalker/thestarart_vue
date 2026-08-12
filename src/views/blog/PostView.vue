@@ -7,6 +7,7 @@ import { useOptimisticLikes } from "@/composables/posts/useOptimisticLikes";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
 import type { PublicPost } from "@/composables/posts/types";
 import { sanitizePostHtml } from "@/utils/sanitizePostHtml";
+import { applyPostSeo, trackPageView } from "@/composables/useSeo";
 
 const route = useRoute();
 const postsRepo = usePostsRepository();
@@ -98,6 +99,8 @@ onMounted(async () => {
 
     const currentPost = response.data;
     post.value = currentPost;
+    applyPostSeo(currentPost);
+    trackPageView(route.fullPath);
     optimisticLikes.initialize(currentPost.slug, {
       liked: false,
       likesCount: currentPost.likes_count,
