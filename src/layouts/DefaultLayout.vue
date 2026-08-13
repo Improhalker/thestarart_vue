@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import Navbar from "@/components/global/NewNavbar/Navbar.vue";
 import StartupPopup from "@/components/global/StartupPopup.vue";
 import ChangelogView from "@/views/ChangelogView.vue";
@@ -6,6 +8,9 @@ import LeftSide from "@/components/home/LeftSide.vue";
 import YoutubeMusic from "@/components/global/YoutubeMusic.vue";
 import Chat from "@/components/globalchat/Chat.vue";
 import AdminPet from "@/components/admin/madoka/AdminPet.vue";
+
+const route = useRoute();
+const isPostReader = computed(() => route.name === "post.show");
 </script>
 
 <template>
@@ -75,13 +80,14 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
         <Navbar />
 
         <div
-          class="container relative z-10 place-self-center h-full py-4 grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-2 lg:gap-5 items-start"
+          class="container relative z-10 place-self-center h-full py-4 grid grid-cols-1 gap-2 lg:gap-5 items-start"
+          :class="isPostReader ? 'max-w-6xl' : 'md:grid-cols-[1fr_2fr_1fr]'"
         >
-          <div class="lg:sticky top-2 order-2 md:order-1">
+          <div v-if="!isPostReader" class="lg:sticky top-2 order-2 md:order-1">
             <LeftSide />
           </div>
 
-          <div class="rounded-xl order-1 md:order-2">
+          <div :class="isPostReader ? 'order-1 min-w-0' : 'rounded-xl order-1 md:order-2'">
             <RouterView v-slot="{ Component, route }">
               <Transition name="page" mode="out-in">
                 <component :is="Component" :key="route.fullPath" />
@@ -90,6 +96,7 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
           </div>
 
           <div
+            v-if="!isPostReader"
             class="lg:sticky top-2 space-y-4 self-start overflow-x-hidden order-3 md:order-3"
           >
             <YoutubeMusic />

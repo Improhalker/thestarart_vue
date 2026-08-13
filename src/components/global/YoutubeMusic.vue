@@ -268,8 +268,8 @@ onUnmounted(() => {
     class="fixed bottom-0 left-0 z-50 w-full overflow-hidden border-t-[3px] border-[var(--crimson-accent)] bg-black p-1 font-pixel text-white shadow-[0_-4px_16px_rgba(0,0,0,0.55)] md:static md:max-w-[420px] md:border-4 md:border-double md:border-[var(--crimson-border)] md:shadow-[0_0_20px_rgba(255,0,0,0.2)]"
     aria-label="Player de música"
   >
-    <div class="relative z-10 bg-black/75 p-2 md:p-3">
-      <header class="mb-2 flex items-center justify-between border-b border-[var(--crimson-border)] pb-1 text-[10px] font-bold uppercase tracking-widest">
+    <div class="relative z-10 bg-black/75 p-1.5 md:p-3">
+      <header class="mb-1 flex items-center justify-between border-b border-[var(--crimson-border)] pb-1 text-[9px] font-bold uppercase tracking-widest md:mb-2 md:text-[10px]">
         <span class="flex items-center gap-2 text-[var(--crimson-accent)]"><span class="h-2 w-2 bg-[var(--crimson-accent)]" :class="isPlaying ? 'animate-pulse' : ''"></span>Radio.exe</span>
         <span class="text-[var(--crimson-text-soft)]">{{ state === "ready" ? "Link_Established.raw" : "Scanning_Archive..." }}</span>
       </header>
@@ -279,11 +279,11 @@ onUnmounted(() => {
       <div v-else-if="state === 'error'" class="flex min-h-24 items-center justify-center border border-[var(--crimson-accent)] p-3 text-center text-xs font-bold text-red-200">{{ playerStateMessage }}</div>
 
       <template v-else-if="currentMusic">
-        <div class="mb-3 flex min-w-0 items-center gap-2 border border-[var(--crimson-border)] bg-black/80 p-2">
-          <img src="https://blob.gifcities.org/gifcities/ZPA6L2QYGWUVN4K3L2RS4KRLTWEL3B6P.gif" alt="" class="h-12 w-12 shrink-0 border border-red-900 object-cover grayscale contrast-150" />
-          <img :src="currentMusic.thumbnail_url" :alt="`Capa de ${currentMusic.title}`" class="h-12 w-16 shrink-0 border border-[var(--crimson-border)] object-cover grayscale" />
+        <div class="mb-1.5 flex min-w-0 items-center gap-2 border border-[var(--crimson-border)] bg-black/80 p-1.5 md:mb-3 md:p-2">
+          <img src="https://blob.gifcities.org/gifcities/ZPA6L2QYGWUVN4K3L2RS4KRLTWEL3B6P.gif" alt="" class="hidden h-12 w-12 shrink-0 border border-red-900 object-cover grayscale contrast-150 md:block" />
+          <img :src="currentMusic.thumbnail_url" :alt="`Capa de ${currentMusic.title}`" class="h-9 w-11 shrink-0 border border-[var(--crimson-border)] object-cover grayscale md:h-12 md:w-16" />
           <div class="min-w-0 flex-1">
-            <p class="text-[9px] font-bold text-[var(--crimson-text-soft)]">{{ trackLabel }}</p>
+            <p class="hidden text-[9px] font-bold text-[var(--crimson-text-soft)] md:block">{{ trackLabel }}</p>
             <p class="truncate text-xs font-black leading-tight text-white" :title="currentMusic.title">{{ currentMusic.title }}</p>
             <p class="truncate text-[10px] font-bold text-[var(--crimson-accent)]">{{ currentMusic.artist || "TheStarArt radio archive" }}</p>
           </div>
@@ -297,9 +297,9 @@ onUnmounted(() => {
         </div>
         <div v-if="playerStateMessage" role="status" class="mb-2 border-l-2 border-[var(--crimson-accent)] bg-red-950/30 p-2 text-[10px] font-bold text-red-100">{{ playerStateMessage }}</div>
 
-        <div class="mb-3">
-          <div class="mb-1 flex justify-between text-[9px] font-bold uppercase text-[var(--crimson-text-soft)]"><span>Buffer_Stream</span><span>{{ Math.floor(progressPercent) }}%</span></div>
-          <div class="h-2 overflow-hidden border border-[var(--crimson-border)] bg-red-950/30"><div class="h-full bg-[var(--crimson-accent)] transition-all duration-500" :style="{ width: `${progressPercent}%` }"></div></div>
+        <div class="mb-1.5 md:mb-3">
+          <div class="mb-1 hidden justify-between text-[9px] font-bold uppercase text-[var(--crimson-text-soft)] md:flex"><span>Buffer_Stream</span><span>{{ Math.floor(progressPercent) }}%</span></div>
+          <div class="h-1 overflow-hidden border border-[var(--crimson-border)] bg-red-950/30 md:h-2"><div class="h-full bg-[var(--crimson-accent)] transition-all duration-500" :style="{ width: `${progressPercent}%` }"></div></div>
         </div>
 
         <div class="flex items-center gap-2">
@@ -310,9 +310,9 @@ onUnmounted(() => {
         </div>
           <div class="hidden lg:mt-6 min-w-0 flex-1 md:block bg-cover bg-center" style="background-image: url('https://blob.gifcities.org/gifcities/4DDT3VQ2T543JNFZE6F573PKLMFZ5V5H.gif')"><Slider :max="100" :step="5" :model-value="[volume]" class="cursor-pointer" @update:model-value="onVolumeChange" /></div>
 
-        <p v-if="currentMusic.personal_note" class="mt-3 border-l-2 border-[var(--crimson-accent)] bg-red-950/10 p-2 text-[11px] italic text-white/70"><strong class="not-italic text-[var(--crimson-accent)]">PERSONAL_NOTE.txt:</strong> {{ currentMusic.personal_note }}</p>
+        <p v-if="currentMusic.personal_note" class="mt-3 hidden border-l-2 border-[var(--crimson-accent)] bg-red-950/10 p-2 text-[11px] italic text-white/70 md:block"><strong class="not-italic text-[var(--crimson-accent)]">PERSONAL_NOTE.txt:</strong> {{ currentMusic.personal_note }}</p>
 
-        <details class="mt-3 border border-[var(--crimson-border)] text-[10px]">
+        <details class="mt-3 hidden border border-[var(--crimson-border)] text-[10px] md:block">
           <summary class="flex cursor-pointer items-center gap-2 p-2 font-bold text-[var(--crimson-text-soft)]"><ListMusic :size="13" /> Playlist ({{ playlist.length }})</summary>
           <ol class="max-h-28 overflow-y-auto border-t border-[var(--crimson-border)]">
             <li v-for="music in playlist" :key="music.id" class="flex gap-2 px-2 py-1" :class="music.id === currentMusic.id ? 'bg-red-950/40 text-white' : 'text-white/60'"><span>{{ String(music.position).padStart(2, "0") }}</span><span class="truncate">{{ music.title }}</span></li>
@@ -333,5 +333,12 @@ onUnmounted(() => {
 :deep(.relative.grow.overflow-hidden.rounded-full) {
   background-image: url("https://blob.gifcities.org/gifcities/WGO4PI5FFCKRLHCTRSITWIGFX745INUD.gif");
   background-size: cover;
+}
+
+@media (max-width: 767px) {
+  button {
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+  }
 }
 </style>

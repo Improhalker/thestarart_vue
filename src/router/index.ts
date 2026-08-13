@@ -88,6 +88,15 @@ const router = createRouter({
       meta: seo({ title: "Star Station | TheStarArt_", description: "Uma experiência interativa no universo TheStarArt_." }),
     },
     {
+      path: '/thumbnail-generator',
+      name: 'thumbnail-generator',
+      component: () => import('@/views/ThumbnailGeneratorView.vue'),
+      meta: seo({
+        title: "Thumbnail Generator | TheStarArt_",
+        description: "Crie thumbnails retrô em 1280 por 720 diretamente no navegador.",
+      }),
+    },
+    {
       path: '/justcryatthispoint',
       name: 'justcryatthispoint',
       component: () => import('@/views/FourthView.vue'),
