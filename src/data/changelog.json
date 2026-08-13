@@ -7,7 +7,13 @@
       "VERSÃO 0.8.3",
       "[IMPROVEMENT] Player de música simplificado no mobile para ocupar menos espaço na tela.",
       "[FEATURE] Madoka agora pode ser arrastada pela tela e reclama enquanto está sendo segurada.",
-      "[FIX] Ajustados os limites do arraste para manter a Madoka sempre visível na tela."
+      "[FIX] Ajustados os limites do arraste para manter a Madoka sempre visível na tela.",
+      "[IMPROVEMENT] Toolbar do editor de posts agora acompanha a rolagem durante a escrita.",
+      "[IMPROVEMENT] Sidebar da leitura do blog fica fixa no desktop e continua confortável no mobile.",
+      "[FEATURE] Nova página de Créditos com fontes de assets e inspirações do projeto.",
+      "[UI] Logo adicionada ao site e integrada à navegação mobile com atalho para a página inicial.",
+      "[FEATURE] Painel de moderação de comentários agora mostra todos os status e permite consultar comentários excluídos.",
+      "[IMPROVEMENT] Ações individuais de aprovar, rejeitar, marcar spam e excluir atualizam os comentários imediatamente."
     ]
   },
   {
