@@ -4,6 +4,9 @@ import { usePostsRepository } from "./usePostRepository";
 const VISITOR_STORAGE_KEY = "thestarart_visitor_id";
 let memoryVisitorId: string | null = null;
 let csrfCookieRequest: Promise<void> | null = null;
+let csrfCookiePrepared = false;
+
+import type { VisitorIdentity } from "./types";
 
 type LikeSyncOptions = {
   keepalive?: boolean;
@@ -57,25 +60,31 @@ export const usePostEngagement = () => {
   const visitorId = () => anonymousVisitorId();
 
   const prepareCsrfCookie = () => {
+    if (csrfCookiePrepared) return Promise.resolve();
+
     if (!csrfCookieRequest) {
-      csrfCookieRequest = requestCsrfCookie().finally(() => {
-        csrfCookieRequest = null;
-      });
+      csrfCookieRequest = requestCsrfCookie()
+        .then(() => {
+          csrfCookiePrepared = true;
+        })
+        .finally(() => {
+          csrfCookieRequest = null;
+        });
     }
 
     return csrfCookieRequest;
   };
 
-  const syncLike = async (slug: string, liked: boolean, options: LikeSyncOptions = {}) => {
+  const syncLike = async (slug: string, liked: boolean, identity: VisitorIdentity | null, options: LikeSyncOptions = {}) => {
     await prepareCsrfCookie();
 
     return liked
-      ? postsRepository.addPublicLike(slug, visitorId(), options)
-      : postsRepository.removePublicLike(slug, visitorId(), options);
+      ? postsRepository.addPublicLike(slug, identity, options)
+      : postsRepository.removePublicLike(slug, options);
   };
 
   return {
-    getLikeState: (slug: string) => postsRepository.getPublicLikeState(slug, visitorId()),
+    getLikeState: (slug: string) => postsRepository.getPublicLikeState(slug),
 
     prepareCsrfCookie,
 
@@ -84,12 +93,12 @@ export const usePostEngagement = () => {
       return postsRepository.recordPublicView(slug, visitorId());
     },
 
-    async addLike(slug: string) {
-      return syncLike(slug, true);
+    async addLike(slug: string, identity: VisitorIdentity | null) {
+      return syncLike(slug, true, identity);
     },
 
     async removeLike(slug: string) {
-      return syncLike(slug, false);
+      return syncLike(slug, false, null);
     },
 
     syncLike,

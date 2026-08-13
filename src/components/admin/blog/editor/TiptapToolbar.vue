@@ -72,7 +72,7 @@ const insertYoutube = () => {
 </script>
 
 <template>
-  <div class="flex items-center gap-1 overflow-x-auto p-2 border-b-2 border-black bg-ts-retro-gray sm:flex-wrap" aria-label="Ferramentas do editor">
+  <div class="sticky top-0 z-30 flex items-center gap-1 overflow-x-auto border-b-2 border-black bg-ts-retro-gray p-2 shadow-[0_3px_0_rgb(0_0_0_/_18%)] sm:flex-wrap" aria-label="Ferramentas do editor">
     <button type="button" :class="[btn, isActive('bold')]" aria-label="Negrito" @click="props.editor.chain().focus().toggleBold().run()"><Bold :size="12" /></button>
     <button type="button" :class="[btn, isActive('italic')]" aria-label="Itálico" @click="props.editor.chain().focus().toggleItalic().run()"><Italic :size="12" /></button>
     <button type="button" :class="[btn, isActive('underline')]" aria-label="Sublinhado" @click="props.editor.chain().focus().toggleUnderline().run()"><Underline :size="12" /></button>

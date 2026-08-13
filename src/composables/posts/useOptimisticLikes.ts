@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { useToast } from "@/composables/useToast";
 import { usePostEngagement } from "./usePostEngagement";
-import type { PublicLikeResult } from "./types";
+import type { PublicLikeResult, VisitorIdentity } from "./types";
 
 type LikeSnapshot = {
   liked: boolean;
@@ -13,6 +13,7 @@ type LikeRecord = LikeSnapshot & {
   confirmedLikesCount: number;
   desiredLiked: boolean;
   isSyncing: boolean;
+  identity: VisitorIdentity | null;
 };
 
 type PendingLike = {
@@ -62,6 +63,7 @@ const getOrCreateRecord = (slug: string, snapshot: LikeSnapshot = { liked: false
     confirmedLikesCount: snapshot.likesCount,
     desiredLiked: snapshot.liked,
     isSyncing: false,
+    identity: null,
   };
 
   records.set(slug, record);
@@ -85,7 +87,7 @@ const synchronize = async (slug: string): Promise<void> => {
   const targetLiked = record.desiredLiked;
 
   try {
-    const response = await engagement.syncLike(slug, targetLiked, { keepalive: true });
+    const response = await engagement.syncLike(slug, targetLiked, record.identity, { keepalive: true });
     updateConfirmedState(record, response.data);
   } catch {
     // O estado otimista só é confirmado após a resposta da API. Em falha,
@@ -150,8 +152,9 @@ export const useOptimisticLikes = () => {
     updateConfirmedState(record, result);
   };
 
-  const toggle = (slug: string) => {
+  const toggle = (slug: string, identity: VisitorIdentity | null = null) => {
     const record = getOrCreateRecord(slug);
+    record.identity = identity;
     record.desiredLiked = !record.liked;
     updateOptimisticState(record);
 

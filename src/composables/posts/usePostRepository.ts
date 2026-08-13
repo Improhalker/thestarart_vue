@@ -5,6 +5,9 @@ import type {
   Post,
   PostCreateDTO,
   PublicLikeResult,
+  PublicComment,
+  AdminPostComment,
+  VisitorIdentity,
   PublicPost,
   PublicPostListFilters,
   PublicPostSummary,
@@ -283,38 +286,66 @@ export const usePostsRepository = () => {
       });
     },
 
-    getPublicLikeState(slug: string, visitorId: string): Promise<{ data: PublicLikeResult }> {
-      const params = new URLSearchParams({ visitor_id: visitorId });
-
-      return client(`/public/posts/${encodeURIComponent(slug)}/likes?${params}`, {
+    getPublicLikeState(slug: string): Promise<{ data: PublicLikeResult }> {
+      return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
         method: "GET",
       });
     },
 
     addPublicLike(
       slug: string,
-      visitorId: string,
+      identity: VisitorIdentity | null,
       options: BackgroundRequestOptions = {},
     ): Promise<{ data: PublicLikeResult }> {
       return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
         method: "POST",
         keepalive: options.keepalive,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visitor_id: visitorId }),
+        body: JSON.stringify(identity ?? {}),
       });
     },
 
     removePublicLike(
       slug: string,
-      visitorId: string,
       options: BackgroundRequestOptions = {},
     ): Promise<{ data: PublicLikeResult }> {
       return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
         method: "DELETE",
         keepalive: options.keepalive,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visitor_id: visitorId }),
+        body: JSON.stringify({}),
       });
+    },
+
+    getPublicComments(slug: string): Promise<PostListResponse<PublicComment>> {
+      return client(`/public/posts/${encodeURIComponent(slug)}/comments`, { method: "GET" });
+    },
+
+    createPublicComment(slug: string, payload: VisitorIdentity & { content: string; website?: string }) {
+      return client<{ data: { id: string; status: string }; message: string }>(`/public/posts/${encodeURIComponent(slug)}/comments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    },
+
+    getAdminComments(filters: { status?: AdminPostComment["status"]; trashed?: "without" | "only"; postId?: string; page?: number } = {}) {
+      const params = new URLSearchParams();
+      if (filters.status) params.set("status", filters.status);
+      if (filters.trashed) params.set("trashed", filters.trashed);
+      if (filters.postId) params.set("post_id", filters.postId);
+      if (filters.page) params.set("page", String(filters.page));
+      return client<PostListResponse<AdminPostComment>>(`/admin/comments${params.size ? `?${params}` : ""}`, { method: "GET" });
+    },
+
+    updateAdminComment(id: string, status: AdminPostComment["status"]) {
+      return client<{ data: AdminPostComment }>(`/admin/comments/${id}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }),
+      });
+    },
+
+    deleteAdminComment(id: string) {
+      return client(`/admin/comments/${id}`, { method: "DELETE" });
     },
 
     async delete(id: string) {

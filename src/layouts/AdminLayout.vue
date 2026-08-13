@@ -8,6 +8,7 @@ import {
   ChevronRight,
   History,
   Settings,
+  MessageSquare,
 } from "lucide-vue-next";
 import { RouterView, useRouter, useRoute } from "vue-router";
 import AdminPet from "@/components/admin/madoka/AdminPet.vue";
@@ -21,6 +22,7 @@ const menuItems = [
   { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { name: "Músicas", path: "/admin/musics", icon: Music },
   { name: "Blog", path: "/admin/blog", icon: History },
+  { name: "Comentários", path: "/admin/comments", icon: MessageSquare },
   { name: "Logs_Sistema", path: "/admin/changelog", icon: History },
 ];
 

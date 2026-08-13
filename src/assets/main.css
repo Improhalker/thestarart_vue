@@ -115,6 +115,12 @@
   --color-ts-ui-dark-accent-soft: var(--ui-dark-accent-soft);
 }
 
+body {
+  height: 100vh;
+  overflow-x: hidden;
+  
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

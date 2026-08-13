@@ -40,7 +40,14 @@ import { navigationLinks } from "./navigation";
       </div>
     </div>
   </nav>
-  <div class="lg:hidden flex justify-end mr-4 pt-4">
+  <div class="mx-4 flex items-center justify-between pt-4 lg:hidden">
+    <RouterLink to="/" class="cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+      <img
+        src="/images/ui/logo.gif"
+        alt="TheStarArt_ — voltar para a página inicial"
+        class="h-auto max-h-12 w-auto max-w-[calc(100vw-6rem)] pixelated"
+      />
+    </RouterLink>
     <NavbarMobile />
   </div>
 </template>

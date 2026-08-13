@@ -54,6 +54,26 @@ export interface PublicLikeResult {
   changed?: boolean;
 }
 
+export interface VisitorIdentity {
+  name: string;
+  email: string;
+}
+
+export interface PublicComment {
+  id: string;
+  name: string;
+  content: string;
+  created_at: string;
+}
+
+export interface AdminPostComment extends PublicComment {
+  email: string;
+  status: "pending" | "approved" | "rejected" | "spam";
+  post: { id: string; title: string; slug: string };
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface PostCreateDTO {
   title: string;
   slug: string;

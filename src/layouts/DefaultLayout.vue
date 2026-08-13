@@ -16,10 +16,18 @@ const isPostReader = computed(() => route.name === "post.show");
 <template>
   <main class="main-layout font-pixel">
     <section
-      class="relative home-gradiant min-h-screen bg-repeat bg-fixed text-pink-100"
+      class="flex flex-col justify-between relative home-gradiant min-h-screen bg-repeat bg-fixed text-pink-100"
       style="background-image: url('/images/bluebox.gif')"
     >
-      <section class="px-0 pb-4 lg:pb-16 pt-0 lg:pt-24">
+      <section class="px-0 pb-4 lg:pb-16 pt-0 lg:pt-12">
+        <div class="container mx-auto hidden justify-center px-2 pt-4 lg:flex lg:pt-0">
+        
+          <img
+            src="/images/ui/logo.gif"
+            alt="TheStarArt_"
+            class="h-auto max-h-24 w-auto max-w-[min(92vw,32rem)] pixelated sm:max-h-32"
+          />
+        </div>
         <div
           class="container flex py-4 mx-auto lg:mb-8 justify-center items-center gap-4 lg:py-1 px-2 text-[11px] bg-purple-200/30 text-white"
         >

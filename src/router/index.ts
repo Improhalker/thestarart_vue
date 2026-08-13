@@ -47,6 +47,15 @@ const router = createRouter({
           }),
         },
         {
+          path: 'credits',
+          name: 'credits',
+          component: () => import('@/views/CreditsView.vue'),
+          meta: seo({
+            title: "Créditos | TheStarArt_",
+            description: "Fontes, assets e inspirações que ajudam a construir o universo TheStarArt_.",
+          }),
+        },
+        {
           path: 'diary',
           name: 'diary',
           component: () => import('@/views/themes/MiraiNikki/Diary.vue'),
@@ -137,6 +146,11 @@ const router = createRouter({
           path: 'changelog',
           name: 'admin.changelog',
           component: () => import('@/views/admin/ChangelogView.vue'),
+        },
+        {
+          path: 'comments',
+          name: 'admin.comments',
+          component: () => import('@/views/admin/blog/BlogCommentsView.vue'),
         },
         {
           path: 'blog',
