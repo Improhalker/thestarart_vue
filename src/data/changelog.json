@@ -1,5 +1,16 @@
 [
   {
+    "version": "0.8.3",
+    "date": "13/08/2026",
+    "status": "DEV",
+    "changes": [
+      "VERSÃO 0.8.3",
+      "[IMPROVEMENT] Player de música simplificado no mobile para ocupar menos espaço na tela.",
+      "[FEATURE] Madoka agora pode ser arrastada pela tela e reclama enquanto está sendo segurada.",
+      "[FIX] Ajustados os limites do arraste para manter a Madoka sempre visível na tela."
+    ]
+  },
+  {
     "version": "0.8.2",
     "date": "05/08/2026",
     "status": "DEV",
