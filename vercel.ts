@@ -8,6 +8,7 @@ if (!laravelApiOrigin?.startsWith("https://")) {
 
 export const config: VercelConfig = {
   rewrites: [
+    routes.rewrite("/sitemap.xml", "/api/sitemap"),
     routes.rewrite("/api/(.*)", `${laravelApiOrigin}/api/$1`),
     routes.rewrite("/sanctum/(.*)", `${laravelApiOrigin}/sanctum/$1`),
     routes.rewrite("/:path*", "/index.html"),
