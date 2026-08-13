@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div
-          class="post-rich-content prose prose-invert max-w-none text-gray-200 leading-relaxed [&_p]:mb-4 [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--ts-primary-pink)] [&_blockquote]:bg-ts-retro-gray [&_blockquote]:px-4 [&_blockquote]:py-3 [&_blockquote]:italic [&_blockquote_p:first-child]:mt-0 [&_blockquote_p:last-child]:mb-0 [&_div:has(>iframe)]:my-4 [&_div:has(>iframe)]:flex [&_div:has(>iframe)]:justify-center [&_iframe]:block [&_iframe]:h-auto [&_iframe]:w-full [&_iframe]:max-w-[500px] [&_iframe]:aspect-video"
+          class="post-rich-content prose prose-invert max-w-none text-gray-200 leading-relaxed [&_p]:mb-4 [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--ts-primary-pink)] [&_blockquote]:bg-ts-primary-pink [&_blockquote]:px-4 [&_blockquote]:py-3 [&_blockquote]:italic [&_blockquote_p:first-child]:mt-0 [&_blockquote_p:last-child]:mb-0 [&_div:has(>iframe)]:my-4 [&_div:has(>iframe)]:flex [&_div:has(>iframe)]:justify-center [&_iframe]:block [&_iframe]:h-auto [&_iframe]:w-full [&_iframe]:max-w-[500px] [&_iframe]:aspect-video"
           v-html="safeContent(post.content)"
         />
 
@@ -237,7 +237,7 @@ onBeforeUnmount(() => {
     <PostReadingSidebar v-if="post" :post="post" :likes-count="likesCount" class="order-2" />
 
     <div v-if="showIdentityForm" class="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4">
-      <form class="w-full max-w-sm space-y-3 border-2 border-[var(--ts-primary-pink)] bg-[var(--ui-bg)] p-5" @submit.prevent="confirmLike">
+      <form class="w-full max-w-sm space-y-3 border-2 border-[var(--ts-primary-pink)] bg-black p-5" @submit.prevent="confirmLike">
         <h2 class="text-sm font-bold uppercase text-white">Identificação para curtidas</h2>
         <p class="text-xs text-gray-300">Seu e-mail não será exibido publicamente.</p>
         <label class="block text-xs text-gray-300">Nome<input v-model="visitorName" required maxlength="80" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
