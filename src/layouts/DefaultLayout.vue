@@ -11,6 +11,8 @@ import AdminPet from "@/components/admin/madoka/AdminPet.vue";
 
 const route = useRoute();
 const isPostReader = computed(() => route.name === "post.show");
+const isAboutProfile = computed(() => route.name === "about");
+const usesDedicatedLayout = computed(() => isPostReader.value || isAboutProfile.value);
 </script>
 
 <template>
@@ -89,13 +91,13 @@ const isPostReader = computed(() => route.name === "post.show");
 
         <div
           class="container relative z-10 place-self-center h-full py-4 grid grid-cols-1 gap-2 lg:gap-5 items-start"
-          :class="isPostReader ? 'max-w-6xl' : 'md:grid-cols-[1fr_2fr_1fr]'"
+          :class="usesDedicatedLayout ? 'max-w-6xl' : 'md:grid-cols-[1fr_2fr_1fr]'"
         >
-          <div v-if="!isPostReader" class="lg:sticky top-2 order-2 md:order-1">
+          <div v-if="!usesDedicatedLayout" class="lg:sticky top-2 order-2 md:order-1">
             <LeftSide />
           </div>
 
-          <div :class="isPostReader ? 'order-1 min-w-0' : 'rounded-xl order-1 md:order-2'">
+          <div :class="usesDedicatedLayout ? 'order-1 min-w-0' : 'rounded-xl order-1 md:order-2'">
             <RouterView v-slot="{ Component, route }">
               <Transition name="page" mode="out-in">
                 <component :is="Component" :key="route.fullPath" />
@@ -104,7 +106,7 @@ const isPostReader = computed(() => route.name === "post.show");
           </div>
 
           <div
-            v-if="!isPostReader"
+            v-if="!usesDedicatedLayout"
             class="lg:sticky top-2 space-y-4 self-start overflow-x-hidden order-3 md:order-3"
           >
             <YoutubeMusic />

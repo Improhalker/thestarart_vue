@@ -9,6 +9,7 @@ import {
   History,
   Settings,
   MessageSquare,
+  BookOpen,
 } from "lucide-vue-next";
 import { RouterView, useRouter, useRoute } from "vue-router";
 import AdminPet from "@/components/admin/madoka/AdminPet.vue";
@@ -23,6 +24,7 @@ const menuItems = [
   { name: "Músicas", path: "/admin/musics", icon: Music },
   { name: "Blog", path: "/admin/blog", icon: History },
   { name: "Comentários", path: "/admin/comments", icon: MessageSquare },
+  { name: "Guestbook", path: "/admin/guestbook", icon: BookOpen },
   { name: "Logs_Sistema", path: "/admin/changelog", icon: History },
 ];
 

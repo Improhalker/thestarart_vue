@@ -9,6 +9,7 @@ import ErrorView from "@/views/ErrorView.vue";
 import HomeView from '@/views/HomeView.vue'
 import { useAuth } from "@/composables/useAuth";
 import { applyRouteSeo, trackPageView, type SeoDefinition } from "@/composables/useSeo";
+import { hasSelectedLocale } from "@/i18n";
 
 const seo = (definition: SeoDefinition) => ({ seo: definition });
 
@@ -72,6 +73,12 @@ const router = createRouter({
             title: "Blog | TheStarArt_",
             description: "Textos sobre arte, tecnologia, jogos, animes e experiências pessoais.",
           }),
+        },
+        {
+          path: 'guestbook',
+          name: 'guestbook',
+          component: () => import('@/views/GuestbookView.vue'),
+          meta: seo({ title: "Guestbook | TheStarArt_", description: "Deixe uma mensagem no livro de visitas do TheStarArt_." }),
         },
         {
           path: 'post/:slug',
@@ -153,6 +160,11 @@ const router = createRouter({
           component: () => import('@/views/admin/blog/BlogCommentsView.vue'),
         },
         {
+          path: 'guestbook',
+          name: 'admin.guestbook',
+          component: () => import('@/views/admin/GuestbookModerationView.vue'),
+        },
+        {
           path: 'blog',
           children: [
             {
@@ -228,9 +240,7 @@ router.beforeEach(async (to, from) => {
     }
   }
 
-  const lang = localStorage.getItem('lang');
-
-  if (!lang && to.path !== '/choose-your-lang' && to.name !== 'login') {
+  if (!hasSelectedLocale() && to.path !== '/choose-your-lang' && to.name !== 'login') {
     return {
       path: '/choose-your-lang',
       query: { redirect: to.fullPath },

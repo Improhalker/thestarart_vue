@@ -23,7 +23,9 @@ const comments = ref<PublicComment[]>([]);
 const commentContent = ref("");
 const visitorName = ref("");
 const visitorEmail = ref("");
-const engagementKnown = ref(false);
+const sessionIdentity = ref<VisitorIdentity | null>(null);
+const viewRegistered = ref(false);
+const viewRecording = ref(false);
 const showIdentityForm = ref(false);
 const commentPending = ref(false);
 const commentFeedback = ref("");
@@ -58,11 +60,17 @@ const recordViewAfterReading = () => {
 
     viewRequestSent = true;
 
+    viewRecording.value = true;
     try {
       const response = await engagement.recordView(post.value.slug);
       post.value.views_count = response.data.views_count;
+      // Uma resposta válida confirma que este leitor já passou pelo fluxo de
+      // visualização, mesmo quando o contador foi deduplicado no servidor.
+      viewRegistered.value = true;
     } catch {
       viewRequestSent = false;
+    } finally {
+      viewRecording.value = false;
     }
   }, minimumReadingTimeMs);
 };
@@ -76,26 +84,30 @@ const onVisibilityChange = () => {
   clearViewTimer();
 };
 
-const visitorIdentity = (): VisitorIdentity | null => {
+const formIdentity = (): VisitorIdentity | null => {
   if (!visitorName.value.trim() || !visitorEmail.value.trim()) return null;
   return { name: visitorName.value.trim(), email: visitorEmail.value.trim() };
 };
 
 const toggleLike = () => {
   if (!post.value) return;
-  if (!engagementKnown.value) {
+
+  if (!viewRegistered.value) return;
+  if (!liked.value && !sessionIdentity.value) {
     showIdentityForm.value = true;
     return;
   }
-  optimisticLikes.toggle(post.value.slug);
+
+  optimisticLikes.toggle(post.value.slug, sessionIdentity.value);
 };
 
 const confirmLike = () => {
-  if (!post.value || !visitorIdentity()) return;
-  engagementKnown.value = true;
-  window.localStorage.setItem("thestarart:engagement-identified", "1");
+  const identity = formIdentity();
+  if (!post.value || !viewRegistered.value || !identity) return;
+
+  sessionIdentity.value = identity;
   showIdentityForm.value = false;
-  optimisticLikes.toggle(post.value.slug, visitorIdentity());
+  optimisticLikes.toggle(post.value.slug, identity);
 };
 
 const loadComments = async (slug: string) => {
@@ -107,17 +119,17 @@ const loadComments = async (slug: string) => {
 };
 
 const submitComment = async () => {
-  if (!post.value || !commentContent.value.trim() || (!engagementKnown.value && !visitorIdentity())) return;
+  const identity = sessionIdentity.value ?? formIdentity();
+  if (!post.value || !commentContent.value.trim() || !identity) return;
   commentPending.value = true;
   commentFeedback.value = "";
   try {
     await engagement.prepareCsrfCookie();
     await postsRepo.createPublicComment(post.value.slug, {
-      ...(visitorIdentity() ?? { name: "", email: "" }),
+      ...identity,
       content: commentContent.value.trim(),
     });
-    engagementKnown.value = true;
-    window.localStorage.setItem("thestarart:engagement-identified", "1");
+    sessionIdentity.value = identity;
     commentContent.value = "";
     commentFeedback.value = "ComentÃ¡rio enviado para moderaÃ§Ã£o.";
   } catch {
@@ -143,7 +155,6 @@ onMounted(async () => {
     const currentPost = response.data;
 
     post.value = currentPost;
-    engagementKnown.value = window.localStorage.getItem("thestarart:engagement-identified") === "1";
     applyPostSeo(currentPost);
     trackPageView(route.fullPath);
     optimisticLikes.initialize(currentPost.slug, { liked: false, likesCount: currentPost.likes_count });
@@ -195,15 +206,20 @@ onBeforeUnmount(() => {
             </span>
             <button
               type="button"
-              class="inline-flex items-center gap-1 border border-[var(--color-ts-ui-border)] px-2 py-1 transition-colors hover:bg-white/10"
+              class="inline-flex items-center gap-1 border border-[var(--color-ts-ui-border)] px-2 py-1 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
               :class="liked ? 'text-[var(--color-ts-primary-pink)]' : ''"
               :aria-pressed="liked"
+              :disabled="!viewRegistered"
+              :title="viewRegistered ? undefined : 'Aguarde a visualização ser registrada para curtir.'"
               @click="toggleLike"
             >
               <Heart :size="14" :fill="liked ? 'currentColor' : 'none'" aria-hidden="true" />
               {{ likesCount }} {{ liked ? 'curtido' : 'curtidas' }}
             </button>
           </div>
+          <p v-if="!viewRegistered" class="text-[10px] uppercase text-gray-400">
+            {{ viewRecording ? "Registrando sua visualização..." : "Leia por alguns segundos para liberar a curtida." }}
+          </p>
         </header>
 
         <div v-if="post.thumbnail" class="h-[220px] w-full overflow-hidden border-2 border-[var(--color-ts-ui-border-dark)] sm:h-[300px] md:h-[360px]">
@@ -218,7 +234,7 @@ onBeforeUnmount(() => {
         <section class="space-y-4 border-t border-[var(--ui-border)] pt-5" aria-labelledby="comments-title">
           <h2 id="comments-title" class="text-sm font-bold uppercase text-white">Comentários</h2>
           <form class="space-y-3" @submit.prevent="submitComment">
-            <div v-if="!engagementKnown" class="grid gap-3 sm:grid-cols-2">
+            <div v-if="!sessionIdentity" class="grid gap-3 sm:grid-cols-2">
               <label class="text-xs text-gray-300">Nome<input v-model="visitorName" required maxlength="80" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
               <label class="text-xs text-gray-300">E-mail<input v-model="visitorEmail" required type="email" maxlength="255" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
             </div>

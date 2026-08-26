@@ -1,5 +1,6 @@
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 import type { PublicPost } from "@/composables/posts/types";
+import { i18n } from "@/i18n";
 
 export type SeoDefinition = {
   title: string;
@@ -91,7 +92,8 @@ export const setSeo = (options: SeoOptions) => {
   const robots = options.robots || "index, follow";
 
   document.title = options.title;
-  document.documentElement.lang = options.language === "pt" ? "pt-BR" : options.language || "pt-BR";
+  const activeLocale = options.language || i18n.global.locale.value;
+  document.documentElement.lang = activeLocale === "pt" ? "pt-BR" : activeLocale;
 
   setMeta('meta[name="description"]', "name", "description", options.description);
   setMeta('meta[name="robots"]', "name", "robots", robots);
