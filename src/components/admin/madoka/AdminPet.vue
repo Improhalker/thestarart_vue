@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useAchievements } from "@/composables/useAchievements";
 
 const isAngry = ref(false);
@@ -8,6 +9,7 @@ const position = ref({ x: 0, y: 0 });
 const dragStart = ref({ x: 0, y: 0, originX: 0, originY: 0 });
 const petElement = ref<HTMLElement | null>(null);
 const { unlock } = useAchievements();
+const { t } = useI18n();
 
 const petStyle = computed(() => ({
   transform: `translate3d(${position.value.x}px, ${position.value.y}px, 0)`,
@@ -54,8 +56,8 @@ const startHolding = (event: PointerEvent) => {
 
   unlock({
     id: "dont_touch_mascot",
-    title: "MASCOTE EM PROTESTO",
-    description: "Você segurou a Madoka. Ela não aprovou a experiência.",
+    title: t("admin.achievementTitle"),
+    description: t("admin.achievementDescription"),
     icon: "💢",
   });
 };
@@ -84,7 +86,7 @@ onBeforeUnmount(() => {
       :class="isHolding ? 'cursor-grabbing' : 'cursor-grab'"
       role="button"
       tabindex="0"
-      aria-label="Segure e arraste a Madoka"
+      :aria-label="t('admin.holdAndDragMadoka')"
       @pointerdown="startHolding"
       @pointermove="movePet"
       @pointerup="stopHolding"
@@ -94,11 +96,11 @@ onBeforeUnmount(() => {
         v-if="isHolding"
         class="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap border-2 border-black bg-red-200 px-2 py-1 text-[10px] font-black text-black shadow-[2px_2px_0_black]"
       >
-        Ei! Me solta!
+        {{ t("admin.releaseMe") }}
       </span>
       <img
         :src="isAngry ? '/images/admin/madoka-no.gif' : '/images/admin/madoka.gif'"
-        alt="Madoka, mascote arrastável"
+        :alt="t('admin.madokaDraggable')"
         draggable="false"
         class="h-auto w-full pixelated transition-transform duration-150"
         :class="isAngry ? 'scale-100 drop-shadow-[4px_4px_0px_red] md:scale-125' : 'scale-80 drop-shadow-[2px_2px_0px_black] md:scale-100'"

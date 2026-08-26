@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import LanguageButton from './LanguageButton.vue'
+import { useI18n } from "vue-i18n"
+import { setLocale, type SupportedLocale } from "@/i18n"
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 
-function selectLang(lang: string) {
-  localStorage.setItem('lang', lang)
+function selectLang(lang: SupportedLocale) {
+  setLocale(lang)
 
   const redirect = route.query.redirect as string
-  router.push(redirect || '/')
+  void router.push(redirect?.startsWith('/') && !redirect.startsWith('//') ? redirect : '/')
 }
 </script>
 
@@ -60,9 +63,9 @@ function selectLang(lang: string) {
           tracking-widest
         "
       >
-        <span>LANGUAGE_SELECT.EXE</span>
+        <span>{{ t("language.selectTitle") }}</span>
 
-        <span>BOOT MODE</span>
+        <span>{{ t("language.bootMode") }}</span>
       </div>
 
       <!-- Content -->
@@ -86,7 +89,7 @@ function selectLang(lang: string) {
               uppercase
             "
           >
-            TheStarArt System
+            {{ t("language.systemName") }}
           </p>
 
           <h1
@@ -99,7 +102,7 @@ function selectLang(lang: string) {
               tracking-tight
             "
           >
-            Select Language
+            {{ t("language.heading") }}
           </h1>
 
           <p
@@ -110,7 +113,7 @@ function selectLang(lang: string) {
               text-white/60
             "
           >
-            Choose your preferred system language
+            {{ t("language.description") }}
           </p>
 
         </div>
@@ -125,20 +128,20 @@ function selectLang(lang: string) {
           "
         >
           <LanguageButton
-            lang="pt"
-            label="Português 🇧🇷"
+            lang="pt-BR"
+            :label="t('language.pt')"
             @select="selectLang"
           />
 
           <LanguageButton
             lang="en"
-            label="English 🇺🇸"
+            :label="t('language.en')"
             @select="selectLang"
           />
 
           <LanguageButton
             lang="es"
-            label="Español 🇪🇸"
+            :label="t('language.es')"
             @select="selectLang"
           />
         </div>
@@ -158,8 +161,8 @@ function selectLang(lang: string) {
             text-white/50
           "
         >
-          <div>USER: GUEST</div>
-          <div>STATUS: WAITING FOR LANGUAGE SELECTION</div>
+          <div>{{ t("language.user") }}</div>
+          <div>{{ t("language.status") }}</div>
         </div>
 
       </div>

@@ -12,9 +12,11 @@ import {
 import { Cpu, Gamepad2, GripHorizontal } from "lucide-vue-next";
 
 import { navigationLinks } from "./navigation";
+import { useI18n } from "vue-i18n";
 
 
 const currentVersion = changelog[0]?.version ?? "0.0.0";
+const { t } = useI18n();
 </script>
 
 <template>
@@ -81,7 +83,7 @@ const currentVersion = changelog[0]?.version ?? "0.0.0";
           <p class="text-ts-pink font-bold group-hover:text-white">></p>
 
           <p class="text-xs font-bold tracking-widest">
-            {{ link.name }}
+            {{ t(link.key) }}
           </p>
         </RouterLink>
       </nav>

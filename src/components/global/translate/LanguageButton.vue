@@ -1,11 +1,11 @@
 <script setup lang="ts">
 interface Props {
-  lang: string
+  lang: "pt-BR" | "en" | "es"
   label: string
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['select'])
+const emit = defineEmits<{ select: [lang: Props["lang"]] }>()
 
 function handleClick() {
   emit('select', props.lang)

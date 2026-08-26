@@ -3,6 +3,9 @@ import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import NavbarMobile from "./NavbarMobile.vue";
 import UiSelector from "@/components/global/translate/UiSelector.vue";
 import { navigationLinks } from "./navigation";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -13,13 +16,13 @@ import { navigationLinks } from "./navigation";
 
     <div class="flex flex-wrap items-center justify-between p-1 bg-black/60">
       <ul class="flex items-center gap-1">
-        <li v-for="link in navigationLinks" :key="link.name">
+        <li v-for="link in navigationLinks" :key="link.key">
           <RouterLink
             :to="link.path"
             class="block px-3 py-1 font-pixel text-[12px] text-[var(--ts-retro-gray)] uppercase border-2 border-transparent hover:border-[var(--ts-primary-pink)] hover:bg-[var(--ts-primary-pink)]/20 hover:text-white transition-none"
             active-class="bg-[var(--ts-primary-pink)]/40 border-[var(--ts-primary-pink)] text-white shadow-[inset_2px_2px_0px_rgba(0,0,0,0.5)]"
           >
-            [{{ link.name }}]
+            [{{ t(link.key) }}]
           </RouterLink>
         </li>
       </ul>

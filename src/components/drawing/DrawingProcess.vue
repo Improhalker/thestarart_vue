@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import CardWindowHeader from "../global/CardWindowHeader.vue";
 
 const selectedImage = ref<string | null>(null);
+const { t } = useI18n();
 
 const images = [
   "/images/desenhos/processos/elaina.jpeg",
@@ -12,11 +14,11 @@ const images = [
 
 <template>
   <div class="container-style-dark">
-    <CardWindowHeader title="CurrentlyDrawing.exe" />
+    <CardWindowHeader :title="t('drawing.currentlyDrawing')" />
 
     <div class="p-6">
       <p class="text-gray-400 text-sm mb-4">
-        Ilustrações atuais em progresso. Clique para ampliar.
+        {{ t("drawing.currentIllustrations") }}
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-4">

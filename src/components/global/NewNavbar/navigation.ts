@@ -1,8 +1,9 @@
 export const navigationLinks = [
-  { name: "HOME", path: "/" },
-  { name: "DIARIO", path: "/diary" },
-  { name: "BLOG", path: "/blog" },
-  { name: "CHANGELOG", path: "/changelog" },
-  { name: "CRÉDITOS", path: "/credits" },
-  { name: "Recrutador", path: "/star-station" },
-]
+  { key: "nav.home", path: "/" },
+  { key: "nav.diary", path: "/diary" },
+  { key: "nav.blog", path: "/blog" },
+  { key: "nav.guestbook", path: "/guestbook" },
+  { key: "nav.changelog", path: "/changelog" },
+  { key: "nav.credits", path: "/credits" },
+  { key: "nav.recruiter", path: "/star-station" },
+] as const;

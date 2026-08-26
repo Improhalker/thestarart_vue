@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { Button } from "@/components/ui/button";
 import RetroInput from "@/views/admin/global/RetroInput.vue";
 import type { AdminMusic, MusicPayload } from "@/services/MusicService";
 
 type ValidationErrors = Record<string, string[]>;
+
+const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
@@ -72,7 +75,7 @@ const submitForm = () => {
   const title = form.title.trim();
 
   if (!youtubeUrl || !title) {
-    localError.value = "Informe o link do YouTube e o título da faixa.";
+    localError.value = t("admin.musicRequiredFields");
     return;
   }
 
@@ -96,7 +99,7 @@ const submitForm = () => {
     <div class="space-y-1">
       <RetroInput
         v-model="form.youtube_url"
-        label="Link do YouTube"
+        :label="t('admin.youtubeLink')"
         type="url"
         placeholder="https://www.youtube.com/watch?v=..."
       />
@@ -108,21 +111,21 @@ const submitForm = () => {
     <div v-if="previewVideoId" class="flex items-center gap-3 border-2 border-black bg-white p-2">
       <img
         :src="`https://i.ytimg.com/vi/${previewVideoId}/default.jpg`"
-        alt="Prévia da thumbnail do vídeo"
+        :alt="t('admin.videoThumbnailPreview')"
         class="h-12 w-20 border border-black object-cover"
       />
-      <p class="text-[10px] font-bold uppercase text-ts-blue">Thumbnail gerada a partir do vídeo</p>
+      <p class="text-[10px] font-bold uppercase text-ts-blue">{{ t("admin.generatedVideoThumbnail") }}</p>
     </div>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       <div class="space-y-1">
-        <RetroInput v-model="form.title" label="Título" placeholder="Nome da faixa" />
+        <RetroInput v-model="form.title" :label="t('admin.title')" :placeholder="t('admin.trackName')" />
         <p v-if="fieldError('title')" role="alert" class="text-xs font-bold text-ts-pink">
           {{ fieldError('title') }}
         </p>
       </div>
       <div class="space-y-1">
-        <RetroInput v-model="form.artist" label="Artista ou contexto" placeholder="Artista, obra ou contexto" />
+        <RetroInput v-model="form.artist" :label="t('admin.artistOrContext')" :placeholder="t('admin.artistWorkOrContext')" />
         <p v-if="fieldError('artist')" role="alert" class="text-xs font-bold text-ts-pink">
           {{ fieldError('artist') }}
         </p>
@@ -136,7 +139,7 @@ const submitForm = () => {
         rows="4"
         maxlength="2000"
         class="w-full resize-y border-2 border-black bg-white p-2 text-xs font-bold outline-none transition-shadow focus:bg-ts-blue/5 focus:shadow-[4px_4px_0px_0px_var(--ts-retro-shadow)]"
-        placeholder="Uma observação pessoal opcional sobre esta faixa..."
+        :placeholder="t('admin.personalNote')"
       />
       <p v-if="fieldError('personal_note')" role="alert" class="text-xs font-bold text-ts-pink">
         {{ fieldError('personal_note') }}
@@ -149,7 +152,7 @@ const submitForm = () => {
         type="checkbox"
         class="h-5 w-5 cursor-pointer appearance-none border-2 border-black checked:bg-ts-blue checked:after:absolute checked:after:ml-[3px] checked:after:mt-[-2px] checked:after:content-['X'] checked:after:text-base checked:after:text-white"
       />
-      Status: {{ form.is_active ? "Ativa — disponível no player" : "Inativa — oculta no player" }}
+      {{ t("admin.status") }}: {{ form.is_active ? t("admin.activeAvailable") : t("admin.inactiveHidden") }}
     </label>
     <p v-if="fieldError('is_active')" role="alert" class="text-xs font-bold text-ts-pink">
       {{ fieldError('is_active') }}
@@ -161,7 +164,7 @@ const submitForm = () => {
         :disabled="isSaving"
         class="rounded-none border-2 border-black bg-ts-blue text-xs font-black uppercase text-white shadow-[4px_4px_0px_0px_black] transition-all hover:translate-x-[2px] hover:translate-y-[2px] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {{ isSaving ? "GRAVANDO..." : `[ ${initialData ? "ATUALIZAR_FAIXA.SYS" : "ADICIONAR_A_PLAYLIST.EXE"} ]` }}
+        {{ isSaving ? t("admin.saving") : `[ ${initialData ? t("admin.updateTrack") : t("admin.addToPlaylist")} ]` }}
       </Button>
     </div>
   </form>

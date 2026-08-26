@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import ChangelogView from '@/views/admin/ChangelogView.vue';
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -22,11 +25,11 @@ import ChangelogView from '@/views/admin/ChangelogView.vue';
     </div>
 
       <section class="border-2 border-black p-2 bg-[#dfdfdf] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-        <p class="text-[10px] uppercase font-black mb-2 border-b border-black/20">Server Monitor</p>
+        <p class="text-[10px] uppercase font-black mb-2 border-b border-black/20">{{ t("admin.serverMonitor") }}</p>
         <div class="space-y-2">
           <div class="flex items-center justify-between text-[10px] font-bold">
             <span>MINE_SRV:</span>
-            <span class="text-green-600 animate-pulse">ONLINE</span>
+            <span class="text-green-600 animate-pulse">{{ t("admin.online") }}</span>
           </div>
           <div class="w-full bg-gray-300 h-2 border border-black p-[1px]">
             <div class="bg-ts-blue h-full" style="width: 65%"></div>

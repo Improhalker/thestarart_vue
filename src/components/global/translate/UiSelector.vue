@@ -1,53 +1,22 @@
 <template>
   <div>
-    <select
-      :key="selectedLanguage"
-      v-model="selectedLanguage"
-      @change="handleChange"
-      class="bg-red-700 border border-gray-300 rounded px-2 py-1 text-sm"
-    >
-      <option value="pt">🇧🇷 PT</option>
-      <option value="en">🇺🇸 EN</option>
-      <option value="es">🇪🇸 ES</option>
+    <select v-model="selectedLanguage" class="bg-red-700 border border-gray-300 rounded px-2 py-1 text-sm" aria-label="Selecionar idioma">
+      <option value="pt-BR">{{ t("language.selectorPt") }}</option>
+      <option value="en">{{ t("language.selectorEn") }}</option>
+      <option value="es">{{ t("language.selectorEs") }}</option>
     </select>
-
-    <div id="google_translate_element" class="hidden"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
-import { useTranslate } from "@/composables/useTranslate"
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { setLocale, type SupportedLocale } from "@/i18n";
 
-const { applyLang, initGoogleTranslate } = useTranslate()
+const { locale, t } = useI18n();
 
-const selectedLanguage = ref("pt")
-const lastLang = ref("pt")
-
-onMounted(() => {
-  initGoogleTranslate()
-
-  const savedLang = localStorage.getItem("lang") || "pt"
-
-  selectedLanguage.value = savedLang
-  lastLang.value = savedLang
-
-  if (savedLang !== "pt") {
-    setTimeout(() => {
-      applyLang(savedLang)
-    }, 1000)
-  }
-})
-
-const handleChange = () => {
-  const lang = selectedLanguage.value
-
-  // evita chamada duplicada
-  if (lang === lastLang.value) return
-
-  lastLang.value = lang
-
-  localStorage.setItem("lang", lang)
-  applyLang(lang)
-}
+const selectedLanguage = computed({
+  get: () => locale.value as SupportedLocale,
+  set: (value: SupportedLocale) => setLocale(value),
+});
 </script>

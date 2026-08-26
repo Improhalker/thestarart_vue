@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import Autoplay from "embla-carousel-autoplay";
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 
 const fullscreen = ref<string | null>(null);
+const { t } = useI18n();
 
 const autoplay = Autoplay({
   delay: 2000,
@@ -34,7 +36,7 @@ const openFullscreen = (img: string) => {
 
 <template>
   <div class="container-style-dark">
-    <CardWindowHeader title="Gallery" />
+    <CardWindowHeader :title="t('drawing.gallery')" />
     <div class="p-2">
       <Carousel
         :plugins="[autoplay]"
@@ -70,6 +72,8 @@ const openFullscreen = (img: string) => {
 
           <button
             class="absolute top-6 right-6 text-3xl text-white"
+            type="button"
+            :aria-label="t('drawing.closePreview')"
             @click="fullscreen = null"
           >
             ✕
