@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Eye, Heart, Pencil, Trash2 } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
 import type { PaginationMeta, Post } from "@/composables/posts/types";
+
+const { t, locale } = useI18n();
 
 defineProps<{
   posts: Post[];
@@ -15,12 +18,7 @@ const emit = defineEmits<{
   (e: "page-change", page: number): void;
 }>();
 
-const statusLabel: Record<Post["status"], string> = {
-  draft: "Rascunho",
-  scheduled: "Agendado",
-  published: "Publicado",
-  archived: "Arquivado",
-};
+const statusLabel = (status: Post["status"]) => t(`admin.status${status.charAt(0).toUpperCase()}${status.slice(1)}`);
 
 const statusClass: Record<Post["status"], string> = {
   draft: "bg-amber-300",
@@ -36,31 +34,31 @@ const languageLabel: Record<Post["lang"], string> = {
 };
 
 const formatDate = (value: string | null | undefined) => {
-  if (!value) return "Sem data definida";
+  if (!value) return t("admin.noDateDefined");
 
-  return new Intl.DateTimeFormat("pt-BR", {
+  return new Intl.DateTimeFormat(locale.value, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
 };
 
-const formatCount = (value: number) => new Intl.NumberFormat("pt-BR").format(value);
+const formatCount = (value: number) => new Intl.NumberFormat(locale.value).format(value);
 </script>
 
 <template>
   <section class="border-2 border-black bg-white p-3 shadow-[4px_4px_0px_black] sm:p-4" :aria-busy="pending">
     <div class="mb-4 flex flex-col gap-1 border-b-2 border-black pb-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h2 class="text-sm font-black uppercase">Posts</h2>
-        <p class="text-xs text-black/60">{{ pagination.total }} resultado(s) encontrado(s)</p>
+        <h2 class="text-sm font-black uppercase">{{ t("admin.posts") }}</h2>
+        <p class="text-xs text-black/60">{{ t("admin.resultsFound", { count: pagination.total }) }}</p>
       </div>
       <p v-if="posts.length" class="text-xs font-bold text-black/65">
-        Exibindo {{ posts.length }} por página
+        {{ t("admin.showingPerPage", { count: posts.length }) }}
       </p>
     </div>
 
     <div v-if="pending" class="py-6 text-sm font-bold" role="status">
-      <p>Carregando posts...</p>
+      <p>{{ t("admin.loadingPosts") }}</p>
       <img
         width="173"
         height="120"
@@ -74,7 +72,7 @@ const formatCount = (value: number) => new Intl.NumberFormat("pt-BR").format(val
     </div>
 
     <div v-else-if="posts.length === 0" class="border-2 border-dashed border-black/50 p-6 text-center text-sm text-black/65">
-      Ainda não há posts para estes filtros.
+      {{ t("admin.noPostsForFilters") }}
     </div>
 
     <div v-else class="divide-y-2 divide-black border-2 border-black">
@@ -97,7 +95,7 @@ const formatCount = (value: number) => new Intl.NumberFormat("pt-BR").format(val
                 class="border border-black px-2 py-0.5 text-[10px] font-black uppercase shadow-[1px_1px_0px_black]"
                 :class="statusClass[post.status]"
               >
-                {{ statusLabel[post.status] }}
+                {{ statusLabel(post.status) }}
               </span>
               <span class="border border-black bg-white px-1.5 py-0.5 text-[10px] font-black">{{ languageLabel[post.lang] }}</span>
               <span
@@ -114,12 +112,12 @@ const formatCount = (value: number) => new Intl.NumberFormat("pt-BR").format(val
             <p v-if="post.excerpt" class="line-clamp-2 text-xs leading-5 text-black/70 sm:text-sm">{{ post.excerpt }}</p>
 
             <div class="flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-bold text-black/70">
-              <span class="inline-flex items-center gap-1"><Eye :size="14" aria-hidden="true" /> {{ formatCount(post.views_count) }} visualizações</span>
-              <span class="inline-flex items-center gap-1"><Heart :size="14" aria-hidden="true" /> {{ formatCount(post.likes_count) }} curtidas</span>
+              <span class="inline-flex items-center gap-1"><Eye :size="14" aria-hidden="true" /> {{ formatCount(post.views_count) }} {{ t("admin.views") }}</span>
+              <span class="inline-flex items-center gap-1"><Heart :size="14" aria-hidden="true" /> {{ formatCount(post.likes_count) }} {{ t("admin.likes") }}</span>
             </div>
 
             <p class="text-[11px] font-bold text-black/60">
-              {{ post.deleted_at ? "Removido em" : post.status === "scheduled" ? "Agendado para" : "Publicação" }}:
+              {{ post.deleted_at ? t("admin.removedAt") : post.status === "scheduled" ? t("admin.scheduledFor") : t("admin.publication") }}:
               {{ formatDate(post.deleted_at || post.published_at) }}
             </p>
           </div>
@@ -132,7 +130,7 @@ const formatCount = (value: number) => new Intl.NumberFormat("pt-BR").format(val
             :disabled="pending"
             @click="emit('toggle-visibility', post)"
           >
-            Arquivar
+            {{ t("admin.archive") }}
           </button>
 
           <button
@@ -141,7 +139,7 @@ const formatCount = (value: number) => new Intl.NumberFormat("pt-BR").format(val
             @click="$router.push(`/admin/blog/editor/${post.id}`)"
           >
             <Pencil :size="14" aria-hidden="true" />
-            Editar
+            {{ t("admin.edit") }}
           </button>
 
           <button
@@ -149,28 +147,28 @@ const formatCount = (value: number) => new Intl.NumberFormat("pt-BR").format(val
             :disabled="pending"
             @click="emit('delete-post', post.id)"
           >
-            <Trash2 :size="14" class="mx-auto" aria-label="Excluir post" />
+            <Trash2 :size="14" class="mx-auto" :aria-label="t('admin.deletePost')" />
           </button>
         </div>
       </article>
     </div>
 
-    <nav v-if="posts.length && pagination.last_page > 1" class="mt-4 flex flex-col gap-2 border-t-2 border-black pt-3 text-xs font-bold sm:flex-row sm:items-center sm:justify-between" aria-label="Paginação de posts">
-      <span>Página {{ pagination.current_page }} de {{ pagination.last_page }}</span>
+    <nav v-if="posts.length && pagination.last_page > 1" class="mt-4 flex flex-col gap-2 border-t-2 border-black pt-3 text-xs font-bold sm:flex-row sm:items-center sm:justify-between" :aria-label="t('admin.postsPagination')">
+      <span>{{ t("admin.pageOf", { current: pagination.current_page, total: pagination.last_page }) }}</span>
       <div class="grid grid-cols-2 gap-2 sm:flex">
         <button
           class="min-h-10 border-2 border-black bg-white px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50"
           :disabled="pending || pagination.current_page <= 1"
           @click="emit('page-change', pagination.current_page - 1)"
         >
-          Anterior
+          {{ t("admin.previous") }}
         </button>
         <button
           class="min-h-10 border-2 border-black bg-white px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50"
           :disabled="pending || pagination.current_page >= pagination.last_page"
           @click="emit('page-change', pagination.current_page + 1)"
         >
-          Próxima
+          {{ t("admin.next") }}
         </button>
       </div>
     </nav>

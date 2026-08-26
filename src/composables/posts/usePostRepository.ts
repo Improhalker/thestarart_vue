@@ -294,14 +294,14 @@ export const usePostsRepository = () => {
 
     addPublicLike(
       slug: string,
-      identity: VisitorIdentity | null,
+      identity: VisitorIdentity,
       options: BackgroundRequestOptions = {},
     ): Promise<{ data: PublicLikeResult }> {
       return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
         method: "POST",
         keepalive: options.keepalive,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(identity ?? {}),
+        body: JSON.stringify(identity),
       });
     },
 
@@ -312,8 +312,6 @@ export const usePostsRepository = () => {
       return client(`/public/posts/${encodeURIComponent(slug)}/likes`, {
         method: "DELETE",
         keepalive: options.keepalive,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
       });
     },
 

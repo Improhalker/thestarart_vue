@@ -78,9 +78,12 @@ export const usePostEngagement = () => {
   const syncLike = async (slug: string, liked: boolean, identity: VisitorIdentity | null, options: LikeSyncOptions = {}) => {
     await prepareCsrfCookie();
 
-    return liked
-      ? postsRepository.addPublicLike(slug, identity, options)
-      : postsRepository.removePublicLike(slug, options);
+    if (liked) {
+      if (!identity) throw new Error("Identidade necessária para criar uma curtida.");
+      return postsRepository.addPublicLike(slug, identity, options);
+    }
+
+    return postsRepository.removePublicLike(slug, options);
   };
 
   return {
@@ -93,7 +96,7 @@ export const usePostEngagement = () => {
       return postsRepository.recordPublicView(slug, visitorId());
     },
 
-    async addLike(slug: string, identity: VisitorIdentity | null) {
+    async addLike(slug: string, identity: VisitorIdentity) {
       return syncLike(slug, true, identity);
     },
 

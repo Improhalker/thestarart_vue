@@ -154,22 +154,27 @@ export const useOptimisticLikes = () => {
 
   const toggle = (slug: string, identity: VisitorIdentity | null = null) => {
     const record = getOrCreateRecord(slug);
-    record.identity = identity;
-    record.desiredLiked = !record.liked;
+    if (identity) record.identity = identity;
+
+    const nextLiked = !record.liked;
+    if (nextLiked && !record.identity) return false;
+
+    record.desiredLiked = nextLiked;
     updateOptimisticState(record);
 
     // Inicia o pré-flight cedo, mas nunca bloqueia a atualização visual.
     void engagement.prepareCsrfCookie().catch(() => undefined);
 
-    if (record.isSyncing) return;
+    if (record.isSyncing) return true;
 
     if (record.desiredLiked === record.confirmedLiked) {
       clearScheduledSync(slug);
       updateOptimisticState(record);
-      return;
+      return true;
     }
 
     scheduleSynchronization(slug);
+    return true;
   };
 
   const stateFor = (slug: string): LikeSnapshot | null => {

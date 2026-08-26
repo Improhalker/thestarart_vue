@@ -18,6 +18,8 @@ vi.mock("@/composables/useToast", () => ({
 }));
 
 describe("useOptimisticLikes", () => {
+  const identity = { name: "Leitora", email: "leitora@example.test" };
+
   beforeEach(() => {
     vi.useFakeTimers();
     vi.resetModules();
@@ -40,7 +42,7 @@ describe("useOptimisticLikes", () => {
     const likes = useOptimisticLikes();
     likes.initialize("post-premium", { liked: false, likesCount: 124 });
 
-    likes.toggle("post-premium");
+    likes.toggle("post-premium", identity);
 
     expect(likes.stateFor("post-premium")).toEqual({ liked: true, likesCount: 125 });
     expect(syncLike).not.toHaveBeenCalled();
@@ -48,7 +50,7 @@ describe("useOptimisticLikes", () => {
     await vi.advanceTimersByTimeAsync(250);
 
     expect(syncLike).toHaveBeenCalledTimes(1);
-    expect(syncLike).toHaveBeenCalledWith("post-premium", true, { keepalive: true });
+    expect(syncLike).toHaveBeenCalledWith("post-premium", true, identity, { keepalive: true });
     expect(likes.stateFor("post-premium")).toEqual({ liked: true, likesCount: 125 });
   });
 
@@ -61,7 +63,7 @@ describe("useOptimisticLikes", () => {
     const likes = useOptimisticLikes();
     likes.initialize("post-rapido", { liked: false, likesCount: 9 });
 
-    likes.toggle("post-rapido");
+    likes.toggle("post-rapido", identity);
     likes.toggle("post-rapido");
     likes.toggle("post-rapido");
 
@@ -70,7 +72,7 @@ describe("useOptimisticLikes", () => {
     await vi.advanceTimersByTimeAsync(250);
 
     expect(syncLike).toHaveBeenCalledTimes(1);
-    expect(syncLike).toHaveBeenCalledWith("post-rapido", true, { keepalive: true });
+    expect(syncLike).toHaveBeenCalledWith("post-rapido", true, identity, { keepalive: true });
   });
 
   it("queues the latest action when the visitor changes their mind during a request", async () => {
@@ -90,7 +92,7 @@ describe("useOptimisticLikes", () => {
     const likes = useOptimisticLikes();
     likes.initialize("post-em-fila", { liked: false, likesCount: 2 });
 
-    likes.toggle("post-em-fila");
+    likes.toggle("post-em-fila", identity);
     await vi.advanceTimersByTimeAsync(250);
     likes.toggle("post-em-fila");
 
@@ -102,7 +104,7 @@ describe("useOptimisticLikes", () => {
     await vi.advanceTimersByTimeAsync(0);
 
     expect(syncLike).toHaveBeenCalledTimes(2);
-    expect(syncLike).toHaveBeenLastCalledWith("post-em-fila", false, { keepalive: true });
+    expect(syncLike).toHaveBeenLastCalledWith("post-em-fila", false, identity, { keepalive: true });
   });
 
   it("restores the confirmed state and displays a discreet error when synchronization fails", async () => {
@@ -112,7 +114,7 @@ describe("useOptimisticLikes", () => {
     const likes = useOptimisticLikes();
     likes.initialize("post-com-erro", { liked: false, likesCount: 7 });
 
-    likes.toggle("post-com-erro");
+    likes.toggle("post-com-erro", identity);
     expect(likes.stateFor("post-com-erro")).toEqual({ liked: true, likesCount: 8 });
 
     await vi.advanceTimersByTimeAsync(250);
@@ -122,5 +124,17 @@ describe("useOptimisticLikes", () => {
       "Não foi possível registrar sua curtida. Tente novamente.",
       { tone: "error" },
     );
+  });
+
+  it("does not create an optimistic like without an identity in memory", async () => {
+    const { useOptimisticLikes } = await import("../useOptimisticLikes");
+    const likes = useOptimisticLikes();
+    likes.initialize("post-sem-identidade", { liked: false, likesCount: 7 });
+
+    expect(likes.toggle("post-sem-identidade")).toBe(false);
+    expect(likes.stateFor("post-sem-identidade")).toEqual({ liked: false, likesCount: 7 });
+
+    await vi.advanceTimersByTimeAsync(250);
+    expect(syncLike).not.toHaveBeenCalled();
   });
 });
