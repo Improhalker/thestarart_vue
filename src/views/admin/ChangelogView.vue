@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import changelogData from "@/data/changelog.json";
+import { useI18n } from "vue-i18n";
+import { getLocalizedChangelog } from "@/data/changelogTranslations";
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import { Terminal, Headphones } from "lucide-vue-next";
 
@@ -16,8 +17,12 @@ const props = withDefaults(defineProps<Props>(), {
   fullHeight: false,
 });
 
+const { locale } = useI18n();
+
 const logs = computed(() => {
-  return props.limit ? changelogData.slice(0, props.limit) : changelogData;
+  const changelog = getLocalizedChangelog(locale.value);
+
+  return props.limit ? changelog.slice(0, props.limit) : changelog;
 });
 
 const isCrimson = computed(() => props.variant === "crimson");
