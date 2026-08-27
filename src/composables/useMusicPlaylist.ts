@@ -121,7 +121,7 @@ export function useMusicPlaylist() {
         playlist.value = [];
         currentIndex.value = 0;
         state.value = "error";
-        errorMessage.value = "Não foi possível carregar a playlist agora.";
+        errorMessage.value = "home.musicLoadError";
       })
       .finally(() => {
         playlistLoadRequest = null;

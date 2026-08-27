@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import type { PublicPostSummary } from "@/composables/posts/types";
+
+const { locale, t } = useI18n();
 
 defineProps<{
   post: PublicPostSummary;
@@ -28,7 +31,7 @@ defineProps<{
         <span
           class="text-[10px] px-2 py-[2px] border border-white/40 rounded-full uppercase font-bold bg-white/10"
         >
-          {{ post.tags?.[0] ?? "SYSTEM" }}
+          {{ post.tags?.[0] ?? t("home.systemTag") }}
         </span>
       </div>
 
@@ -42,7 +45,7 @@ defineProps<{
         </p>
 
         <span class="text-[10px] text-gray-300">
-          {{ new Date(post.published_at!).toLocaleDateString("pt-BR") }}
+          {{ new Date(post.published_at!).toLocaleDateString(locale) }}
         </span>
       </div>
 
@@ -53,7 +56,7 @@ defineProps<{
         >
           <img
             src="/images/ui/read_nowlight2.png"
-            alt="Read Now"
+            :alt="t('home.readNow')"
             class="w-32 inline-block"
           />
         </router-link>

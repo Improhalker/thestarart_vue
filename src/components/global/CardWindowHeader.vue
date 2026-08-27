@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Component } from "vue";
+import { useI18n } from "vue-i18n";
 import { useAchievements } from "@/composables/useAchievements";
 interface Props {
   title: string;
@@ -10,13 +11,13 @@ interface Props {
 defineProps<Props>();
 
 const { unlock } = useAchievements();
+const { t } = useI18n();
 
 const handleInutilClick = () => {
   unlock({
     id: "useless_buttons",
-    title: "FALTA DE CRIATIVIDADE",
-    description:
-      "Esses botões são meramente visuais. Parabéns, achou mais uma inutilidade no projeto!",
+    title: t("home.headerAchievementTitle"),
+    description: t("home.headerAchievementDescription"),
     icon: "⚙️",
   });
 };

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import type { PaginationMeta, PublicPostSummary } from "@/composables/posts/types";
 import PostCard from "./PostCard.vue";
+
+const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
@@ -44,25 +47,24 @@ const visiblePages = computed(() => {
 <template>
   <div class="p-4 space-y-4">
     <div v-if="loading && visiblePosts.length === 0">
-      <p>Carregando posts...</p>
+      <p>{{ t("home.loadingPosts") }}</p>
 
       <img
         width="139"
         height="115"
         src="https://blob.gifcities.org/gifcities/NNDAMTBIN4ZDLQSQMSMSLE3YFC7K646F.gif"
-        alt="Carregando"
+        :alt="t('home.loading')"
       />
     </div>
 
     <!-- Error -->
     <div v-else-if="error && visiblePosts.length === 0" class="border-2 border-red-500 bg-red-50 p-4 text-sm">
       <p class="font-black uppercase text-red-700">
-        ⚠️ Não foi possível carregar os posts.
+        {{ t("home.postsLoadError") }}
       </p>
 
       <p class="mt-2 text-gray-700">
-        Tente atualizar a página em alguns instantes. Se o problema continuar, entre em
-        contato pelo Instagram ou por e-mail.
+        {{ t("home.postsLoadErrorHelp") }}
       </p>
 
       <div class="mt-3 text-gray-700 flex flex-wrap gap-3 text-xs font-bold">
@@ -91,13 +93,13 @@ const visiblePages = computed(() => {
       v-if="!loading && !error && visiblePosts.length === 0"
       class="text-center text-sm"
     >
-      Nenhum post encontrado.
+      {{ t("home.noPosts") }}
     </div>
 
     <nav
       v-if="pagination && pagination.last_page > 1"
       class="flex flex-wrap items-center justify-center gap-2 border-t border-[var(--color-ts-ui-border)] pt-4 text-xs"
-      aria-label="Paginação dos posts"
+      :aria-label="t('home.postsPagination')"
     >
       <button
         type="button"
@@ -105,7 +107,7 @@ const visiblePages = computed(() => {
         :disabled="loading || pagination.current_page <= 1"
         @click="emit('change-page', pagination.current_page - 1)"
       >
-        Anterior
+        {{ t("home.previous") }}
       </button>
 
       <button
@@ -129,11 +131,11 @@ const visiblePages = computed(() => {
         :disabled="loading || pagination.current_page >= pagination.last_page"
         @click="emit('change-page', pagination.current_page + 1)"
       >
-        Próxima
+        {{ t("home.next") }}
       </button>
 
       <p class="basis-full text-center text-[11px] text-gray-400">
-        Página {{ pagination.current_page }} de {{ pagination.last_page }} · {{ pagination.total }} posts
+        {{ t("home.pageOfPosts", { current: pagination.current_page, total: pagination.last_page, count: pagination.total }) }}
       </p>
     </nav>
 
@@ -145,7 +147,7 @@ const visiblePages = computed(() => {
       >
         <img
           src="/images/ui/load_morebutton.png"
-          alt="Ver todos os posts"
+          :alt="t('home.viewAllPosts')"
           class="w-32 inline-block"
         />
       </router-link>

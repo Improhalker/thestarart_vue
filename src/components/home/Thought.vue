@@ -1,47 +1,35 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import CardWindowHeader from "../global/CardWindowHeader.vue";
 
-const terminalSections = [
+const { t } = useI18n();
+
+const terminalSections = computed(() => [
   {
-    title: ">> WHOAMI",
-    content: `
-      Bom, meu codinome é <strong>TheStarArt_</strong> e tenho 21 anos.
-      Esse projeto é uma tentativa de expressar tudo o que gosto e vivo neste mundo. <br>
-      ┐(´～｀)┌
-    `,
+    title: t("home.thoughtWhoamiTitle"),
+    content: t("home.thoughtWhoamiContent"),
   },
   {
-    title: ">> CURRENT_INTERESTS",
+    title: t("home.thoughtInterestsTitle"),
     items: [
-      "Jogar CS2 de AWP",
-      "Programação com Vue, PHP, WordPress, Webflow e ambientes Linux 🐧",
-      "Lápis de cor (estou voltando a desenhar mais) ✏️",
-      "Anime e cultura geek 🌸",
-      "Música. Muita música. Não consigo ficar sem escutar",
-      `Meu GitHub:
-        <a
-          href="https://github.com/improhalker"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="underline hover:text-pink-300"
-        >
-          github.com/improhalker
-        </a>`,
+      t("home.thoughtInterestGaming"),
+      t("home.thoughtInterestDevelopment"),
+      t("home.thoughtInterestDrawing"),
+      t("home.thoughtInterestAnime"),
+      t("home.thoughtInterestMusic"),
+      t("home.thoughtGithub"),
     ],
   },
   {
-    title: ">> Quais linguas eu falo?",
-    content: `
-      Eu sou brasileiro entao falo nativamente Portugues, mas tenho Ingles avancado e estou aprendendo Mandarim (e esta sendo muito dificil meu deus). <br> Eu estava em duvida entre Japones e mandarim, mas acabou que eu escolhi por questoes geopoliticas que infelizmente estao acontecendo no mundo, e tambem por que eu quero viajar pra China com minha namorada (Coreia e Japao tmb, um dia vou aprender Japones). <br> (╯°□°）╯︵ ┻━┻
-    `,
+    title: t("home.thoughtLanguagesTitle"),
+    content: t("home.thoughtLanguagesContent"),
   },
   {
-    title: ">> Voce esta bem?",
-    content: `
-      Ja estive pior, mas estou bem sim, comecei terapia recentemente
-    `,
+    title: t("home.thoughtWellTitle"),
+    content: t("home.thoughtWellContent"),
   },
-];
+]);
 </script>
 
 <template>
@@ -80,7 +68,7 @@ const terminalSections = [
         </template>
       </div>
 
-      <div class="text-pink-500 animate-pulse text-xs">_ aguardando input...</div>
+      <div class="text-pink-500 animate-pulse text-xs">{{ t("home.thoughtAwaitingInput") }}</div>
     </div>
   </div>
 </template>

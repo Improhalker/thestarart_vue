@@ -18,7 +18,7 @@
 
     <!-- STATS -->
     <div
-      v-for="stat in stats"
+      v-for="stat in localizedStats"
       :key="stat.label"
       class="space-y-1">
 
@@ -53,9 +53,19 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+
 const stats = [
-  { label: "Energy", val: "80%", color: "bg-green-400" },
-  { label: "Coffee", val: "100%", color: "bg-[var(--ui-accent)]" },
-  { label: "Focus", val: "45%", color: "bg-blue-400" }
+  { key: "resourceEnergy", val: "80%", color: "bg-green-400" },
+  { key: "resourceCoffee", val: "100%", color: "bg-[var(--ui-accent)]" },
+  { key: "resourceFocus", val: "45%", color: "bg-blue-400" }
 ];
+
+const localizedStats = computed(() => stats.map((stat) => ({
+  ...stat,
+  label: t(`home.${stat.key}`),
+})));
 </script>

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { Slider } from "@/components/ui/slider";
 import { ListMusic, Music, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-vue-next";
 import { useMusicPlaylist } from "@/composables/useMusicPlaylist";
+
+const { t } = useI18n();
 
 type YouTubePlayer = {
   cueVideoById: (videoId: string) => void;
@@ -106,7 +109,11 @@ const progressPercent = computed(() =>
   duration.value > 0 ? Math.min(100, (currentTime.value / duration.value) * 100) : 0,
 );
 
-const playerStateMessage = computed(() => playerError.value ?? errorMessage.value);
+const playerStateMessage = computed(() => {
+  const message = playerError.value ?? errorMessage.value;
+
+  return message === "home.musicLoadError" ? t(message) : message;
+});
 
 let progressInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -141,11 +148,11 @@ const handleUnavailableVideo = () => {
   if (!nextMusic) {
     isPlaying.value = false;
     stopProgressTimer();
-    playerError.value = "Nenhuma faixa disponível para reprodução agora.";
+    playerError.value = t("home.musicUnavailable");
     return;
   }
 
-  playerError.value = "Vídeo indisponível: avançando para a próxima faixa.";
+  playerError.value = t("home.musicVideoUnavailable");
   loadCurrentVideo(true);
 };
 
@@ -185,7 +192,7 @@ const createPlayer = async (youtubeApi: Promise<YouTubeApi> = loadYouTubeApi()) 
       },
     });
   } catch {
-    playerError.value = "Não foi possível iniciar o player do YouTube.";
+    playerError.value = t("home.musicStartError");
   }
 };
 
@@ -266,7 +273,7 @@ onUnmounted(() => {
 <template>
   <aside
     class="fixed bottom-0 left-0 z-50 w-full overflow-hidden border-t-[3px] border-[var(--crimson-accent)] bg-black p-1 font-pixel text-white shadow-[0_-4px_16px_rgba(0,0,0,0.55)] md:static md:max-w-[420px] md:border-4 md:border-double md:border-[var(--crimson-border)] md:shadow-[0_0_20px_rgba(255,0,0,0.2)]"
-    aria-label="Player de música"
+    :aria-label="t('home.musicPlayer')"
   >
     <div class="relative z-10 bg-black/75 p-1.5 md:p-3">
       <header class="mb-1 flex items-center justify-between border-b border-[var(--crimson-border)] pb-1 text-[9px] font-bold uppercase tracking-widest md:mb-2 md:text-[10px]">
@@ -274,24 +281,24 @@ onUnmounted(() => {
         <span class="text-[var(--crimson-text-soft)]">{{ state === "ready" ? "Link_Established.raw" : "Scanning_Archive..." }}</span>
       </header>
 
-      <div v-if="state === 'loading' || state === 'idle'" class="flex min-h-24 items-center justify-center border border-[var(--crimson-border)] text-xs font-bold text-[var(--crimson-text-soft)]">Carregando playlist...</div>
-      <div v-else-if="state === 'empty'" class="flex min-h-24 items-center justify-center border border-[var(--crimson-border)] p-3 text-center text-xs font-bold text-[var(--crimson-text-soft)]">Nenhuma faixa ativa foi encontrada.</div>
+      <div v-if="state === 'loading' || state === 'idle'" class="flex min-h-24 items-center justify-center border border-[var(--crimson-border)] text-xs font-bold text-[var(--crimson-text-soft)]">{{ t("home.musicLoading") }}</div>
+      <div v-else-if="state === 'empty'" class="flex min-h-24 items-center justify-center border border-[var(--crimson-border)] p-3 text-center text-xs font-bold text-[var(--crimson-text-soft)]">{{ t("home.musicEmpty") }}</div>
       <div v-else-if="state === 'error'" class="flex min-h-24 items-center justify-center border border-[var(--crimson-accent)] p-3 text-center text-xs font-bold text-red-200">{{ playerStateMessage }}</div>
 
       <template v-else-if="currentMusic">
         <div class="mb-1.5 flex min-w-0 items-center gap-2 border border-[var(--crimson-border)] bg-black/80 p-1.5 md:mb-3 md:p-2">
           <img src="https://blob.gifcities.org/gifcities/ZPA6L2QYGWUVN4K3L2RS4KRLTWEL3B6P.gif" alt="" class="hidden h-12 w-12 shrink-0 border border-red-900 object-cover grayscale contrast-150 md:block" />
-          <img :src="currentMusic.thumbnail_url" :alt="`Capa de ${currentMusic.title}`" class="h-9 w-11 shrink-0 border border-[var(--crimson-border)] object-cover grayscale md:h-12 md:w-16" />
+          <img :src="currentMusic.thumbnail_url" :alt="t('home.musicCover', { title: currentMusic.title })" class="h-9 w-11 shrink-0 border border-[var(--crimson-border)] object-cover grayscale md:h-12 md:w-16" />
           <div class="min-w-0 flex-1">
             <p class="hidden text-[9px] font-bold text-[var(--crimson-text-soft)] md:block">{{ trackLabel }}</p>
             <p class="truncate text-xs font-black leading-tight text-white" :title="currentMusic.title">{{ currentMusic.title }}</p>
-            <p class="truncate text-[10px] font-bold text-[var(--crimson-accent)]">{{ currentMusic.artist || "TheStarArt radio archive" }}</p>
+            <p class="truncate text-[10px] font-bold text-[var(--crimson-accent)]">{{ currentMusic.artist || t("home.musicArchive") }}</p>
           </div>
         </div>
 
         <div class="relative mb-3 hidden aspect-video overflow-hidden border-2 border-[var(--crimson-border)] bg-black md:block">
           <div ref="playerHost" class="h-full w-full"></div>
-          <button v-if="!hasStarted" type="button" class="absolute inset-0 flex items-center justify-center bg-black/70" aria-label="Reproduzir faixa" @click="togglePlay">
+          <button v-if="!hasStarted" type="button" class="absolute inset-0 flex items-center justify-center bg-black/70" :aria-label="t('home.musicPlay')" @click="togglePlay">
             <Play class="h-8 w-8 fill-white text-white" />
           </button>
         </div>
@@ -303,17 +310,17 @@ onUnmounted(() => {
         </div>
 
         <div class="flex items-center gap-2">
-          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-border)] bg-black hover:border-[var(--crimson-accent)] disabled:opacity-40" :disabled="!playlist.length" aria-label="Faixa anterior" @click="playPrevious"><SkipBack class="mx-auto text-[var(--crimson-accent)]" :size="17" /></button>
-          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-accent)] bg-red-950/40 hover:bg-[var(--crimson-accent)] disabled:opacity-40" :disabled="!playlist.length" :aria-label="isPlaying ? 'Pausar faixa' : 'Reproduzir faixa'" @click="togglePlay"><component :is="isPlaying ? Pause : Play" class="mx-auto text-white" :size="18" :class="isPlaying ? '' : 'fill-white'" /></button>
-          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-border)] bg-black hover:border-[var(--crimson-accent)] disabled:opacity-40" :disabled="!playlist.length" aria-label="Próxima faixa" @click="playNext"><SkipForward class="mx-auto text-[var(--crimson-accent)]" :size="17" /></button>
-          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-border)] bg-black hover:border-[var(--crimson-accent)]" :aria-label="isMuted ? 'Ativar som' : 'Silenciar'" @click="toggleMute"><component :is="isMuted ? VolumeX : Volume2" class="mx-auto text-white" :size="16" /></button>
+          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-border)] bg-black hover:border-[var(--crimson-accent)] disabled:opacity-40" :disabled="!playlist.length" :aria-label="t('home.musicPrevious')" @click="playPrevious"><SkipBack class="mx-auto text-[var(--crimson-accent)]" :size="17" /></button>
+          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-accent)] bg-red-950/40 hover:bg-[var(--crimson-accent)] disabled:opacity-40" :disabled="!playlist.length" :aria-label="isPlaying ? t('home.musicPause') : t('home.musicPlay')" @click="togglePlay"><component :is="isPlaying ? Pause : Play" class="mx-auto text-white" :size="18" :class="isPlaying ? '' : 'fill-white'" /></button>
+          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-border)] bg-black hover:border-[var(--crimson-accent)] disabled:opacity-40" :disabled="!playlist.length" :aria-label="t('home.musicNext')" @click="playNext"><SkipForward class="mx-auto text-[var(--crimson-accent)]" :size="17" /></button>
+          <button type="button" class="min-h-11 min-w-11 border border-[var(--crimson-border)] bg-black hover:border-[var(--crimson-accent)]" :aria-label="isMuted ? t('home.musicUnmute') : t('home.musicMute')" @click="toggleMute"><component :is="isMuted ? VolumeX : Volume2" class="mx-auto text-white" :size="16" /></button>
         </div>
           <div class="hidden lg:mt-6 min-w-0 flex-1 md:block bg-cover bg-center" style="background-image: url('https://blob.gifcities.org/gifcities/4DDT3VQ2T543JNFZE6F573PKLMFZ5V5H.gif')"><Slider :max="100" :step="5" :model-value="[volume]" class="cursor-pointer" @update:model-value="onVolumeChange" /></div>
 
         <p v-if="currentMusic.personal_note" class="mt-3 hidden border-l-2 border-[var(--crimson-accent)] bg-red-950/10 p-2 text-[11px] italic text-white/70 md:block"><strong class="not-italic text-[var(--crimson-accent)]">PERSONAL_NOTE.txt:</strong> {{ currentMusic.personal_note }}</p>
 
         <details class="mt-3 hidden border border-[var(--crimson-border)] text-[10px] md:block">
-          <summary class="flex cursor-pointer items-center gap-2 p-2 font-bold text-[var(--crimson-text-soft)]"><ListMusic :size="13" /> Playlist ({{ playlist.length }})</summary>
+          <summary class="flex cursor-pointer items-center gap-2 p-2 font-bold text-[var(--crimson-text-soft)]"><ListMusic :size="13" /> {{ t("home.musicPlaylist", { count: playlist.length }) }}</summary>
           <ol class="max-h-28 overflow-y-auto border-t border-[var(--crimson-border)]">
             <li v-for="music in playlist" :key="music.id" class="flex gap-2 px-2 py-1" :class="music.id === currentMusic.id ? 'bg-red-950/40 text-white' : 'text-white/60'"><span>{{ String(music.position).padStart(2, "0") }}</span><span class="truncate">{{ music.title }}</span></li>
           </ol>

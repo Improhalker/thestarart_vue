@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import Navbar from "@/components/global/NewNavbar/Navbar.vue";
 import StartupPopup from "@/components/global/StartupPopup.vue";
 import ChangelogView from "@/views/ChangelogView.vue";
@@ -10,6 +11,7 @@ import Chat from "@/components/globalchat/Chat.vue";
 import AdminPet from "@/components/admin/madoka/AdminPet.vue";
 
 const route = useRoute();
+const { t } = useI18n();
 const isPostReader = computed(() => route.name === "post.show");
 const isAboutProfile = computed(() => route.name === "about");
 const usesDedicatedLayout = computed(() => isPostReader.value || isAboutProfile.value);
@@ -48,7 +50,7 @@ const usesDedicatedLayout = computed(() => isPostReader.value || isAboutProfile.
             class="flex items-center gap-1 hover:text-white transition"
           >
             <img src="/images/social/youtube.png" class="w-5 h-4 pixelated" />
-            <p class="hidden md:flex">Arte e Filosofia</p>
+            <p class="hidden md:flex">{{ t("home.socialArtAndPhilosophy") }}</p>
           </a>
 
           <a
@@ -57,7 +59,7 @@ const usesDedicatedLayout = computed(() => isPostReader.value || isAboutProfile.
             class="flex items-center gap-1 hover:text-white transition"
           >
             <img src="/images/social/youtube.png" class="w-5 h-4 pixelated" />
-            <p class="hidden md:flex">Jogos</p>
+            <p class="hidden md:flex">{{ t("home.socialGames") }}</p>
           </a>
 
           <a
@@ -133,7 +135,7 @@ const usesDedicatedLayout = computed(() => isPostReader.value || isAboutProfile.
 
           <div class="py-3">
             <p class="text-center text-sm text-gray-300">
-              © 2026 TheStarArt_. All rights reserved.
+              © 2026 TheStarArt_. {{ t("home.footerRights") }}
             </p>
           </div>
         </footer>

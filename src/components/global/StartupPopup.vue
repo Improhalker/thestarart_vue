@@ -8,7 +8,7 @@
       <!-- Header -->
       <div class="flex justify-between items-center">
         <h2 class="text-pink-500 text-xs font-black uppercase">
-          Aviso_do_Sistema.exe
+          {{ t("home.popupTitle") }}
         </h2>
 
         <button
@@ -21,14 +21,14 @@
 
       <!-- Content -->
       <div class="space-y-3 text-[11px] text-pink-200">
-        <p>Este site ainda está em construção.</p>
+        <p>{{ t("home.popupIntro") }}</p>
 
         <p class="text-pink-400">
-          Algumas páginas e funcionalidades podem estar incompletas ou apresentar comportamentos inesperados.
+          {{ t("home.popupWarning") }}
         </p>
 
         <p>
-          Agradeço pela compreensão enquanto continuo postergando o lançamento oficial do site. Sinta-se à vontade para explorar o que já está disponível e voltar em breve para novidades!
+          {{ t("home.popupBody") }}
         </p>
       </div>
 
@@ -44,7 +44,7 @@
       <div class="flex items-center justify-center gap-2 text-[10px] text-pink-400">
         
         <span>
-          Aguarde {{ countdown }}s para continuar
+          {{ t("home.popupWait", { count: countdown }) }}
         </span>
       </div>
 
@@ -58,7 +58,7 @@
             ? 'border-pink-900 text-pink-900 cursor-not-allowed opacity-50'
             : 'border-pink-700 text-pink-400 hover:bg-pink-500/10'"
         >
-          {{ countdown > 0 ? `Aguarde (${countdown})` : 'Entendi' }}
+          {{ countdown > 0 ? t("home.popupWaitButton", { count: countdown }) : t("home.popupConfirm") }}
         </button>
       </div>
 
@@ -68,6 +68,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 const isOpen = ref(false)
 const countdown = ref(3)

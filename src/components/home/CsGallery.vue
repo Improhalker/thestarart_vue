@@ -1,5 +1,8 @@
-<script setup>
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import CardWindowHeader from '../global/CardWindowHeader.vue';
+
+const { t } = useI18n();
 </script>
 <template>
     <div class="container-style-dark">
@@ -23,18 +26,17 @@ import CardWindowHeader from '../global/CardWindowHeader.vue';
 
                 <div
                     class="absolute bottom-0 left-0 bg-pink-600 text-white text-[14px] px-2 py-1 uppercase font-bold z-10 shadow-[2px_-2px_0px_black]">
-                    LIVE_PREVIEW: HIGHLIGHTS AT0N Gaming
+                    {{ t("home.csLivePreview") }}
                 </div>
             </div>
             <!-- TEXTO -->
             <div class="container-style-light flex flex-col justify-center p-4">
                 <span class="text-pink-500 text-[10px] font-bold uppercase mb-1">
-                    Status: Rendering...
+                    {{ t("home.csRendering") }}
                 </span>
 
                 <p class="text-pink-100 text-[12px] leading-tight uppercase tracking-tight">
-                    Alguns melhores momentos dos ultimos campeonatos representanod a AT0N Gaming, foram alguns
-                    campeonatos com menos de 1 mes de time, entao ja estou bem orgulhoso.
+                    {{ t("home.csDescription") }}
                 </p>
             </div>
         </div>
