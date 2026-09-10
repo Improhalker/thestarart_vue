@@ -12,6 +12,10 @@ import { applyRouteSeo, trackPageView, type SeoDefinition } from "@/composables/
 import { hasSelectedLocale } from "@/i18n";
 
 const seo = (definition: SeoDefinition) => ({ seo: definition });
+const localizedSeo = (key: string) => seo({
+  titleKey: `seo.${key}Title`,
+  descriptionKey: `seo.${key}Description`,
+});
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,70 +28,49 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: HomeView,
-          meta: seo({
-            title: "TheStarArt_ - Animes, Arte e Programação",
-            description: "Universo digital pessoal do TheStarArt: arte, programação, jogos, pensamentos e cultura da internet.",
-          }),
+          meta: localizedSeo("home"),
         },
         {
           path: 'about',
           name: 'about',
           component: () => import('@/views/AboutView.vue'),
-          meta: seo({
-            title: "Sobre | TheStarArt_",
-            description: "Conheça TheStarArt, artista, desenvolvedor e criador deste universo digital pessoal.",
-          }),
+          meta: localizedSeo("about"),
         },
         {
           path: 'changelog',
           name: 'changelog',
           component: () => import('@/views/ChangelogView.vue'),
-          meta: seo({
-            title: "Changelog | TheStarArt_",
-            description: "Atualizações, experimentos e mudanças no universo digital TheStarArt_.",
-          }),
+          meta: localizedSeo("changelog"),
         },
         {
           path: 'credits',
           name: 'credits',
           component: () => import('@/views/CreditsView.vue'),
-          meta: seo({
-            title: "Créditos | TheStarArt_",
-            description: "Fontes, assets e inspirações que ajudam a construir o universo TheStarArt_.",
-          }),
+          meta: localizedSeo("credits"),
         },
         {
           path: 'diary',
           name: 'diary',
           component: () => import('@/views/themes/MiraiNikki/Diary.vue'),
-          meta: seo({
-            title: "Diário | TheStarArt_",
-            description: "Anotações e experiências pessoais...",
-          }),
+          meta: localizedSeo("diary"),
         },
         {
           path: 'blog',
           name: 'blog',
           component: () => import('@/views/blog/BlogView.vue'),
-          meta: seo({
-            title: "Blog | TheStarArt_",
-            description: "Textos sobre arte, tecnologia, jogos, animes e experiências pessoais.",
-          }),
+          meta: localizedSeo("blog"),
         },
         {
           path: 'guestbook',
           name: 'guestbook',
           component: () => import('@/views/GuestbookView.vue'),
-          meta: seo({ title: "Guestbook | TheStarArt_", description: "Deixe uma mensagem no livro de visitas do TheStarArt_." }),
+          meta: localizedSeo("guestbook"),
         },
         {
           path: 'post/:slug',
           name: 'post.show',
           component: () => import('@/views/blog/PostView.vue'),
-          meta: seo({
-            title: "Post | TheStarArt_",
-            description: "Leia um texto do blog TheStarArt_.",
-          }),
+          meta: localizedSeo("blog"),
         }
       ],
     },
@@ -101,16 +84,13 @@ const router = createRouter({
       path: '/star-station',
       name: 'star-station',
       component: () => import('@/features/star-station/views/StarStationView.vue'),
-      meta: seo({ title: "Star Station | TheStarArt_", description: "Uma experiência interativa no universo TheStarArt_." }),
+      meta: localizedSeo("starStation"),
     },
     {
       path: '/thumbnail-generator',
       name: 'thumbnail-generator',
       component: () => import('@/views/ThumbnailGeneratorView.vue'),
-      meta: seo({
-        title: "Thumbnail Generator | TheStarArt_",
-        description: "Crie thumbnails retrô em 1280 por 720 diretamente no navegador.",
-      }),
+      meta: localizedSeo("thumbnailGenerator"),
     },
     {
       path: '/justcryatthispoint',

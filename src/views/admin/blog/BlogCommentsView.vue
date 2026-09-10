@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { Check, CircleX, Mail, MessageSquareWarning, Trash2 } from "lucide-vue-next";
+import PaginationControls from "@/components/global/PaginationControls.vue";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
-import type { AdminPostComment } from "@/composables/posts/types";
+import type { AdminPostComment, PaginationMeta } from "@/composables/posts/types";
 
 type CommentFilter = "all" | AdminPostComment["status"] | "deleted";
 
 const repository = usePostsRepository();
 const comments = ref<AdminPostComment[]>([]);
+const pagination = ref<PaginationMeta | null>(null);
 const filter = ref<CommentFilter>("all");
 const pending = ref(true);
 const error = ref(false);
@@ -27,15 +29,19 @@ const statusClass: Record<AdminPostComment["status"], string> = {
   spam: "bg-fuchsia-200",
 };
 
-const load = async () => {
+const load = async (page = pagination.value?.current_page ?? 1) => {
   pending.value = true;
   error.value = false;
 
   try {
-    comments.value = (await repository.getAdminComments({
+    const response = await repository.getAdminComments({
       status: filter.value === "all" || filter.value === "deleted" ? undefined : filter.value,
       trashed: filter.value === "deleted" ? "only" : "without",
-    })).data;
+      page,
+      perPage: 20,
+    });
+    comments.value = response.data;
+    pagination.value = response.meta;
   } catch {
     error.value = true;
   } finally {
@@ -88,7 +94,7 @@ onMounted(load);
       </div>
       <label class="grid gap-1 text-xs font-bold uppercase">
         Filtro
-        <select v-model="filter" class="min-h-10 border-2 border-black bg-white px-2 normal-case" @change="load">
+        <select v-model="filter" class="min-h-10 border-2 border-black bg-white px-2 normal-case" @change="load(1)">
           <option value="all">Todos</option>
           <option value="pending">Pendentes</option>
           <option value="approved">Aprovados</option>
@@ -128,5 +134,14 @@ onMounted(load);
         </div>
       </li>
     </ul>
+    <PaginationControls
+      v-if="pagination && !error"
+      :current-page="pagination.current_page"
+      :last-page="pagination.last_page"
+      :total="pagination.total"
+      :pending="pending"
+      label="Paginação de comentários"
+      @change="load"
+    />
   </section>
 </template>

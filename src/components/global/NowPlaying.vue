@@ -49,7 +49,7 @@ onBeforeUnmount(() => {
     <div class="p-3">
       <p v-if="!state && !failed" class="text-[10px] uppercase text-gray-400">procurando sinal do rádio...</p>
       <p v-else-if="failed" class="text-[10px] text-gray-400">O rádio está indisponível no momento.</p>
-      <p v-else-if="!state?.available" class="text-[10px] text-gray-400">Integração Spotify aguardando configuração.</p>
+      <p v-else-if="!state?.available" class="text-[10px] text-gray-400">Integração Spotify indisponível no momento.</p>
       <p v-else-if="!state.is_playing || !state.track" class="text-[10px] text-gray-400">Nenhuma faixa tocando agora. O rádio volta em breve.</p>
       <div v-else class="flex min-w-0 gap-3">
         <img v-if="state.track.cover_url" :src="state.track.cover_url" :alt="`Capa de ${state.track.title}`" class="h-16 w-16 shrink-0 border border-[var(--ts-primary-pink)] object-cover" />

@@ -315,8 +315,12 @@ export const usePostsRepository = () => {
       });
     },
 
-    getPublicComments(slug: string): Promise<PostListResponse<PublicComment>> {
-      return client(`/public/posts/${encodeURIComponent(slug)}/comments`, { method: "GET" });
+    getPublicComments(slug: string, filters: { page?: number; perPage?: number } = {}): Promise<PostListResponse<PublicComment>> {
+      const params = new URLSearchParams();
+      if (filters.page) params.set("page", String(filters.page));
+      if (filters.perPage) params.set("per_page", String(filters.perPage));
+
+      return client(`/public/posts/${encodeURIComponent(slug)}/comments${params.size ? `?${params}` : ""}`, { method: "GET" });
     },
 
     createPublicComment(slug: string, payload: VisitorIdentity & { content: string; website?: string }) {
@@ -327,12 +331,13 @@ export const usePostsRepository = () => {
       });
     },
 
-    getAdminComments(filters: { status?: AdminPostComment["status"]; trashed?: "without" | "only"; postId?: string; page?: number } = {}) {
+    getAdminComments(filters: { status?: AdminPostComment["status"]; trashed?: "without" | "only"; postId?: string; page?: number; perPage?: number } = {}) {
       const params = new URLSearchParams();
       if (filters.status) params.set("status", filters.status);
       if (filters.trashed) params.set("trashed", filters.trashed);
       if (filters.postId) params.set("post_id", filters.postId);
       if (filters.page) params.set("page", String(filters.page));
+      if (filters.perPage) params.set("per_page", String(filters.perPage));
       return client<PostListResponse<AdminPostComment>>(`/admin/comments${params.size ? `?${params}` : ""}`, { method: "GET" });
     },
 

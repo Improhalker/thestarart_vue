@@ -28,19 +28,20 @@ uma variável de ambiente da Vercel e não é uma variável `VITE_*`.
 - `vercel.ts`: proxy reverso para `/api/*` e `/sanctum/*`; impede cache dessas
   respostas.
 - `src/composables/api/useApi.ts`: em produção usa `/api`; em desenvolvimento
-  usa `VITE_API_URL` ou `http://localhost:8000/api`.
+  usa `VITE_API_URL` ou `http://localhost:8000/api` somente no desenvolvimento.
 
 ## Configuração obrigatória
 
 ### Vercel
 
-Definir somente no ambiente de deploy:
+Definir somente no ambiente de deploy (Production e, se usado, Preview):
 
 ```dotenv
 LARAVEL_API_ORIGIN=https://<host-publico-do-laravel>
 ```
 
-O valor deve ser uma origem HTTPS, sem `/api` no final. Não criar
+O valor deve ser uma origem HTTPS, sem `/api` no final. Esta variável é lida
+pelo `vercel.ts` no servidor e não é exposta no bundle. Não criar
 `VITE_API_URL` de produção apontando diretamente ao Laravel.
 
 ### Laravel em produção

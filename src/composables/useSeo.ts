@@ -3,12 +3,16 @@ import type { PublicPost } from "@/composables/posts/types";
 import { i18n } from "@/i18n";
 
 export type SeoDefinition = {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
+  titleKey?: string;
+  descriptionKey?: string;
   robots?: "index, follow" | "noindex, nofollow";
 };
 
-type SeoOptions = SeoDefinition & {
+type SeoOptions = Omit<SeoDefinition, "title" | "description"> & {
+  title: string;
+  description: string;
   canonicalPath?: string;
   image?: string | null;
   type?: "website" | "article";
@@ -18,7 +22,7 @@ type SeoOptions = SeoDefinition & {
 
 const siteName = "TheStarArt_";
 const fallbackImagePath = "/images/banner.webp";
-const defaultSeo: SeoDefinition = {
+const defaultSeo: SeoDefinition & Required<Pick<SeoDefinition, "title" | "description">> = {
   title: "TheStarArt_ | Arte, tecnologia, jogos e experiências",
   description: "Universo digital pessoal de TheStarArt_: arte, programação, jogos, pensamentos e cultura da internet.",
   robots: "index, follow",
@@ -119,11 +123,13 @@ export const setSeo = (options: SeoOptions) => {
 
 export const applyRouteSeo = (route: RouteLocationNormalizedLoaded) => {
   const definition = (route.meta.seo as SeoDefinition | undefined) || defaultSeo;
+  const title = definition.titleKey ? i18n.global.t(definition.titleKey) : definition.title || defaultSeo.title;
+  const description = definition.descriptionKey ? i18n.global.t(definition.descriptionKey) : definition.description || defaultSeo.description;
   const canonicalPath = route.name === "blog" && typeof route.query.page === "string"
     ? `${route.path}?page=${encodeURIComponent(route.query.page)}`
     : route.path;
 
-  setSeo({ ...definition, canonicalPath });
+  setSeo({ ...definition, title, description, canonicalPath });
   clearArticleSchema();
 };
 

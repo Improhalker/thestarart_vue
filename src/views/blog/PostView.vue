@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { Eye, Heart } from "lucide-vue-next";
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
+import PaginationControls from "@/components/global/PaginationControls.vue";
 import PostReadingSidebar from "@/components/global/blog/PostReadingSidebar.vue";
 import { usePostEngagement } from "@/composables/posts/usePostEngagement";
 import { useOptimisticLikes } from "@/composables/posts/useOptimisticLikes";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
-import type { PublicComment, PublicPost, VisitorIdentity } from "@/composables/posts/types";
+import type { PaginationMeta, PublicComment, PublicPost, VisitorIdentity } from "@/composables/posts/types";
 import { sanitizePostHtml } from "@/utils/sanitizePostHtml";
 import { applyPostSeo, trackPageView } from "@/composables/useSeo";
 
 const route = useRoute();
+const { locale, t } = useI18n();
 const postsRepo = usePostsRepository();
 const engagement = usePostEngagement();
 const optimisticLikes = useOptimisticLikes();
@@ -20,6 +23,8 @@ const post = ref<PublicPost | null>(null);
 const pending = ref(true);
 const error = ref(false);
 const comments = ref<PublicComment[]>([]);
+const commentsPagination = ref<PaginationMeta | null>(null);
+const commentsLoading = ref(false);
 const commentContent = ref("");
 const visitorName = ref("");
 const visitorEmail = ref("");
@@ -39,8 +44,8 @@ let viewTimer: ReturnType<typeof setTimeout> | null = null;
 let viewRequestSent = false;
 
 const formatDate = (date: string | null) => date
-  ? new Date(date).toLocaleDateString("pt-BR")
-  : "data indisponível";
+  ? new Date(date).toLocaleDateString(locale.value)
+  : t("blog.unavailableDate");
 
 const safeContent = (content: string) => sanitizePostHtml(content);
 
@@ -110,11 +115,16 @@ const confirmLike = () => {
   optimisticLikes.toggle(post.value.slug, identity);
 };
 
-const loadComments = async (slug: string) => {
+const loadComments = async (slug: string, page = commentsPagination.value?.current_page ?? 1) => {
+  commentsLoading.value = true;
   try {
-    comments.value = (await postsRepo.getPublicComments(slug)).data;
+    const response = await postsRepo.getPublicComments(slug, { page, perPage: 10 });
+    comments.value = response.data;
+    commentsPagination.value = response.meta;
   } catch {
     comments.value = [];
+  } finally {
+    commentsLoading.value = false;
   }
 };
 
@@ -131,9 +141,9 @@ const submitComment = async () => {
     });
     sessionIdentity.value = identity;
     commentContent.value = "";
-    commentFeedback.value = "ComentÃ¡rio enviado para moderaÃ§Ã£o.";
+    commentFeedback.value = t("blog.commentSent");
   } catch {
-    commentFeedback.value = "NÃ£o foi possÃ­vel enviar o comentÃ¡rio.";
+    commentFeedback.value = t("blog.commentError");
   } finally {
     commentPending.value = false;
   }
@@ -185,24 +195,24 @@ onBeforeUnmount(() => {
       <CardWindowHeader title="POST_READER.EXE" />
 
       <div v-if="pending" class="p-4 text-sm">
-        <p>Carregando arquivo...</p>
-        <img width="173" height="120" src="https://blob.gifcities.org/gifcities/3CCTKJPWEPVDFGJ6YSRXG7732XOYGHQS.gif" alt="Carregando post" />
+        <p>{{ t("blog.loadingPost") }}</p>
+        <img width="173" height="120" src="https://blob.gifcities.org/gifcities/3CCTKJPWEPVDFGJ6YSRXG7732XOYGHQS.gif" :alt="t('blog.loadingPostAlt')" />
       </div>
 
       <div v-else-if="error || !post" class="p-4 text-sm text-red-500">
-        Não foi possível carregar o post.
+        {{ t("blog.postLoadError") }}
       </div>
 
       <div v-else class="space-y-6 p-4 sm:p-6">
         <header class="space-y-2 border-b border-[var(--ui-border)] pb-5 text-center">
-          <p class="text-[10px] uppercase tracking-[0.22em] text-[var(--ts-primary-pink)]">arquivo pessoal carregado</p>
+          <p class="text-[10px] uppercase tracking-[0.22em] text-[var(--ts-primary-pink)]">{{ t("blog.readerLoaded") }}</p>
           <h1 class="text-2xl font-black uppercase text-white sm:text-3xl">{{ post.title }}</h1>
-          <p class="text-[11px] uppercase text-gray-400">publicado em {{ formatDate(post.published_at) }}</p>
+          <p class="text-[11px] uppercase text-gray-400">{{ t("blog.publishedOn", { date: formatDate(post.published_at) }) }}</p>
 
           <div class="flex items-center justify-center gap-3 text-[11px] uppercase text-gray-300">
-            <span class="inline-flex items-center gap-1" :aria-label="`${post.views_count} visualizações`">
+            <span class="inline-flex items-center gap-1" :aria-label="`${post.views_count} ${t('blog.views')}`">
               <Eye :size="14" aria-hidden="true" />
-              {{ post.views_count }} visualizações
+              {{ post.views_count }} {{ t("blog.views") }}
             </span>
             <button
               type="button"
@@ -210,20 +220,20 @@ onBeforeUnmount(() => {
               :class="liked ? 'text-[var(--color-ts-primary-pink)]' : ''"
               :aria-pressed="liked"
               :disabled="!viewRegistered"
-              :title="viewRegistered ? undefined : 'Aguarde a visualização ser registrada para curtir.'"
+              :title="viewRegistered ? undefined : t('blog.waitToLike')"
               @click="toggleLike"
             >
               <Heart :size="14" :fill="liked ? 'currentColor' : 'none'" aria-hidden="true" />
-              {{ likesCount }} {{ liked ? 'curtido' : 'curtidas' }}
+              {{ likesCount }} {{ liked ? t("blog.liked") : t("blog.likes") }}
             </button>
           </div>
           <p v-if="!viewRegistered" class="text-[10px] uppercase text-gray-400">
-            {{ viewRecording ? "Registrando sua visualização..." : "Leia por alguns segundos para liberar a curtida." }}
+            {{ viewRecording ? t("blog.recordingView") : t("blog.readToLike") }}
           </p>
         </header>
 
         <div v-if="post.thumbnail" class="h-[220px] w-full overflow-hidden border-2 border-[var(--color-ts-ui-border-dark)] sm:h-[300px] md:h-[360px]">
-          <img :src="post.thumbnail" :alt="`Capa de ${post.title}`" class="h-full w-full object-cover" />
+          <img :src="post.thumbnail" :alt="t('blog.thumbnailOf', { title: post.title })" class="h-full w-full object-cover" />
         </div>
 
         <div
@@ -232,20 +242,31 @@ onBeforeUnmount(() => {
         />
 
         <section class="space-y-4 border-t border-[var(--ui-border)] pt-5" aria-labelledby="comments-title">
-          <h2 id="comments-title" class="text-sm font-bold uppercase text-white">Comentários</h2>
+          <h2 id="comments-title" class="text-sm font-bold uppercase text-white">{{ t("blog.comments") }}</h2>
           <form class="space-y-3" @submit.prevent="submitComment">
             <div v-if="!sessionIdentity" class="grid gap-3 sm:grid-cols-2">
-              <label class="text-xs text-gray-300">Nome<input v-model="visitorName" required maxlength="80" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
-              <label class="text-xs text-gray-300">E-mail<input v-model="visitorEmail" required type="email" maxlength="255" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
+              <label class="text-xs text-gray-300">{{ t("blog.name") }}<input v-model="visitorName" required maxlength="80" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
+              <label class="text-xs text-gray-300">{{ t("blog.email") }}<input v-model="visitorEmail" required type="email" maxlength="255" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
             </div>
-            <label class="block text-xs text-gray-300">Mensagem<textarea v-model="commentContent" required maxlength="2000" rows="4" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
-            <button type="submit" :disabled="commentPending" class="border border-[var(--ts-primary-pink)] px-3 py-2 text-xs uppercase text-white disabled:opacity-50">{{ commentPending ? "Enviando..." : "Enviar para moderação" }}</button>
+            <label class="block text-xs text-gray-300">{{ t("blog.message") }}<textarea v-model="commentContent" required maxlength="2000" rows="4" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
+            <button type="submit" :disabled="commentPending" class="border border-[var(--ts-primary-pink)] px-3 py-2 text-xs uppercase text-white disabled:opacity-50">{{ commentPending ? t("blog.sending") : t("blog.sendForModeration") }}</button>
             <p v-if="commentFeedback" class="text-xs text-gray-300">{{ commentFeedback }}</p>
           </form>
-          <p v-if="!comments.length" class="text-xs text-gray-400">Ainda não há comentários aprovados.</p>
+          <p v-if="commentsLoading" class="text-xs text-gray-400">{{ t("blog.openingArchive") }}</p>
+          <p v-else-if="!comments.length" class="text-xs text-gray-400">{{ t("blog.noComments") }}</p>
           <ol v-else class="space-y-3">
             <li v-for="comment in comments" :key="comment.id" class="border-l-2 border-[var(--ts-primary-pink)] pl-3 text-sm text-gray-200"><strong class="text-white">{{ comment.name }}</strong><p class="mt-1 whitespace-pre-wrap">{{ comment.content }}</p></li>
           </ol>
+          <PaginationControls
+            v-if="commentsPagination"
+            class="mt-4"
+            :current-page="commentsPagination.current_page"
+            :last-page="commentsPagination.last_page"
+            :total="commentsPagination.total"
+            :pending="commentsLoading"
+            :label="t('blog.commentsPagination')"
+            @change="loadComments(post.slug, $event)"
+          />
         </section>
       </div>
     </article>
@@ -254,11 +275,11 @@ onBeforeUnmount(() => {
 
     <div v-if="showIdentityForm" class="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4">
       <form class="w-full max-w-sm space-y-3 border-2 border-[var(--ts-primary-pink)] bg-black p-5" @submit.prevent="confirmLike">
-        <h2 class="text-sm font-bold uppercase text-white">Identificação para curtidas</h2>
-        <p class="text-xs text-gray-300">Seu e-mail não será exibido publicamente.</p>
-        <label class="block text-xs text-gray-300">Nome<input v-model="visitorName" required maxlength="80" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
-        <label class="block text-xs text-gray-300">E-mail<input v-model="visitorEmail" required type="email" maxlength="255" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
-        <div class="flex gap-2"><button class="border border-[var(--ts-primary-pink)] px-3 py-2 text-xs text-white">Curtir</button><button type="button" class="px-3 py-2 text-xs text-gray-300" @click="showIdentityForm = false">Cancelar</button></div>
+        <h2 class="text-sm font-bold uppercase text-white">{{ t("blog.likeIdentityTitle") }}</h2>
+        <p class="text-xs text-gray-300">{{ t("blog.likeIdentityDescription") }}</p>
+        <label class="block text-xs text-gray-300">{{ t("blog.name") }}<input v-model="visitorName" required maxlength="80" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
+        <label class="block text-xs text-gray-300">{{ t("blog.email") }}<input v-model="visitorEmail" required type="email" maxlength="255" class="mt-1 w-full border border-[var(--ui-border)] bg-black/30 p-2 text-white" /></label>
+        <div class="flex gap-2"><button class="border border-[var(--ts-primary-pink)] px-3 py-2 text-xs text-white">{{ t("blog.likeConfirm") }}</button><button type="button" class="px-3 py-2 text-xs text-gray-300" @click="showIdentityForm = false">{{ t("blog.cancel") }}</button></div>
       </form>
     </div>
   </div>

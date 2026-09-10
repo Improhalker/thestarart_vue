@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, defineAsyncComponent } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import Navbar from "@/components/global/NewNavbar/Navbar.vue";
 import StartupPopup from "@/components/global/StartupPopup.vue";
-import ChangelogView from "@/views/ChangelogView.vue";
 import LeftSide from "@/components/home/LeftSide.vue";
-import YoutubeMusic from "@/components/global/YoutubeMusic.vue";
-import Chat from "@/components/globalchat/Chat.vue";
-import AdminPet from "@/components/admin/madoka/AdminPet.vue";
+
+// Widgets complementares não bloqueiam o primeiro render da página pública.
+// Uma vez carregado, o layout permanece montado entre navegações e o player
+// continua sendo o mesmo componente.
+const ChangelogView = defineAsyncComponent(() => import("@/views/ChangelogView.vue"));
+const YoutubeMusic = defineAsyncComponent(() => import("@/components/global/YoutubeMusic.vue"));
+const Chat = defineAsyncComponent(() => import("@/components/globalchat/Chat.vue"));
+const AdminPet = defineAsyncComponent(() => import("@/components/admin/madoka/AdminPet.vue"));
 
 const route = useRoute();
 const { t } = useI18n();

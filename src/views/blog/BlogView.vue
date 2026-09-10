@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import PostGrid from "@/components/global/blog/PostGrid.vue";
@@ -9,6 +10,7 @@ import UnderConstruction from "@/components/global/UnderConstruction.vue";
 
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 const pageSize = 8;
 const { posts, pagination, pending, error, fetchPublicPosts } = usePublicPosts();
 
@@ -61,11 +63,11 @@ watch(() => route.query.page, () => {
 
         <div class="relative z-10 h-full flex flex-col justify-center p-4">
           <h1 class="text-xl font-black text-white uppercase">
-            Bem-vindo à Área do Blog
+            {{ t("blog.title") }}
           </h1>
 
           <p class="text-xs text-gray-300 mt-1">
-            pensamentos · desenhos · dev notes · atualizações de sistema
+            {{ t("blog.subtitle") }}
           </p>
         </div>
       </div>
