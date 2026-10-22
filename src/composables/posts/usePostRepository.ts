@@ -28,6 +28,8 @@ type UploadImageResponse = {
   url: string;
 };
 
+type UploadThumbnailResponse = UploadImageResponse & { path: string };
+
 type BackgroundRequestOptions = {
   /**
    * Solicita ao navegador que tente concluir a mutação mesmo durante a saída
@@ -248,17 +250,19 @@ export const usePostsRepository = () => {
       return normalizePostResponse(response);
     },
 
-    uploadThumbnail(formData: FormData) {
-      return client("/admin/posts/thumbnail", {
+    uploadThumbnail(formData: FormData, options: { signal?: AbortSignal } = {}): Promise<UploadThumbnailResponse> {
+      return client<UploadThumbnailResponse>("/admin/posts/thumbnail", {
         method: "POST",
         body: formData,
+        signal: options.signal,
       });
     },
 
-    uploadImage(formData: FormData): Promise<UploadImageResponse> {
+    uploadImage(formData: FormData, options: { signal?: AbortSignal } = {}): Promise<UploadImageResponse> {
       return client("/upload/image", {
         method: "POST",
         body: formData,
+        signal: options.signal,
       });
     },
 

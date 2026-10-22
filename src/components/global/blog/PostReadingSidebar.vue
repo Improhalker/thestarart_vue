@@ -7,6 +7,7 @@ import ChangelogView from "@/views/ChangelogView.vue";
 import Chat from "@/components/globalchat/Chat.vue";
 import { usePublicPosts } from "@/composables/posts/usePublicPosts";
 import type { PublicPost } from "@/composables/posts/types";
+import PostImage from "./PostImage.vue";
 
 const props = defineProps<{
   post: PublicPost;
@@ -65,7 +66,7 @@ watch(
           :to="`/post/${item.slug}`"
           class="group flex gap-2 p-2 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--ts-primary-pink)]"
         >
-          <img :src="item.thumbnail ?? '/images/banner.webp'" alt="" class="h-20 w-20 shrink-0 border border-black object-cover pixelated" loading="lazy" />
+          <PostImage :src="item.thumbnail" alt="" class="h-20 w-20 shrink-0 border border-black object-cover pixelated" />
           <span class="min-w-0">
             <span class="block truncate text-[11px] font-bold uppercase text-white group-hover:text-[var(--ts-primary-pink)]">{{ item.title }}</span>
             <span class="mt-1 block text-[9px] uppercase text-gray-400">{{ formatDate(item.published_at) }}</span>

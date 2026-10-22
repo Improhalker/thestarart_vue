@@ -3,7 +3,8 @@ import { defineConfig } from "vitest/config";
 import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
-  plugins: [vue()],
+  // Public assets are URLs, not filesystem imports (especially on Windows).
+  plugins: [vue({ template: { transformAssetUrls: { includeAbsolute: false } } })],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

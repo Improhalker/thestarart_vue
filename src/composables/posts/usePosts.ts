@@ -1,10 +1,12 @@
 import { computed, ref } from "vue";
+import { ApiError } from "../api/useApi";
 import { usePostsRepository } from "./usePostRepository";
 import type { AdminPostListFilters, PaginationMeta, Post, PostCreateDTO } from "./types";
 
 const posts = ref<Post[]>([]);
 const pending = ref(false);
 const error = ref<string | null>(null);
+let listRequestId = 0;
 const pagination = ref<PaginationMeta>({
   current_page: 1,
   last_page: 1,
@@ -30,19 +32,24 @@ export const usePosts = () => {
   const repo = usePostsRepository();
 
   const fetchAdminPosts = async (filters: AdminPostListFilters = {}) => {
+    const requestId = ++listRequestId;
     pending.value = true;
     error.value = null;
 
     try {
       const response = await repo.getAdminPosts(filters);
+      if (requestId !== listRequestId) return;
 
       posts.value = response.data;
       pagination.value = response.meta;
 
     } catch (e) {
-      error.value = "Erro ao carregar posts";
+      if (requestId !== listRequestId) return;
+      error.value = e instanceof ApiError && e.status === 403
+        ? "Acesso negado: sua conta não possui permissão para administrar posts."
+        : "Erro ao carregar posts";
     } finally {
-      pending.value = false;
+      if (requestId === listRequestId) pending.value = false;
     }
   };
 

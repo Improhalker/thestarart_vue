@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
-import { onBeforeRouteLeave, useRoute } from "vue-router";
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from "vue-router";
 import { Eye, Heart } from "lucide-vue-next";
 import TiptapEditor from "@/components/admin/blog/editor/TiptapEditor.vue";
+import PostImage from "@/components/global/blog/PostImage.vue";
 import { ApiError } from "@/composables/api/useApi";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
 import type { Post } from "@/composables/posts/types";
 import { normalizePostSlug } from "@/utils/postSlug";
 import { sanitizePostHtml } from "@/utils/sanitizePostHtml";
+import { useI18n } from "vue-i18n";
+import { handlePostContentImageError, validatePostImage } from "@/utils/postImage";
 
 type PostStatus = Post["status"];
 
 const route = useRoute();
 const postsRepo = usePostsRepository();
-const postId = route.params.id as string | undefined;
-const isEditing = Boolean(postId);
+const { t } = useI18n();
+const postId = computed(() => route.params.id as string | undefined);
+const isEditing = computed(() => Boolean(postId.value));
 const statuses: Array<{ value: PostStatus; label: string }> = [
   { value: "draft", label: "Rascunho" },
   { value: "scheduled", label: "Agendado" },
@@ -31,9 +35,16 @@ const errorMessage = ref("");
 const slugManuallyEdited = ref(false);
 const thumbnailFile = ref<File | null>(null);
 const thumbnailPreview = ref<string | null>(null);
+const thumbnailInput = ref<HTMLInputElement | null>(null);
 const savedFingerprint = ref("");
 const fieldErrors = ref<Record<string, string[]>>({});
 const engagement = ref({ views: 0, likes: 0 });
+const isUploadingContent = ref(false);
+const loadFailed = ref(false);
+let applyingPost = false;
+let disposed = false;
+let loadGeneration = 0;
+let successTimer: ReturnType<typeof setTimeout> | undefined;
 
 const localDateTime = (date = new Date()) => {
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
@@ -58,14 +69,17 @@ const wordCount = computed(() => {
   return text.trim() ? text.trim().split(/\s+/).length : 0;
 });
 const readingMinutes = computed(() => Math.max(1, Math.ceil(wordCount.value / 200)));
-const fingerprint = computed(() => JSON.stringify({ ...form, thumbnail: thumbnailFile.value?.name || null }));
+const fingerprint = computed(() => JSON.stringify({ ...form, pendingThumbnail: thumbnailFile.value
+  ? [thumbnailFile.value.name, thumbnailFile.value.size, thumbnailFile.value.lastModified] : null }));
 const hasUnsavedChanges = computed(() => fingerprint.value !== savedFingerprint.value);
 const currentThumbnail = computed(() => thumbnailPreview.value || form.thumbnail);
+const tagErrors = computed(() => Object.entries(fieldErrors.value)
+  .filter(([field]) => field === "tags" || field.startsWith("tags.")).flatMap(([, messages]) => messages));
 
 watch(
   () => form.title,
   (title) => {
-    if (!slugManuallyEdited.value) form.slug = normalizePostSlug(title);
+    if (!applyingPost && !slugManuallyEdited.value) form.slug = normalizePostSlug(title);
   },
   { immediate: true },
 );
@@ -73,6 +87,7 @@ watch(
 watch(
   () => form.status,
   (status) => {
+    if (applyingPost) return;
     if (["draft", "archived"].includes(status)) {
       form.published_at = "";
     } else if (!form.published_at) {
@@ -89,8 +104,32 @@ const setSavedFingerprint = async () => {
   savedFingerprint.value = fingerprint.value;
 };
 
-onMounted(async () => {
-  if (!isEditing) {
+const applySavedPost = async (post: Post) => {
+  applyingPost = true;
+  clearThumbnailPreview();
+  thumbnailFile.value = null;
+  if (thumbnailInput.value) thumbnailInput.value.value = "";
+  Object.assign(form, {
+    title: post.title, slug: post.slug, excerpt: post.excerpt, content: post.content || "",
+    thumbnail: post.thumbnail, tags: [...(post.tags ?? [])],
+    published_at: toLocalDateTime(post.published_at), status: post.status, lang: post.lang,
+  });
+  engagement.value = { views: post.views_count, likes: post.likes_count };
+  slugManuallyEdited.value = true;
+  await nextTick();
+  applyingPost = false;
+  await setSavedFingerprint();
+};
+
+const loadPost = async () => {
+  const generation = ++loadGeneration;
+  loadFailed.value = false;
+  errorMessage.value = "";
+  successMessage.value = "";
+  fieldErrors.value = {};
+  if (!isEditing.value) {
+    isLoading.value = false;
+    await resetForm();
     await setSavedFingerprint();
     return;
   }
@@ -98,26 +137,24 @@ onMounted(async () => {
   isLoading.value = true;
 
   try {
-    const { data: post } = await postsRepo.getAdminPost(postId!);
-    form.title = post.title;
-    form.slug = post.slug;
-    form.excerpt = post.excerpt;
-    form.content = post.content;
-    form.thumbnail = post.thumbnail;
-    form.tags = [...post.tags];
-    form.published_at = toLocalDateTime(post.published_at);
-    form.status = post.status;
-    form.lang = post.lang;
-    engagement.value = { views: post.views_count, likes: post.likes_count };
-    slugManuallyEdited.value = true;
+    const { data: post } = await postsRepo.getAdminPost(postId.value!);
+    if (disposed || generation !== loadGeneration) return;
+    await applySavedPost(post);
     editorKey.value++;
     await setSavedFingerprint();
-  } catch {
-    errorMessage.value = "Não foi possível carregar o post.";
+  } catch (cause) {
+    if (disposed || generation !== loadGeneration) return;
+    loadFailed.value = true;
+    errorMessage.value = cause instanceof ApiError && cause.status === 403
+      ? "Acesso negado: você precisa de permissão administrativa e ser o autor deste post para editá-lo."
+      : "Não foi possível carregar o post.";
   } finally {
-    isLoading.value = false;
+    if (generation === loadGeneration) isLoading.value = false;
   }
-});
+};
+
+onMounted(loadPost);
+watch(postId, () => { void loadPost(); });
 
 const addTag = () => {
   const tag = tagInput.value.trim().toLowerCase();
@@ -139,9 +176,25 @@ const clearThumbnailPreview = () => {
   thumbnailPreview.value = null;
 };
 
+const cancelThumbnailSelection = () => {
+  clearThumbnailPreview();
+  thumbnailFile.value = null;
+  if (thumbnailInput.value) thumbnailInput.value.value = "";
+  delete fieldErrors.value.thumbnail;
+};
+
 const handleThumbnailUpload = (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
   if (!file) return;
+
+  const validationError = validatePostImage(file, "thumbnail");
+  if (validationError) {
+    fieldErrors.value.thumbnail = [t(validationError)];
+    input.value = "";
+    return;
+  }
+  delete fieldErrors.value.thumbnail;
 
   clearThumbnailPreview();
   thumbnailFile.value = file;
@@ -149,7 +202,7 @@ const handleThumbnailUpload = (event: Event) => {
 };
 
 const resetForm = async () => {
-  clearThumbnailPreview();
+  cancelThumbnailSelection();
   form.title = "";
   form.slug = "";
   form.excerpt = "";
@@ -167,10 +220,11 @@ const resetForm = async () => {
 };
 
 const submit = async () => {
-  if (isSubmitting.value) return;
+  if (isSubmitting.value || isLoading.value || loadFailed.value || isUploadingContent.value) return;
 
   isSubmitting.value = true;
   errorMessage.value = "";
+  successMessage.value = "";
   fieldErrors.value = {};
 
   try {
@@ -187,18 +241,22 @@ const submit = async () => {
       thumbnail: thumbnailFile.value,
     };
 
-    if (isEditing) {
-      await postsRepo.update(postId!, payload);
+    if (isEditing.value) {
+      const { data: post } = await postsRepo.update(postId.value!, payload);
+      if (disposed) return;
+      await applySavedPost(post);
       successMessage.value = "Post atualizado com sucesso!";
-      await setSavedFingerprint();
     } else {
       await postsRepo.create(payload);
+      if (disposed) return;
       successMessage.value = "Post criado com sucesso!";
       await resetForm();
     }
 
-    window.setTimeout(() => (successMessage.value = ""), 3000);
+    if (successTimer) clearTimeout(successTimer);
+    successTimer = setTimeout(() => (successMessage.value = ""), 3000);
   } catch (error) {
+    if (disposed) return;
     if (error instanceof ApiError && error.status === 422) {
       const payload = error.payload as { errors?: Record<string, string[]> };
       fieldErrors.value = payload.errors || {};
@@ -211,12 +269,29 @@ const submit = async () => {
   }
 };
 
-onBeforeRouteLeave(() => {
-  if (!hasUnsavedChanges.value) return true;
+const canLeaveEditor = () => {
+  if (isSubmitting.value) return false;
+  if (isLoading.value || loadFailed.value) return true;
+  if (!hasUnsavedChanges.value && !isUploadingContent.value) return true;
   return window.confirm("Há alterações não salvas. Deseja sair mesmo assim?");
-});
+};
+onBeforeRouteLeave(canLeaveEditor);
+onBeforeRouteUpdate((to, from) => to.params.id === from.params.id || canLeaveEditor());
 
-onBeforeUnmount(clearThumbnailPreview);
+const beforeUnload = (event: BeforeUnloadEvent) => {
+  if ((!isLoading.value && !loadFailed.value && hasUnsavedChanges.value) || isSubmitting.value || isUploadingContent.value) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+};
+onMounted(() => window.addEventListener("beforeunload", beforeUnload));
+onBeforeUnmount(() => {
+  disposed = true;
+  loadGeneration++;
+  clearThumbnailPreview();
+  if (successTimer) clearTimeout(successTimer);
+  window.removeEventListener("beforeunload", beforeUnload);
+});
 </script>
 
 <template>
@@ -242,10 +317,15 @@ onBeforeUnmount(clearThumbnailPreview);
       <img width="173" height="120" src="https://blob.gifcities.org/gifcities/3CCTKJPWEPVDFGJ6YSRXG7732XOYGHQS.gif" alt="Carregando" />
     </div>
 
-    <template v-else>
+    <div v-else-if="loadFailed" role="alert" class="space-y-3 border-2 border-red-800 bg-red-100 p-3 text-sm text-red-900">
+      <p>{{ errorMessage }}</p>
+      <button type="button" class="border-2 border-black px-3 py-2 font-bold" @click="loadPost">Tentar novamente</button>
+    </div>
+    <fieldset v-else class="contents" :disabled="isSubmitting">
       <div class="space-y-1">
         <label for="post-title" class="text-sm font-bold">Título</label>
         <input id="post-title" v-model="form.title" placeholder="Título" class="border p-2 w-full" />
+        <p v-if="fieldErrors.title" class="text-xs font-bold text-red-800">{{ fieldErrors.title[0] }}</p>
       </div>
 
       <div class="space-y-1">
@@ -287,13 +367,15 @@ onBeforeUnmount(clearThumbnailPreview);
       </div>
 
       <div class="space-y-2">
-        <label class="font-bold text-sm">Thumbnail</label>
-        <label class="flex items-center justify-between gap-3 border-2 border-black px-3 py-2 bg-white shadow cursor-pointer hover:bg-gray-50 transition">
+        <p class="font-bold text-sm">Thumbnail</p>
+        <button type="button" class="flex w-full items-center justify-between gap-3 border-2 border-black px-3 py-2 bg-white shadow cursor-pointer hover:bg-gray-50 transition" @click="thumbnailInput?.click()">
           <span class="truncate text-xs font-bold">{{ thumbnailFile ? thumbnailFile.name : "Selecionar imagem..." }}</span>
           <span class="shrink-0 text-[10px] uppercase opacity-70">choose file</span>
-          <input type="file" accept="image/png,image/jpeg,image/webp" class="hidden" @change="handleThumbnailUpload" />
-        </label>
-        <img v-if="currentThumbnail" :src="currentThumbnail" class="max-h-40 border-2 border-black object-cover" alt="Prévia da thumbnail" />
+        </button>
+        <input ref="thumbnailInput" type="file" accept="image/png,image/jpeg,image/webp" class="hidden" @change="handleThumbnailUpload" />
+        <button v-if="thumbnailFile" type="button" class="text-xs font-bold underline" @click="cancelThumbnailSelection">Cancelar seleção</button>
+        <PostImage v-if="currentThumbnail" :src="currentThumbnail" class="max-h-40 border-2 border-black object-cover" alt="Prévia da thumbnail" priority />
+        <p v-if="fieldErrors.thumbnail" role="alert" class="text-xs font-bold text-red-800">{{ fieldErrors.thumbnail[0] }}</p>
       </div>
 
       <div class="space-y-2">
@@ -301,18 +383,19 @@ onBeforeUnmount(clearThumbnailPreview);
           <label class="text-sm font-bold">Conteúdo</label>
           <span class="text-[10px] font-bold uppercase text-black/60">Editor rico</span>
         </div>
-        <TiptapEditor :key="editorKey" v-model="form.content" />
+        <TiptapEditor :key="editorKey" v-model="form.content" :disabled="isSubmitting" @uploading="isUploadingContent = $event" />
         <p v-if="fieldErrors.content" class="text-xs font-bold text-red-800">{{ fieldErrors.content[0] }}</p>
       </div>
       <p class="text-xs text-gray-600">{{ wordCount }} palavras · cerca de {{ readingMinutes }} min de leitura</p>
 
       <details class="border-2 border-black bg-white">
         <summary class="cursor-pointer px-3 py-2 font-bold">Prévia segura</summary>
-        <div class="post-rich-content prose max-w-none border-t-2 border-black p-3" v-html="safePreview" />
+        <div class="post-rich-content prose max-w-none border-t-2 border-black p-3" @error.capture="handlePostContentImageError" v-html="safePreview" />
       </details>
 
       <div class="space-y-2">
         <label class="font-bold text-sm">Tags</label>
+        <p v-if="tagErrors.length" class="text-xs font-bold text-red-800">{{ tagErrors[0] }}</p>
         <input v-model="tagInput" @keydown.enter.prevent="addTag" placeholder="Digite uma tag e pressione Enter" class="min-h-11 w-full border-2 border-black p-2" />
         <div class="flex flex-wrap gap-2">
           <span v-for="(tag, index) in form.tags" :key="tag" class="border-2 border-black px-2 py-1 text-xs font-bold flex items-center gap-2">
@@ -322,12 +405,12 @@ onBeforeUnmount(clearThumbnailPreview);
         </div>
       </div>
 
-      <button @click="submit" :disabled="isSubmitting" class="min-h-11 w-full border-2 border-black bg-white px-4 py-2 font-bold shadow disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto">
+      <button @click="submit" :disabled="isSubmitting || isUploadingContent" class="min-h-11 w-full border-2 border-black bg-white px-4 py-2 font-bold shadow disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto">
         {{ isSubmitting ? (isEditing ? "Atualizando..." : "Salvando...") : (isEditing ? "Atualizar" : "Salvar") }}
       </button>
 
       <p v-if="successMessage" class="border-2 border-black bg-green-100 p-2 text-sm font-bold">{{ successMessage }}</p>
       <p v-if="errorMessage" role="alert" class="border-2 border-red-800 bg-red-100 p-2 text-sm font-bold text-red-900">{{ errorMessage }}</p>
-    </template>
+    </fieldset>
   </div>
 </template>

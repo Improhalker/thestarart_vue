@@ -1,11 +1,12 @@
-export function toFormData<T extends Record<string, any>>(data: T): FormData {
+export function toFormData<T extends object>(data: T): FormData {
   const formData = new FormData();
 
-  Object.entries(data).forEach(([key, value]) => {
+  (Object.entries(data) as Array<[string, unknown]>).forEach(([key, value]) => {
     if (value === null || value === undefined) return;
 
     if (Array.isArray(value)) {
-      value.forEach(item => formData.append(`${key}[]`, item));
+      if (value.length === 0) formData.append(key, "");
+      value.forEach(item => formData.append(`${key}[]`, String(item)));
       return;
     }
 
@@ -14,7 +15,8 @@ export function toFormData<T extends Record<string, any>>(data: T): FormData {
       return;
     }
 
-    formData.append(key, value);
+    if (value instanceof Blob) formData.append(key, value);
+    else formData.append(key, String(value));
   });
 
   return formData;

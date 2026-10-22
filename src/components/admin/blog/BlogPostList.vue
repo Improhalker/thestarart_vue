@@ -2,6 +2,7 @@
 import { Eye, Heart, Pencil, Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import type { PaginationMeta, Post } from "@/composables/posts/types";
+import PostImage from "@/components/global/blog/PostImage.vue";
 
 const { t, locale } = useI18n();
 
@@ -82,7 +83,7 @@ const formatCount = (value: number) => new Intl.NumberFormat(locale.value).forma
         class="grid gap-4 bg-white p-3 transition-colors hover:bg-gray-50 sm:grid-cols-[minmax(0,1fr)_auto] sm:p-4"
       >
         <div class="flex min-w-0 gap-3">
-          <img
+          <PostImage
             v-if="post.thumbnail"
             :src="post.thumbnail"
             alt=""

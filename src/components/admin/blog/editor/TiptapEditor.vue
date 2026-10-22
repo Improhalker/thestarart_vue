@@ -6,14 +6,19 @@ import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import Youtube from "@tiptap/extension-youtube";
 import TiptapToolbar from "./TiptapToolbar.vue";
+import { watch } from "vue";
 
-const props = defineProps<{ modelValue: string }>();
-const emit = defineEmits(["update:modelValue"]);
+const props = defineProps<{ modelValue: string; disabled?: boolean }>();
+const emit = defineEmits<{
+  (event: "update:modelValue", value: string): void;
+  (event: "uploading", value: boolean): void;
+}>();
 
 const editor = useEditor({
   content: props.modelValue || "<p></p>",
+  editable: !props.disabled,
   extensions: [
-    StarterKit,
+    StarterKit.configure({ link: false, underline: false }),
     Image.configure({ allowBase64: false }),
     Link.configure({
       openOnClick: false,
@@ -27,11 +32,18 @@ const editor = useEditor({
     emit("update:modelValue", editor.getHTML());
   },
 });
+
+watch(() => props.modelValue, (value) => {
+  if (editor.value && value !== editor.value.getHTML()) {
+    editor.value.commands.setContent(value || "<p></p>", { emitUpdate: false });
+  }
+});
+watch(() => props.disabled, (disabled) => editor.value?.setEditable(!disabled));
 </script>
 
 <template>
   <div class="border-2 border-black shadow-[4px_4px_0px_0px_black] bg-white">
-    <TiptapToolbar v-if="editor" :editor="editor" />
+    <TiptapToolbar v-if="editor" :editor="editor" :disabled="props.disabled" @uploading="emit('uploading', $event)" />
     <div class="editor-content post-rich-content p-3"><EditorContent :editor="editor" /></div>
   </div>
 </template>

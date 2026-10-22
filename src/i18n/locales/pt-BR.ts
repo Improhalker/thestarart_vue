@@ -35,6 +35,9 @@ export const ptBR: LocaleMessages = {
     selectorEs: "🇪🇸 ES",
   },
   admin: {
+    imageUploading: "Enviando imagem… Aguarde antes de salvar o post.",
+    imageInvalidType: "Use JPG, PNG ou WebP; GIF é permitido apenas no conteúdo.",
+    imageTooLarge: "Arquivo vazio ou acima do limite: thumbnail até 1 MiB; conteúdo até 2 MiB.",
     blogParent: "Blog pai",
     blogCreate: "Create",
     posts: "Posts",
@@ -195,6 +198,8 @@ export const ptBR: LocaleMessages = {
     pageOf: "Página {current} de {total} · {count} itens",
   },
   blog: {
+    postNotFound: "Post não encontrado ou indisponível para leitura pública.",
+    retryPost: "Tentar novamente",
     title: "Bem-vindo à Área do Blog",
     subtitle: "pensamentos · desenhos · dev notes · atualizações de sistema",
     readerLoaded: "arquivo pessoal carregado",

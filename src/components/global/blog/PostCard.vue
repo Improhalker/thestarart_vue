@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import type { PublicPostSummary } from "@/composables/posts/types";
+import PostImage from "./PostImage.vue";
 
 const { locale, t } = useI18n();
 
@@ -14,12 +15,7 @@ defineProps<{
     class="relative group cursor-pointer overflow-hidden border-2 border-[var(--color-ts-ui-border-dark)] min-h-[220px]"
   >
     <!-- Background -->
-    <div
-      class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-      :style="{
-        backgroundImage: `url(${post.thumbnail ?? '/images/banner.webp'})`,
-      }"
-    />
+    <PostImage :src="post.thumbnail" alt="" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
 
     <!-- Overlay -->
     <div class="absolute inset-0 bg-purple-900/70" />

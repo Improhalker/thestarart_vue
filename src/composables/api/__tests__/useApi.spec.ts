@@ -28,6 +28,15 @@ describe("useApi deployment topology", () => {
     const options = fetchMock.mock.calls[0]?.[1] as RequestInit;
     expect(new Headers(options.headers).has("X-Requested-With")).toBe(false);
   });
+
+  it("keeps the existing upload error envelope readable without changing the API", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 500,
+      headers: new Headers({ "content-type": "application/json" }),
+      json: async () => ({ error: "Não foi possível armazenar a imagem." }),
+    }));
+    await expect(useApi().client("/upload/image", { method: "POST" }))
+      .rejects.toMatchObject({ status: 500, message: "Não foi possível armazenar a imagem." });
+  });
 });
 
 afterEach(() => {

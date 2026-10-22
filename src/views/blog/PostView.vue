@@ -6,6 +6,9 @@ import { Eye, Heart } from "lucide-vue-next";
 import CardWindowHeader from "@/components/global/CardWindowHeader.vue";
 import PaginationControls from "@/components/global/PaginationControls.vue";
 import PostReadingSidebar from "@/components/global/blog/PostReadingSidebar.vue";
+import PostImage from "@/components/global/blog/PostImage.vue";
+import { ApiError } from "@/composables/api/useApi";
+import { handlePostContentImageError } from "@/utils/postImage";
 import { usePostEngagement } from "@/composables/posts/usePostEngagement";
 import { useOptimisticLikes } from "@/composables/posts/useOptimisticLikes";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
@@ -22,6 +25,8 @@ const optimisticLikes = useOptimisticLikes();
 const post = ref<PublicPost | null>(null);
 const pending = ref(true);
 const error = ref(false);
+const notFound = ref(false);
+let disposed = false;
 const comments = ref<PublicComment[]>([]);
 const commentsPagination = ref<PaginationMeta | null>(null);
 const commentsLoading = ref(false);
@@ -47,7 +52,7 @@ const formatDate = (date: string | null) => date
   ? new Date(date).toLocaleDateString(locale.value)
   : t("blog.unavailableDate");
 
-const safeContent = (content: string) => sanitizePostHtml(content);
+const safeContent = computed(() => sanitizePostHtml(post.value?.content || "", { lazyImages: true }));
 
 const clearViewTimer = () => {
   if (viewTimer !== null) {
@@ -158,10 +163,14 @@ const loadLikeState = async (slug: string) => {
   }
 };
 
-onMounted(async () => {
+const loadPost = async () => {
+  pending.value = true;
+  error.value = false;
+  notFound.value = false;
   try {
     const slug = route.params.slug as string;
     const response = await postsRepo.getPublicPost(slug);
+    if (disposed) return;
     const currentPost = response.data;
 
     post.value = currentPost;
@@ -176,14 +185,18 @@ onMounted(async () => {
     recordViewAfterReading();
     void loadLikeState(currentPost.slug);
     void loadComments(currentPost.slug);
-  } catch {
+  } catch (cause) {
+    if (disposed) return;
     error.value = true;
+    notFound.value = cause instanceof ApiError && cause.status === 404;
   } finally {
     pending.value = false;
   }
-});
+};
+onMounted(loadPost);
 
 onBeforeUnmount(() => {
+  disposed = true;
   clearViewTimer();
   document.removeEventListener("visibilitychange", onVisibilityChange);
 });
@@ -200,7 +213,8 @@ onBeforeUnmount(() => {
       </div>
 
       <div v-else-if="error || !post" class="p-4 text-sm text-red-500">
-        {{ t("blog.postLoadError") }}
+        <p>{{ notFound ? t("blog.postNotFound") : t("blog.postLoadError") }}</p>
+        <button v-if="!notFound" type="button" class="mt-3 border px-3 py-2 text-white" @click="loadPost">{{ t("blog.retryPost") }}</button>
       </div>
 
       <div v-else class="space-y-6 p-4 sm:p-6">
@@ -233,12 +247,13 @@ onBeforeUnmount(() => {
         </header>
 
         <div v-if="post.thumbnail" class="h-[220px] w-full overflow-hidden border-2 border-[var(--color-ts-ui-border-dark)] sm:h-[300px] md:h-[360px]">
-          <img :src="post.thumbnail" :alt="t('blog.thumbnailOf', { title: post.title })" class="h-full w-full object-cover" />
+          <PostImage :src="post.thumbnail" :alt="t('blog.thumbnailOf', { title: post.title })" priority class="h-full w-full object-cover" />
         </div>
 
         <div
           class="post-rich-content prose prose-invert max-w-none text-gray-200 leading-relaxed [&_p]:mb-4 [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--ts-primary-pink)] [&_blockquote]:bg-ts-primary-pink [&_blockquote]:px-4 [&_blockquote]:py-3 [&_blockquote]:italic [&_blockquote_p:first-child]:mt-0 [&_blockquote_p:last-child]:mb-0 [&_div:has(>iframe)]:my-4 [&_div:has(>iframe)]:flex [&_div:has(>iframe)]:justify-center [&_iframe]:block [&_iframe]:h-auto [&_iframe]:w-full [&_iframe]:max-w-[500px] [&_iframe]:aspect-video"
-          v-html="safeContent(post.content)"
+          @error.capture="handlePostContentImageError"
+          v-html="safeContent"
         />
 
         <section class="space-y-4 border-t border-[var(--ui-border)] pt-5" aria-labelledby="comments-title">

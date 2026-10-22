@@ -1,21 +1,36 @@
 <script setup lang="ts">
 import { Editor } from "@tiptap/vue-3";
-import { ref } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { usePostsRepository } from "@/composables/posts/usePostRepository";
+import { ApiError } from "@/composables/api/useApi";
+import { validatePostImage } from "@/utils/postImage";
 import { Bold, Code2, Heading2, Heading3, Image, Italic, Link, List, ListOrdered, Minus, Quote, Redo2, Underline, Undo2, Youtube } from "lucide-vue-next";
 
-const props = defineProps<{ editor: Editor }>();
+const props = defineProps<{ editor: Editor; disabled?: boolean }>();
+const emit = defineEmits<{ (event: "uploading", value: boolean): void }>();
 const { t } = useI18n();
 const imageInput = ref<HTMLInputElement | null>(null);
 const postsRepo = usePostsRepository();
+const uploading = ref(false);
+const uploadError = ref("");
+let uploadController: AbortController | null = null;
+let disposed = false;
+let uploadTimeout: ReturnType<typeof setTimeout> | undefined;
 const btn = "shrink-0 bg-[#8d8d8d] p-1 border-2 border-black shadow-[2px_2px_0px_black] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#ff4d6d] transition-all flex items-center justify-center";
 const isActive = (type: string, attributes?: Record<string, unknown>) => props.editor.isActive(type, attributes) ? "bg-black text-white" : "";
 
 const handleImageUpload = async (event: Event) => {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
-  if (!file) return;
+  if (!file || uploading.value || props.disabled) return;
+  uploadError.value = "";
+  const validationError = validatePostImage(file, "content");
+  if (validationError) {
+    uploadError.value = t(validationError);
+    input.value = "";
+    return;
+  }
 
   const alt = window.prompt(t("admin.imageAltPrompt"))?.trim();
   if (!alt) {
@@ -28,15 +43,28 @@ const handleImageUpload = async (event: Event) => {
   const formData = new FormData();
   formData.append("image", file);
 
+  uploading.value = true;
+  emit("uploading", true);
+  uploadController = new AbortController();
+  uploadTimeout = setTimeout(() => uploadController?.abort(), 60_000);
   try {
-    const data = await postsRepo.uploadImage(formData);
+    const data = await postsRepo.uploadImage(formData, { signal: uploadController.signal });
+    if (disposed || props.editor.isDestroyed) return;
     props.editor.chain().focus().setImage({ src: data.url, alt, title: title || undefined }).run();
   } catch (error) {
-    window.alert(error instanceof Error ? error.message : t("admin.imageUploadError"));
+    if (disposed) return;
+    const payload = error instanceof ApiError ? error.payload as { errors?: { image?: string[] } } | null : null;
+    uploadError.value = payload?.errors?.image?.[0] || (error instanceof ApiError ? error.message : t("admin.imageUploadError"));
   } finally {
+    if (uploadTimeout) clearTimeout(uploadTimeout);
+    uploading.value = false;
+    uploadController = null;
+    if (!disposed) emit("uploading", false);
     input.value = "";
   }
 };
+
+onBeforeUnmount(() => { disposed = true; if (uploadTimeout) clearTimeout(uploadTimeout); uploadController?.abort(); emit("uploading", false); });
 
 const insertLink = () => {
   const value = window.prompt(t("admin.safeUrlPrompt"))?.trim();
@@ -74,7 +102,8 @@ const insertYoutube = () => {
 </script>
 
 <template>
-  <div class="sticky top-0 z-30 flex items-center gap-1 overflow-x-auto border-b-2 border-black bg-ts-retro-gray p-2 shadow-[0_3px_0_rgb(0_0_0_/_18%)] sm:flex-wrap" :aria-label="t('admin.editorToolbar')">
+  <div class="sticky top-0 z-30 border-b-2 border-black bg-ts-retro-gray shadow-[0_3px_0_rgb(0_0_0_/_18%)]" :aria-busy="uploading">
+  <fieldset :disabled="props.disabled" class="flex items-center gap-1 overflow-x-auto p-2 sm:flex-wrap" :aria-label="t('admin.editorToolbar')">
     <button type="button" :class="[btn, isActive('bold')]" :aria-label="t('admin.bold')" @click="props.editor.chain().focus().toggleBold().run()"><Bold :size="12" /></button>
     <button type="button" :class="[btn, isActive('italic')]" :aria-label="t('admin.italic')" @click="props.editor.chain().focus().toggleItalic().run()"><Italic :size="12" /></button>
     <button type="button" :class="[btn, isActive('underline')]" :aria-label="t('admin.underline')" @click="props.editor.chain().focus().toggleUnderline().run()"><Underline :size="12" /></button>
@@ -86,10 +115,13 @@ const insertYoutube = () => {
     <button type="button" :class="[btn, isActive('codeBlock')]" :aria-label="t('admin.codeBlock')" @click="props.editor.chain().focus().toggleCodeBlock().run()"><Code2 :size="12" /></button>
     <button type="button" :class="btn" :aria-label="t('admin.separator')" @click="props.editor.chain().focus().setHorizontalRule().run()"><Minus :size="12" /></button>
     <button type="button" :class="btn" :aria-label="t('admin.insertLink')" @click="insertLink"><Link :size="12" /></button>
-    <button type="button" :class="btn" :aria-label="t('admin.insertImage')" @click="imageInput?.click()"><Image :size="12" /></button>
-    <input ref="imageInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" @change="handleImageUpload" />
+    <button type="button" :class="btn" :disabled="uploading || props.disabled" :aria-label="t('admin.insertImage')" @click="imageInput?.click()"><Image :size="12" /></button>
+    <input ref="imageInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" :disabled="uploading || props.disabled" @change="handleImageUpload" />
     <button type="button" :class="btn" :aria-label="t('admin.insertYoutube')" @click="insertYoutube"><Youtube :size="12" /></button>
     <button type="button" :class="btn" :aria-label="t('admin.undo')" :disabled="!props.editor.can().undo()" @click="props.editor.chain().focus().undo().run()"><Undo2 :size="12" /></button>
     <button type="button" :class="btn" :aria-label="t('admin.redo')" :disabled="!props.editor.can().redo()" @click="props.editor.chain().focus().redo().run()"><Redo2 :size="12" /></button>
+  </fieldset>
+  <p v-if="uploading" role="status" class="px-2 pb-2 text-xs">{{ t('admin.imageUploading') }}</p>
+  <p v-if="uploadError" role="alert" class="px-2 pb-2 text-xs font-bold text-red-800">{{ uploadError }}</p>
   </div>
 </template>

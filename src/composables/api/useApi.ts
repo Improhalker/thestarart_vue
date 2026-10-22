@@ -50,11 +50,15 @@ const messageFrom = (data: unknown) => {
     if (typeof message === "string") return message;
   }
 
+  if (data && typeof data === "object" && "error" in data && typeof data.error === "string") {
+    return data.error;
+  }
+
   return "Não foi possível concluir a requisição.";
 };
 
 export const useApi = () => {
-  const client = async <T = any>(
+  const client = async <T = unknown>(
     endpoint: string,
     options: RequestInit = {},
     behavior: RequestBehavior = {},

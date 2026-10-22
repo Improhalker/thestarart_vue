@@ -1,5 +1,7 @@
 # Módulo Blog no Vue — arquitetura técnica
 
+> Complemento de 22/10/2026: [uploads, formulário e renderização de imagens](image-pipeline.md). O inventário abaixo registra a arquitetura anterior; para os fluxos alterados nesta rodada, consulte o complemento atualizado.
+
 | Item | Valor |
 | --- | --- |
 | Última atualização | 2026-07-22 |
