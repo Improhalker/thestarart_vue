@@ -1,10 +1,22 @@
 import { routes, type VercelConfig } from "@vercel/config/v1";
 
-const laravelApiOrigin = process.env.LARAVEL_API_ORIGIN?.replace(/\/+$/, "");
+// Compatibility during the migration to a non-VITE build-only setting.
+// Never fall back in the browser: production requests still use /api.
+const configuredOrigin = (process.env.LARAVEL_API_ORIGIN ?? process.env.VITE_API_URL)?.trim();
+let apiUrl: URL | undefined;
 
-if (!laravelApiOrigin?.startsWith("https://")) {
-  throw new Error("LARAVEL_API_ORIGIN must be an HTTPS origin without the /api suffix.");
+try {
+  apiUrl = configuredOrigin ? new URL(configuredOrigin) : undefined;
+} catch {
+  // Report the setting name, never its potentially sensitive value.
 }
+
+if (!apiUrl || apiUrl.protocol !== "https:" || apiUrl.username || apiUrl.password
+  || apiUrl.pathname !== "/" || apiUrl.search || apiUrl.hash) {
+  throw new Error("Set LARAVEL_API_ORIGIN (or legacy VITE_API_URL) to an HTTPS origin without credentials, path, query or fragment.");
+}
+
+const laravelApiOrigin = apiUrl.origin;
 
 export const config: VercelConfig = {
   rewrites: [

@@ -81,3 +81,7 @@ fluxo de produção via proxy.
 - Quando houver domínio próprio, basta trocar o host stateful da produção. O
   proxy e a estratégia de cookies permanecem os mesmos.
 - A origem Laravel precisa continuar HTTPS e acessível pela Vercel.
+
+## Compatibilidade do deploy (22/10/2026)
+
+`vercel.ts` prioriza `LARAVEL_API_ORIGIN` e, enquanto a configuração existente não for migrada, aceita `VITE_API_URL` como fallback somente no build do proxy. O destino precisa ser uma origem HTTPS, sem credenciais, caminho (`/api` inclusive), query ou fragmento. A API continua acessível no navegador por `/api`, sem mudança em cookies, CSRF ou Sanctum. O fallback é temporário; a recomendação continua sendo configurar a variável sem prefixo `VITE_` e deixar `VITE_API_URL` apenas no desenvolvimento local.
